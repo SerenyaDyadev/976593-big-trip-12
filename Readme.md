@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Рычков](https://up.htmlacademy.ru/ecmascript/12/user/976593).
-* Наставник: `Неизвестно`.
+* Наставник:[Даниил Царёв](https://htmlacademy.ru/profile/id945835).
 
 ---
 

@@ -7,8 +7,13 @@ import {createListDays} from "./view/list-days.js";
 import {createDayItem} from "./view/day-item.js";
 import {createListEvents} from "./view/list-events.js";
 import {createEventItem} from "./view/event-item.js";
+import {generateEvent} from "./mock/event.js";
 
 const EVENT_COUNT = 3;
+
+const events = new Array(EVENT_COUNT).fill().map(generateEvent);
+
+console.log(events);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);

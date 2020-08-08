@@ -9,11 +9,21 @@ import {createListEvents} from "./view/list-events.js";
 import {createEventItem} from "./view/event-item.js";
 import {generateEvent} from "./mock/event.js";
 
-const EVENT_COUNT = 3;
+const EVENT_COUNT = 15;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
-console.log(events);
+// console.log(events);
+
+const destinationsTemplate = [];
+for (let i = 1; i < events.length; i++) {
+  destinationsTemplate.push(events[i].destination);
+}
+
+let totalTemplate = 0;
+for (let i = 1; i < events.length; i++) {
+  totalTemplate += events[i].price;
+}
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -21,7 +31,7 @@ const render = (container, template, place) => {
 
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripMainInfoElement = siteHeader.querySelector(`.trip-main`);
-render(siteTripMainInfoElement, createTripInfoTemplate(), `afterbegin`);
+render(siteTripMainInfoElement, createTripInfoTemplate(destinationsTemplate, totalTemplate), `afterbegin`);
 
 const siteTripControlsElement = siteHeader.querySelector(`.trip-main__trip-controls`);
 render(siteTripControlsElement, createTripControlsTemplate(), `afterbegin`);
@@ -30,7 +40,7 @@ render(siteTripControlsElement, createTripFilterTemplate(), `beforeend`);
 const sitePageMain = document.querySelector(`.page-main`);
 const siteTripEvents = sitePageMain.querySelector(`.trip-events`);
 render(siteTripEvents, createTripSortEventsTemplate(), `beforeend`);
-render(siteTripEvents, createTripAddEditEvent(), `beforeend`);
+render(siteTripEvents, createTripAddEditEvent(events[0]), `beforeend`);
 
 render(siteTripEvents, createListDays(), `beforeend`);
 
@@ -42,6 +52,6 @@ render(siteDayItem, createListEvents(), `beforeend`);
 
 const siteListEvents = siteDayItem.querySelector(`.trip-events__list`);
 
-for (let i = 0; i < EVENT_COUNT; i++) {
-  render(siteListEvents, createEventItem(), `beforeend`);
+for (let i = 1; i < EVENT_COUNT; i++) {
+  render(siteListEvents, createEventItem(events[i]), `beforeend`);
 }

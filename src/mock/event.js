@@ -26,9 +26,9 @@ const getTypeEvent = () =>{
 const getDestination = () => {
   const destinations = [
     `Moscow`,
-    `Saint-Petersburg`,
+    `SaintPeterb`,
     `Voronezh`,
-    `Rostov-on-the Don`,
+    `RostovOnDon`,
     `Krasnodar`,
     `Sochi`
   ];
@@ -62,14 +62,14 @@ const getOfferPrice = (offers) => {
 
 
 const getTimeStamp = () => {
-  const maxHoursGap = 24;
+  const maxMinutsGap = 1000;
   const currentDate = new Date();
   const time = [];
-  let hoursGap = getRandomInteger(0, maxHoursGap);
-
-  time.push(new Date(currentDate.setHours(currentDate.getHours() + hoursGap)).toLocaleString(`en-GB`));
-  time.push(new Date(currentDate.setHours(currentDate.getHours() + hoursGap * 2)).toLocaleString(`en-GB`));
-
+  let minutsGap = getRandomInteger(0, maxMinutsGap);
+  let duration = minutsGap * 2;
+  time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + minutsGap)).toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}));
+  time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + duration)).toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}));
+  time.push(duration);
   return time;
 };
 
@@ -94,16 +94,16 @@ const getDecription = () => {
 export const generateEvent = () => {
   const typeEvent = getTypeEvent();
   const offers = getOffers(typeEvent);
-  const offerPrice = getOfferPrice(offers);
+  const offerPrices = getOfferPrice(offers);
   const time = getTimeStamp();
 
   return {
     typeEvent,
     destination: getDestination(),
     offers,
-    offerPrice,
+    offerPrices,
     time,
-    price: getRandomInteger(0, 1000),
+    price: getRandomInteger(0, 100),
     description: getDecription(),
     photoPlace: `http://picsum.photos/248/152?r=${Math.random()}`
   };

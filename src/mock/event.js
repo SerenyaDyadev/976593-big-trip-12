@@ -1,64 +1,5 @@
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const getTypeEvent = () =>{
-  const typeEvents = [
-    `Taxi`,
-    `Bus`,
-    `Ship`,
-    `Transport`,
-    `Drive`,
-    `Flight`,
-    `Check`,
-    `Sightseeing`,
-    `Restaurant`
-  ];
-
-  const randomIndex = getRandomInteger(0, typeEvents.length - 1);
-
-  return typeEvents[randomIndex];
-};
-
-const getDestination = () => {
-  const destinations = [
-    `Moscow`,
-    `SaintPeterb`,
-    `Voronezh`,
-    `RostovOnDon`,
-    `Krasnodar`,
-    `Sochi`
-  ];
-
-  const randomIndex = getRandomInteger(0, destinations.length - 1);
-
-  return destinations[randomIndex];
-};
-
-const getOffers = (typeEvent) => {
-  const offerList = {
-    Taxi: [`Order Uber`, `Taxi Minivan`, `Business Class`],
-    Bus: [`Comfort Chair`, `Bisiness Chair`],
-    Ship: [`Lux`],
-    Transport: [`Comfort ticket`, `Bisiness ticket`],
-    Drive: [`Motorbike`, `Sedan`, `MiniBus`],
-    Flight: [`Add luggage`, `Switch to comfort class`, `Add meal`, `Choose seats`, `Travel by train`],
-    Check: [],
-    Sightseeing: [],
-    Restaurant: [`Two persons`, `Dinner`]
-  };
-
-  return offerList[typeEvent];
-};
-
-const getOfferPrice = (offers) => {
-  const offerPrice = (new Array(offers.length)).fill().map(() => getRandomInteger(0, 100));
-
-  return offerPrice;
-};
+import {getRandomInteger} from "../utils.js";
+import {TYPE_EVENTS, DESTINATIONS, DESCRIPTIONS, OFFER_LIST} from "../const.js";
 
 const getTimeStamp = () => {
   const maxMinutsGap = 120;
@@ -66,51 +7,30 @@ const getTimeStamp = () => {
   let currentDate = new Date();
   currentDate = new Date(currentDate.setDate(currentDate.getDate() + getRandomInteger(0, maxDaysGap)));
 
-  const day = currentDate.toLocaleString(`en-GB`, {day: `2-digit`, month: `short`});
-
   const time = [];
   let minutsGap = getRandomInteger(0, maxMinutsGap);
-  let duration = minutsGap * 2;
+  let duration = getRandomInteger(0, minutsGap);
   time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + minutsGap)));
   time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + duration)));
 
-  return {day, time, duration};
-};
-
-const getDecription = () => {
-  const description = [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit.Cras aliquet varius magna, non porta ligula feugiat eget.`,
-    `Fusce tristique felis at fermentum pharetra.`,
-    `Aliquam id orci ut lectus varius viverra.Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
-    `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-    `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-    `Aliquam erat volutpat.`,
-    `Nunc fermentum tortor ac porta dapibus.`,
-    `In rutrum ac purus sit amet tempus.`
-  ];
-
-  const randomIndex = getRandomInteger(0, description.length - 1);
-
-  return description[randomIndex];
+  return {time, duration};
 };
 
 export const generateEvent = () => {
-  const typeEvent = getTypeEvent();
-  const offers = getOffers(typeEvent);
-  const offerPrices = getOfferPrice(offers);
-  const {day, time, duration} = getTimeStamp();
+  const typeEvent = TYPE_EVENTS[getRandomInteger(0, TYPE_EVENTS.length - 1)];
+  const offers = OFFER_LIST[typeEvent];
+  const offerPrices = (new Array(offers.length)).fill().map(() => getRandomInteger(0, 100));
+  const {time, duration} = getTimeStamp();
 
   return {
     typeEvent,
-    destination: getDestination(),
+    destination: DESTINATIONS[getRandomInteger(0, DESTINATIONS.length - 1)],
     offers,
     offerPrices,
-    day,
     time,
     duration,
     price: getRandomInteger(0, 100),
-    description: getDecription(),
+    description: DESCRIPTIONS[getRandomInteger(0, DESCRIPTIONS.length - 1)],
     photoPlace: `http://picsum.photos/248/152?r=${Math.random()}`
   };
 };

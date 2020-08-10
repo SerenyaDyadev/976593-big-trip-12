@@ -1,8 +1,10 @@
-const getDurationTemplate = (minsDuration) => {
+import {humanizeEventDate} from "../utils.js";
+
+const getDurationTemplate = (minutesDuration) => {
   const oneHourInMinutes = 60;
   const oneDayInHours = 24;
   const minLengthTimeStamp = 2;
-  const hoursDuration = minsDuration / oneHourInMinutes;
+  const hoursDuration = minutesDuration / oneHourInMinutes;
 
   let days = Math.floor(hoursDuration / oneDayInHours) + `D` !== `0D`
     ? Math.floor(hoursDuration / oneDayInHours) + `D`
@@ -20,7 +22,7 @@ const getDurationTemplate = (minsDuration) => {
     ? `0` + hours
     : hours;
 
-  const mins = Math.floor(minsDuration % oneHourInMinutes) + `M`;
+  const mins = Math.floor(minutesDuration % oneHourInMinutes) + `M`;
 
   return (days + hours + mins);
 };
@@ -45,11 +47,11 @@ const createOffersTemplates = (offers, offerPrices) => {
 };
 
 export const createEventItem = (event) => {
-  const {typeEvent, destination, time, price, offers, offerPrices} = event;
-  const [startTime, endTime, duration] = time;
+  const {typeEvent, destination, time, duration, price, offers, offerPrices} = event;
+  const [startTime, endTime] = time;
   const durationTemplate = getDurationTemplate(duration);
-  const startPeriod = startTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).slice(11, 17);
-  const endPeriod = endTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).slice(11, 17);
+  const startPeriod = humanizeEventDate(startTime).slice(11, 17);
+  const endPeriod = humanizeEventDate(endTime).slice(11, 17);
 
   return (
     `<li class="trip-events__item">

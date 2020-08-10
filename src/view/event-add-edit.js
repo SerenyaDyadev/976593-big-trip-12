@@ -1,3 +1,5 @@
+import {humanizeEventDate} from "../utils.js";
+
 const getOffersTemplate = (offers, offerPrices) => {
   if (offers.length === 0) {
     return ``;
@@ -41,8 +43,8 @@ export const createTripAddEditEvent = (event = {}) => {
   } = event;
 
   let [startTime, endTime] = time;
-  startTime = startTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).replace(`,`, ``);
-  endTime = endTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).replace(`,`, ``);
+  startTime = humanizeEventDate(startTime).replace(`,`, ``);
+  endTime = humanizeEventDate(endTime).replace(`,`, ``);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">

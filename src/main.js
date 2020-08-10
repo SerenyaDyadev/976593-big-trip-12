@@ -11,25 +11,13 @@ const EVENT_COUNT = 16;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
-// console.log(events);
-
-const destinationsTemplate = [];
-for (let i = 1; i < events.length; i++) {
-  destinationsTemplate.push(events[i].destination);
-}
-
-let totalTemplate = 0;
-for (let i = 1; i < events.length; i++) {
-  totalTemplate += events[i].price;
-}
-
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripMainInfoElement = siteHeader.querySelector(`.trip-main`);
-render(siteTripMainInfoElement, createTripInfoTemplate(destinationsTemplate, totalTemplate), `afterbegin`);
+render(siteTripMainInfoElement, createTripInfoTemplate(events), `afterbegin`);
 
 const siteTripControlsElement = siteHeader.querySelector(`.trip-main__trip-controls`);
 render(siteTripControlsElement, createTripControlsTemplate(), `afterbegin`);

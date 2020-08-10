@@ -66,14 +66,15 @@ const getTimeStamp = () => {
   let currentDate = new Date();
   currentDate = new Date(currentDate.setDate(currentDate.getDate() + getRandomInteger(0, maxDaysGap)));
 
+  const day = currentDate.toLocaleString(`en-GB`, {day: `2-digit`, month: `short`});
+
   const time = [];
   let minutsGap = getRandomInteger(0, maxMinutsGap);
   let duration = minutsGap * 2;
   time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + minutsGap)));
   time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + duration)));
-  time.push(duration);
 
-  return time;
+  return {day, time, duration};
 };
 
 const getDecription = () => {
@@ -98,14 +99,16 @@ export const generateEvent = () => {
   const typeEvent = getTypeEvent();
   const offers = getOffers(typeEvent);
   const offerPrices = getOfferPrice(offers);
-  const time = getTimeStamp();
+  const {day, time, duration} = getTimeStamp();
 
   return {
     typeEvent,
     destination: getDestination(),
     offers,
     offerPrices,
+    day,
     time,
+    duration,
     price: getRandomInteger(0, 100),
     description: getDecription(),
     photoPlace: `http://picsum.photos/248/152?r=${Math.random()}`

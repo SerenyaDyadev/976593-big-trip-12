@@ -60,16 +60,19 @@ const getOfferPrice = (offers) => {
   return offerPrice;
 };
 
-
 const getTimeStamp = () => {
-  const maxMinutsGap = 1000;
-  const currentDate = new Date();
+  const maxMinutsGap = 120;
+  const maxDaysGap = 4;
+  let currentDate = new Date();
+  currentDate = new Date(currentDate.setDate(currentDate.getDate() + getRandomInteger(0, maxDaysGap)));
+
   const time = [];
   let minutsGap = getRandomInteger(0, maxMinutsGap);
   let duration = minutsGap * 2;
-  time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + minutsGap)).toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}));
-  time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + duration)).toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}));
+  time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + minutsGap)));
+  time.push(new Date(currentDate.setMinutes(currentDate.getMinutes() + duration)));
   time.push(duration);
+
   return time;
 };
 

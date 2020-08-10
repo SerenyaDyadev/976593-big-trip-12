@@ -13,7 +13,7 @@ const EVENT_COUNT = 15;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
-// console.log(events);
+console.log(events);
 
 const destinationsTemplate = [];
 for (let i = 1; i < events.length; i++) {
@@ -45,9 +45,10 @@ render(siteTripEvents, createTripAddEditEvent(events[0]), `beforeend`);
 render(siteTripEvents, createListDays(), `beforeend`);
 
 const siteListDays = siteTripEvents.querySelector(`.trip-days`);
-render(siteListDays, createDayItem(), `beforeend`);
+render(siteListDays, createDayItem(events[0]), `beforeend`);
 
-const siteDayItem = siteListDays.querySelector(`.trip-days__item`);
+const siteDayItem = siteListDays.querySelector(`.trip-days__tem`);
+
 render(siteDayItem, createListEvents(), `beforeend`);
 
 const siteListEvents = siteDayItem.querySelector(`.trip-events__list`);

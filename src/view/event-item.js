@@ -48,8 +48,8 @@ export const createEventItem = (event) => {
   const {typeEvent, destination, time, price, offers, offerPrices} = event;
   const [startTime, endTime, duration] = time;
   const durationTemplate = getDurationTemplate(duration);
-  const startPeriod = startTime.slice(11, 17);
-  const endPeriod = endTime.slice(11, 17);
+  const startPeriod = startTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).slice(11, 17);
+  const endPeriod = endTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).slice(11, 17);
 
   return (
     `<li class="trip-events__item">

@@ -41,8 +41,8 @@ export const createTripAddEditEvent = (event = {}) => {
   } = event;
 
   let [startTime, endTime] = time;
-  startTime = startTime.replace(`,`, ``);
-  endTime = endTime.replace(`,`, ``);
+  startTime = startTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).replace(`,`, ``);
+  endTime = endTime.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`}).replace(`,`, ``);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -166,52 +166,3 @@ export const createTripAddEditEvent = (event = {}) => {
           </form>`
   );
 };
-
-/*
-   <div class="event__available-offers">
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-                    <label class="event__offer-label" for="event-offer-luggage-1">
-                      <span class="event__offer-title">Add luggage</span>
-                      &plus;
-                      &euro;&nbsp;<span class="event__offer-price">30</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-                    <label class="event__offer-label" for="event-offer-comfort-1">
-                      <span class="event__offer-title">Switch to comfort class</span>
-                      &plus;
-                      &euro;&nbsp;<span class="event__offer-price">100</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-                    <label class="event__offer-label" for="event-offer-meal-1">
-                      <span class="event__offer-title">Add meal</span>
-                      &plus;
-                      &euro;&nbsp;<span class="event__offer-price">15</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-                    <label class="event__offer-label" for="event-offer-seats-1">
-                      <span class="event__offer-title">Choose seats</span>
-                      &plus;
-                      &euro;&nbsp;<span class="event__offer-price">5</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-                    <label class="event__offer-label" for="event-offer-train-1">
-                      <span class="event__offer-title">Travel by train</span>
-                      &plus;
-                      &euro;&nbsp;<span class="event__offer-price">40</span>
-                    </label>
-                  </div>
-                </div>
-*/

@@ -2,14 +2,11 @@ import {createEventItem} from "./event-item.js";
 
 const getEventsTemplate = (events, count, day) => {
 
-  let template = [];
-  for (let i = 1; i < count; i++) {
-    if (day === events[i].time[0].toLocaleString(`en-GB`, {day: `2-digit`, month: `short`})) {
-      template.push(createEventItem(events[i]));
-    }
-  }
+  const template = new Array(count).fill().map((element, index) => {
+    return day === events[index].time[0].toLocaleString(`en-GB`, {day: `2-digit`, month: `short`}) ? createEventItem(events[index]) : ``;
+  }).join(` `);
 
-  return template.join(` `);
+  return template;
 };
 
 export const createDayItem = (events, EVENT_COUNT) => {
@@ -25,22 +22,17 @@ export const createDayItem = (events, EVENT_COUNT) => {
 
   const templateDays = () => {
     let dayCount = 1;
-    const template = [];
-    for (let i = 0; i < days.length; i++) {
-      const dayStamp = days[i].toUpperCase();
-      const dateStamp = dates[i];
-      template.push(`<li class="trip-days__item  day">
+    const template = new Array(days.length).fill().map((element, index) => `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${dayCount + i}</span>
-        <time class="day__date" datetime="${dateStamp}">${dayStamp}</time>
+        <span class="day__counter">${dayCount + index}</span>
+        <time class="day__date" datetime="${dates[index]}">${days[index].toUpperCase()}</time>
       </div>
       <ul class="trip-events__list">
-      ${getEventsTemplate(events, EVENT_COUNT, days[i])}
+      ${getEventsTemplate(events, EVENT_COUNT, days[index])}
       </ul>
-    </li>`);
-    }
+    </li>`).join(` `);
 
-    return template.join(` `);
+    return template;
   };
 
   return templateDays();

@@ -5,21 +5,15 @@ const getOffersTemplate = (offers, offerPrices) => {
     return ``;
   }
 
-  const template = [];
-  for (let i = 0; i < offers.length; i++) {
-    template.push(`<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[i].replace(` `)}" type="checkbox"
+  const template = new Array(offers.length).fill().map((element, index) => `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[index].replace(` `)}" type="checkbox"
           name="event-offer-luggage">
-        <label class="event__offer-label" for="event-offer-${offers[i].replace(` `)}">
-          <span class="event__offer-title">${offers[i]}</span>
+        <label class="event__offer-label" for="event-offer-${offers[index].replace(` `)}">
+          <span class="event__offer-title">${offers[index]}</span>
           &plus;
-          &euro;&nbsp;<span class="event__offer-price">${offerPrices[i]}</span>
+          &euro;&nbsp;<span class="event__offer-price">${offerPrices[index]}</span>
         </label>
-      </div>`
-    );
-  }
-
-  template.join(`,`);
+      </div>`).join(`,`);
 
   return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>

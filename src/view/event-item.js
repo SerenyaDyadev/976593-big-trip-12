@@ -31,19 +31,17 @@ const createOffersTemplates = (offers, offerPrices) => {
 
   offers.sort(() => Math.random() - 0.5);
 
-  const template = [];
   const maxOfferLength = 3;
   const templateLength = offers.length > maxOfferLength ? maxOfferLength : offers.length;
 
-  for (let i = 0; i < templateLength; i++) {
-    template[i] = `<li class="event__offer">
-              <span class="event__offer-title">${offers[i]}</span>
-                          &plus;
-                          &euro;&nbsp;<span class="event__offer-price">${offerPrices[i]}</span>
-            </li>`;
-  }
+  const template = new Array(templateLength).fill().map((element, index) => `<li class="event__offer">
+    <span class="event__offer-title">${offers[index]}</span>
+      &plus;
+      &euro;&nbsp;<span class="event__offer-price">${offerPrices[index]}</span>
+    </li>`
+  ).join(` `);
 
-  return template.join(` `);
+  return template;
 };
 
 export const createEventItem = (event) => {

@@ -6,14 +6,11 @@ import {createTripAddEditEvent} from "./view/event-add-edit.js";
 import {createListDays} from "./view/list-days.js";
 import {createDayItem} from "./view/day-item.js";
 import {generateEvent} from "./mock/event.js";
+import {render} from "./dom-utils.js";
 
 const EVENT_COUNT = 16;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripMainInfoElement = siteHeader.querySelector(`.trip-main`);

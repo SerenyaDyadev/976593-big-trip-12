@@ -1,13 +1,14 @@
+import {getMonthStamp, getDayStamp} from "../date-utils.js";
 export const createTripInfoTemplate = (events) => {
 
   const destinations = new Array(events.length).fill().map((element, index) => events[index].destination).join(`,`).replace(/,/g, ` &mdash; `);
 
   let totalPrice = 0;
-  for (let i = 1; i < events.length; i++) {
+  for (let i = 0; i < events.length; i++) {
     totalPrice += events[i].price;
   }
 
-  const dates = new Array(events.length).fill().map((element, index) => events[index].time[0].toLocaleString(`en-GB`, {month: `short`}).toUpperCase() + ` ` + events[index].time[0].toLocaleString(`en-GB`, {day: `2-digit`})).sort();
+  const dates = new Array(events.length).fill().map((element, index) => getMonthStamp(events[index].time[0]).toUpperCase() + ` ` + getDayStamp(events[index].time[0])).sort();
 
   return (
     `<section class="trip-main__trip-info  trip-info">

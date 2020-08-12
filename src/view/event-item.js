@@ -2,7 +2,7 @@ import {getHoursMinutsStamp, getYearMonthDayStamp, getDurationTemplate} from "..
 
 const createOffersTemplates = (offers, offerPrices, maxOffersLength) => {
 
-  offers.sort(() => Math.random() - 0.5);
+  offers.slice().sort(() => Math.random() - 0.5);
 
   const templateLength = offers.length > maxOffersLength ? maxOffersLength : offers.length;
 

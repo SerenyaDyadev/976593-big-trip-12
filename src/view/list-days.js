@@ -19,14 +19,16 @@ const createDayItems = (events, count) => {
         <time class="day__date" datetime="${dates[index]}">${days[index].toUpperCase()}</time>
       </div>
       <ul class="trip-events__list">
-        ${ getEventsTemplate(events, count, days[index]) }
+        ${getEventsTemplate(events, count, days[index])}
       </ul>
     </li>`).join(`\n`);
 };
 
 const createListDays = (events, count) => {
   return (
-    `<ul class="trip-days"> ${createDayItems(events, count)} </ul>`
+    `<ul class="trip-days">
+      ${createDayItems(events, count)}
+    </ul>`
   );
 };
 

@@ -1,5 +1,7 @@
 import {getMonthStamp, getDayStamp} from "../date-utils.js";
-export const createTripInfoTemplate = (events) => {
+import {createElement} from "../dom-utils.js";
+
+const createTripInfoTemplate = (events) => {
 
   const destinations = new Array(events.length).fill().map((element, index) => events[index].destination).join(`,`).replace(/,/g, ` &mdash; `);
 
@@ -24,3 +26,26 @@ export const createTripInfoTemplate = (events) => {
      </section>`
   );
 };
+
+export default class TripInfo {
+  constructor(events) {
+    this._events = events;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

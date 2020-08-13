@@ -1,5 +1,6 @@
 import {createEventItem} from "./event-item.js";
 import {getDayMonthStamp, getYearMonthDayStamp} from "../date-utils.js";
+import {createElement2} from "../dom-utils.js";
 
 const getEventsTemplate = (events, count, day) => {
 
@@ -22,7 +23,8 @@ const getSortDatesEndDaysForTemplate = (events) => {
   return {days, dates};
 };
 
-export const createDayItem = (events, count) => {
+const createDayItems = (events) => {
+  // console.log(events);
   const {days, dates} = getSortDatesEndDaysForTemplate(events);
 
   return new Array(days.length).fill().map((element, index) =>
@@ -31,8 +33,31 @@ export const createDayItem = (events, count) => {
         <span class="day__counter">${index + 1}</span>
         <time class="day__date" datetime="${dates[index]}">${days[index].toUpperCase()}</time>
       </div>
-      <ul class="trip-events__list">
-        ${getEventsTemplate(events, count, days[index])}
-      </ul>
-    </li>`).join(` `);
+      <ul class="trip-events__list"></ul>
+    </li>`).join(`\n`);
 };
+
+// ${ getEventsTemplate(events, count, days[index]) }
+export default class DayItem {
+  constructor(events) {
+    this._events = events;
+    this._element = null;
+  }
+
+  getTemplate() {
+    // console.log(createDayItems(this._events));
+    return createDayItems(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement2(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

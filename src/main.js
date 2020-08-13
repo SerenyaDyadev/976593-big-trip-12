@@ -4,7 +4,9 @@ import TripFilterView from "./view/trip-filter.js";
 import TripSortView from "./view/trip-sort-events.js";
 import TripEditView from "./view/event-add-edit.js";
 import ListTripDaysView from "./view/list-days.js";
+import EventItemView from "./view/event-item.js";
 import {generateEvent} from "./mock/event.js";
+import {getYearMonthDayStamp} from "./date-utils.js";
 import {render, RenderPosition} from "./dom-utils.js";
 
 const EVENT_COUNT = 16;
@@ -25,5 +27,14 @@ const siteTripEvents = sitePageMain.querySelector(`.trip-events`);
 
 render(siteTripEvents, new TripSortView().getElement(), RenderPosition.BEFOREEND);
 render(siteTripEvents, new TripEditView(events[0]).getElement(), RenderPosition.BEFOREEND);
-render(siteTripEvents, new ListTripDaysView(events, EVENT_COUNT).getElement(), RenderPosition.BEFOREEND);
+render(siteTripEvents, new ListTripDaysView(events).getElement(), RenderPosition.BEFOREEND);
 
+const days = siteTripEvents.querySelectorAll(`.trip-days__item`);
+
+for (let i = 0; i < days.length; i++) {
+  for (let j = 0; j < events .length; j++) {
+    if (days[i].querySelector(`.day__date`).getAttribute(`datetime`) === getYearMonthDayStamp(events[j].time[0])) {
+      render(days[i].querySelector(`.trip-events__list`), new EventItemView(events[j]).getElement(), RenderPosition.BEFOREEND);
+    }
+  }
+}

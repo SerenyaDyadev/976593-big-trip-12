@@ -1,15 +1,14 @@
-import {createEventItem} from "./event-item.js";
 import {createElement} from "../dom-utils.js";
-import {getDayMonthStamp, getSortDatesEndDaysForTemplate} from "../date-utils.js";
+import {getSortDatesEndDaysForTemplate} from "../date-utils.js";
 
-const getEventsTemplate = (events, count, day) => {
+// const getEventsTemplate = (events, count, day) => {
 
-  return new Array(count).fill().map((element, index) => {
-    return day === getDayMonthStamp(events[index].time[0]) ? createEventItem(events[index]) : ``;
-  }).join(` `);
-};
-
-const createDayItems = (events, count) => {
+//   return new Array(count).fill().map((element, index) => {
+//     return day === getDayMonthStamp(events[index].time[0]) ? createEventItem(events[index]) : ``;
+//   }).join(` `);
+// };
+//        ${getEventsTemplate(events, count, days[index])}
+const createDayItems = (events) => {
   const {days, dates} = getSortDatesEndDaysForTemplate(events);
 
   return new Array(days.length).fill().map((element, index) =>
@@ -18,30 +17,27 @@ const createDayItems = (events, count) => {
         <span class="day__counter">${index + 1}</span>
         <time class="day__date" datetime="${dates[index]}">${days[index].toUpperCase()}</time>
       </div>
-      <ul class="trip-events__list">
-        ${getEventsTemplate(events, count, days[index])}
-      </ul>
+      <ul class="trip-events__list"></ul>
     </li>`).join(`\n`);
 };
 
-const createListDays = (events, count) => {
+const createListDays = (events) => {
   return (
     `<ul class="trip-days">
-      ${createDayItems(events, count)}
+      ${createDayItems(events)}
     </ul>`
   );
 };
 
 
 export default class ListTripDays {
-  constructor(events, count) {
+  constructor(events) {
     this._events = events;
-    this._count = count;
     this._element = null;
   }
 
   getTemplate() {
-    return createListDays(this._events, this._count);
+    return createListDays(this._events);
   }
 
   getElement() {

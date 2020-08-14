@@ -5,9 +5,9 @@ import TripSortView from "./view/trip-sort-events.js";
 import TripEditView from "./view/event-add-edit.js";
 import ListTripDaysView from "./view/list-days.js";
 import EventItemView from "./view/event-item.js";
-import { generateEvent } from "./mock/event.js";
-import { getYearMonthDayStamp } from "./date-utils.js";
-import { render, RenderPosition } from "./dom-utils.js";
+import {generateEvent} from "./mock/event.js";
+import {getYearMonthDayStamp} from "./date-utils.js";
+import {render, RenderPosition} from "./dom-utils.js";
 
 const EVENT_COUNT = 16;
 

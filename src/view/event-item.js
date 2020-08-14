@@ -1,3 +1,4 @@
+import {createElement} from "../dom-utils.js";
 import {getHoursMinutsStamp, getYearMonthDayStamp, getDurationTemplate} from "../date-utils.js";
 
 const createOffersTemplates = (offers, offerPrices, maxOffersLength) => {
@@ -15,7 +16,7 @@ const createOffersTemplates = (offers, offerPrices, maxOffersLength) => {
   ).join(` `);
 };
 
-export const createEventItem = (event) => {
+const createEventItem = (event) => {
   const maxOffersLength = 3;
   const {eventType, destination, time, duration, price, offers, offerPrices} = event;
   const [startTime, endTime] = time;
@@ -52,3 +53,26 @@ export const createEventItem = (event) => {
     </li>`
   );
 };
+
+export default class EventItem {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventItem(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

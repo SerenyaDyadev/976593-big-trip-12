@@ -1,4 +1,17 @@
 import {getFullDateForTeplate} from "../date-utils.js";
+import {createElement} from "../dom-utils.js";
+
+const BLANK_EVENT = {
+  eventType: ` `,
+  destination: ` `,
+  offers: [],
+  offerPrices: [],
+  time: [`00-00`, `00-00`],
+  price: 0,
+  description: ``,
+  photoPlace: `http://picsum.photos/248/152?r=${Math.random()}`
+};
+
 
 const getOffers = (offers, offerPrices) => {
 
@@ -28,17 +41,16 @@ const getOffersTemplate = (offers, offerPrices) => {
   );
 };
 
-export const createTripAddEditEvent = (event = {}) => {
-
+const createTripAddEditEvent = (event) => {
   const {
-    typeEvent = ` `,
-    destination = ` `,
-    offers = [],
-    offerPrices = [],
-    time = [`00-00`, `00-00`],
-    price = 0,
-    description = ``,
-    photoPlace = `http://picsum.photos/248/152?r=${Math.random()}`
+    eventType,
+    destination,
+    offers,
+    offerPrices,
+    time,
+    price,
+    description,
+    photoPlace
   } = event;
 
   let [startTime, endTime] = time;
@@ -115,7 +127,7 @@ export const createTripAddEditEvent = (event = {}) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${typeEvent} to
+              ${eventType} to
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
             <datalist id="destination-list-1">
@@ -164,3 +176,26 @@ export const createTripAddEditEvent = (event = {}) => {
           </form>`
   );
 };
+
+export default class TripEdit {
+  constructor(event = BLANK_EVENT) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripAddEditEvent(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -5,6 +5,7 @@ import TripSortView from "./view/trip-sort-events.js";
 import TripEditView from "./view/event-add-edit.js";
 import ListTripDaysView from "./view/list-days.js";
 import EventItemView from "./view/event-item.js";
+import NoEventView from "./view/no-event.js";
 import {generateEvent} from "./mock/event.js";
 import {getYearMonthDayStamp} from "./date-utils.js";
 import {render, RenderPosition} from "./dom-utils.js";
@@ -14,7 +15,6 @@ const EVENT_COUNT = 16;
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const siteHeader = document.querySelector(`.page-header`);
-
 const siteTripMainInfoElement = siteHeader.querySelector(`.trip-main`);
 render(siteTripMainInfoElement, new TripInfoView(events).getElement(), RenderPosition.AFTERBEGIN);
 
@@ -26,7 +26,6 @@ const sitePageMain = document.querySelector(`.page-main`);
 const siteTripEvents = sitePageMain.querySelector(`.trip-events`);
 
 render(siteTripEvents, new TripSortView().getElement(), RenderPosition.BEFOREEND);
-render(siteTripEvents, new ListTripDaysView(events).getElement(), RenderPosition.BEFOREEND);
 
 const renderEvent = (eventListElement, event) => {
   const eventComponent = new EventItemView(event);
@@ -40,24 +39,44 @@ const renderEvent = (eventListElement, event) => {
     eventListElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
   };
 
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   eventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
     replaceCardToForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   eventEditComponent.getElement().addEventListener(`submit`, (evt) => {
     evt.preventDefault();
     replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(eventListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const days = siteTripEvents.querySelectorAll(`.trip-days__item`);
+const renderListEvents = (listContainer, listEvents) => {
+  if (listEvents.length === 0) {
+    render(listContainer, new NoEventView().getElement(), RenderPosition.BEFOREEND);
+  } else {
+    render(listContainer, new ListTripDaysView(listEvents).getElement(), RenderPosition.BEFOREEND);
 
-for (let i = 0; i < days.length; i++) {
-  for (let j = 0; j < events.length; j++) {
-    if (days[i].querySelector(`.day__date`).getAttribute(`datetime`) === getYearMonthDayStamp(events[j].time[0])) {
-      renderEvent(days[i].querySelector(`.trip-events__list`), events[j]);
+    const days = listContainer.querySelectorAll(`.trip-days__item`);
+
+    for (let i = 0; i < days.length; i++) {
+      for (let j = 0; j < listEvents.length; j++) {
+        if (days[i].querySelector(`.day__date`).getAttribute(`datetime`) === getYearMonthDayStamp(listEvents[j].time[0])) {
+          renderEvent(days[i].querySelector(`.trip-events__list`), listEvents[j]);
+        }
+      }
     }
   }
-}
+};
+
+renderListEvents(siteTripEvents, events);

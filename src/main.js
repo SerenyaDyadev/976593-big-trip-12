@@ -11,7 +11,7 @@ import {generateEvent} from "./mock/event.js";
 import {getYearMonthDayStamp} from "./date-utils.js";
 import {render, RenderPosition} from "./dom-utils.js";
 
-const EVENT_COUNT = 16;
+const EVENT_COUNT = 3;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
@@ -25,8 +25,6 @@ render(siteTripControlsElement, new TripFilterView().getElement(), RenderPositio
 
 const sitePageMain = document.querySelector(`.page-main`);
 const siteTripEvents = sitePageMain.querySelector(`.trip-events`);
-
-render(siteTripEvents, new TripSortView().getElement(), RenderPosition.BEFOREEND);
 
 const renderEvent = (eventListElement, event) => {
   const eventComponent = new EventItemView(event);
@@ -65,11 +63,19 @@ const renderEvent = (eventListElement, event) => {
 const renderListEvents = (listContainer, listEvents) => {
   if (listEvents.length === 0) {
     render(listContainer, new NoEventView().getElement(), RenderPosition.BEFOREEND);
-  } else {
-    render(listContainer, new TripListView().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+  render(siteTripEvents, new TripSortView().getElement(), RenderPosition.BEFOREEND);
+
+  render(listContainer, new TripListView().getElement(), RenderPosition.BEFOREEND);
     console.log(new TripListView().getElement());
 
-    render(new TripListView().getElement(), new DayItemView(listEvents[0]).getElement(), RenderPosition.BEFOREEND);
+    // const test = listContainer.querySelector(`.trip-days`);
+    // console.log(test);
+
+
+
+  render(listContainer.insertAdjacentHTML(`beforeend`), new DayItemView(listEvents).getElement(), RenderPosition.BEFOREEND);
 
 
     /*
@@ -82,7 +88,6 @@ const renderListEvents = (listContainer, listEvents) => {
         }
       }
     }*/
-  }
 };
 
 renderListEvents(siteTripEvents, events);

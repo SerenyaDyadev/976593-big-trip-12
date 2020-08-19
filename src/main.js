@@ -3,7 +3,8 @@ import TripControlView from "./view/trip-controls.js";
 import TripFilterView from "./view/trip-filter.js";
 import TripSortView from "./view/trip-sort-events.js";
 import TripEditView from "./view/event-add-edit.js";
-import ListTripDaysView from "./view/list-days.js";
+import TripListView from "./view/trip-list.js";
+import DayItemView from "./view/day-item.js";
 import EventItemView from "./view/event-item.js";
 import NoEventView from "./view/no-event.js";
 import {generateEvent} from "./mock/event.js";
@@ -65,8 +66,13 @@ const renderListEvents = (listContainer, listEvents) => {
   if (listEvents.length === 0) {
     render(listContainer, new NoEventView().getElement(), RenderPosition.BEFOREEND);
   } else {
-    render(listContainer, new ListTripDaysView(listEvents).getElement(), RenderPosition.BEFOREEND);
+    render(listContainer, new TripListView().getElement(), RenderPosition.BEFOREEND);
+    console.log(new TripListView().getElement());
 
+    render(new TripListView().getElement(), new DayItemView(listEvents[0]).getElement(), RenderPosition.BEFOREEND);
+
+
+    /*
     const days = listContainer.querySelectorAll(`.trip-days__item`);
 
     for (let i = 0; i < days.length; i++) {
@@ -75,7 +81,7 @@ const renderListEvents = (listContainer, listEvents) => {
           renderEvent(days[i].querySelector(`.trip-events__list`), listEvents[j]);
         }
       }
-    }
+    }*/
   }
 };
 

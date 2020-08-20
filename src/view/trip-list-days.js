@@ -1,4 +1,4 @@
-import {createElement2} from "../dom-utils.js";
+import {createElement} from "../dom-utils.js";
 import {getSortDatesEndDaysForTemplate} from "../date-utils.js";
 
 const createDayItems = (events) => {
@@ -14,24 +14,24 @@ const createDayItems = (events) => {
     </li>`).join(`\n`);
 };
 
-const createListDays = (events) => {
-  return `<ul>${createDayItems(events)}</ul>`;
+const createTripListDays = (events) => {
+  return `<ul class="trip-days">${createDayItems(events)}</ul>`;
 };
 
-export default class ListDays {
+
+export default class TripListDays {
   constructor(events) {
     this._events = events;
     this._element = null;
   }
 
   getTemplate() {
-
-    return createListDays(this._events);
+    return createTripListDays(this._events);
   }
 
   getElement() {
     if (!this._element) {
-      this._element = createElement2(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

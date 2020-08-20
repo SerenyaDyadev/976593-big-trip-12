@@ -3,17 +3,25 @@ import TripControlView from "./view/trip-controls.js";
 import TripFilterView from "./view/trip-filter.js";
 import TripSortView from "./view/trip-sort-events.js";
 import TripEditView from "./view/event-add-edit.js";
-import TripListView from "./view/trip-list.js";
-import ListDaysView from "./view/list-days.js";
+import TripListDaysView from "./view/trip-list-days.js";
+// import ListDaysView from "./view/list-days.js";
 import EventItemView from "./view/event-item.js";
 import NoEventView from "./view/no-event.js";
 import {generateEvent} from "./mock/event.js";
 import {getYearMonthDayStamp} from "./date-utils.js";
 import {render, RenderPosition} from "./dom-utils.js";
 
-const EVENT_COUNT = 5;
+const EVENT_COUNT = 20;
 
-const events = new Array(EVENT_COUNT).fill().map(generateEvent);
+const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((event1, event2) => {
+  if (event1.time[0] > event2.time[0]) {
+    return 1;
+  } else if (event1.time[0] < event2.time[0]) {
+    return -1;
+  } else {
+    return 0;
+  }
+});
 
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripMainInfoElement = siteHeader.querySelector(`.trip-main`);
@@ -65,34 +73,22 @@ const renderListEvents = (listContainer, listEvents) => {
     render(listContainer, new NoEventView().getElement(), RenderPosition.BEFOREEND);
     return;
   }
+
   render(siteTripEvents, new TripSortView().getElement(), RenderPosition.BEFOREEND);
-
-  render(listContainer, new TripListView().getElement(), RenderPosition.BEFOREEND);
-
-  render(listContainer.lastChild, new ListDaysView(listEvents).getElement(), RenderPosition.BEFOREEND);
-
-
-  /*
-  const sorted = listEvents.slice().sort((event1, event2) => {
-    if (event1.date.start > event2.date.start) return 1;
-    if (event1.date.start < event2.date.start) return -1;
-    return 0;
-  });
-
-  console.log(sorted);
+  render(listContainer, new TripListDaysView(listEvents).getElement(), RenderPosition.BEFOREEND);
 
   const eventsByDays = new Map();
 
   for (let event of listEvents) {
     const date = getYearMonthDayStamp(event.time[0]);
+    // console.log(date);
     const day = eventsByDays.get(date);
+    // console.log(day);
 
     if (day) {
       day.push(event);
     } else {
-
-      eventsByDays.set(date, Array.of(renderEvent(event)));
-      // eventsByDays.set(date, Array.of(event));
+      eventsByDays.set(date, Array.of());
     }
   }
 
@@ -101,6 +97,7 @@ const renderListEvents = (listContainer, listEvents) => {
   // for (let eventsInDay of eventsByDays.values()) {
   // render(listContainer.lastChild, new DayItemView(eventsInDay).getElement(), RenderPosition.BEFOREEND);
   // }
+  console.log(listContainer.lastChild.lastChild);
 
 
 //  render(listContainer.lastChild, new DayItemView(listEvents).getElement(), RenderPosition.BEFOREEND);

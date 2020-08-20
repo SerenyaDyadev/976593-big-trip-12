@@ -4,7 +4,7 @@ import TripFilterView from "./view/trip-filter.js";
 import TripSortView from "./view/trip-sort-events.js";
 import TripEditView from "./view/event-add-edit.js";
 import TripListView from "./view/trip-list.js";
-import DayItemView from "./view/day-item.js";
+import ListDaysView from "./view/list-days.js";
 import EventItemView from "./view/event-item.js";
 import NoEventView from "./view/no-event.js";
 import {generateEvent} from "./mock/event.js";
@@ -69,6 +69,10 @@ const renderListEvents = (listContainer, listEvents) => {
 
   render(listContainer, new TripListView().getElement(), RenderPosition.BEFOREEND);
 
+  render(listContainer.lastChild, new ListDaysView(listEvents).getElement(), RenderPosition.BEFOREEND);
+
+
+  /*
   const sorted = listEvents.slice().sort((event1, event2) => {
     if (event1.date.start > event2.date.start) return 1;
     if (event1.date.start < event2.date.start) return -1;
@@ -95,7 +99,7 @@ const renderListEvents = (listContainer, listEvents) => {
   console.log(eventsByDays.values());
 
   // for (let eventsInDay of eventsByDays.values()) {
-  render(listContainer.lastChild, new DayItemView(eventsInDay).getElement(), RenderPosition.BEFOREEND);
+  // render(listContainer.lastChild, new DayItemView(eventsInDay).getElement(), RenderPosition.BEFOREEND);
   // }
 
 

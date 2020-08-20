@@ -29,7 +29,7 @@ const events = [{
 const eventsList = document.querySelector(`.events-list`);
 
 const renderDay = (dayEvents) => {
-  if (dayEvents.length == 0) {
+  if (dayEvents.length === 0) {
     return ``;
   }
 

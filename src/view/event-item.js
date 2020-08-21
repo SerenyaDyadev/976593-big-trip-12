@@ -55,9 +55,9 @@ const createEventItem = (event) => {
 };
 
 export default class EventItem extends AbstractView {
-  constructor(_event) {
+  constructor(event) {
     super();
-    this._event = _event;
+    this._event = event;
 
     this._editClickHandler = this._editClickHandler.bind(this);
   }

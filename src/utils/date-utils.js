@@ -48,16 +48,3 @@ export const getDurationTemplate = (minutesDuration) => {
 
   return (days + hours + mins);
 };
-
-export const getSortDatesEndDaysForTemplate11 = (events) => {
-  const daysForTemplate = {};
-  for (let i = 0; i < events.length; i++) {
-    let key = getDayMonthStamp(events[i].time[0]);
-    daysForTemplate[key] = getYearMonthDayStamp(events[i].time[0]);
-  }
-
-  const days = Object.keys(daysForTemplate).sort();
-  const dates = Object.values(daysForTemplate).sort();
-
-  return {days, dates};
-};

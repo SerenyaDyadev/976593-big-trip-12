@@ -1,4 +1,4 @@
-import {createElement} from "../dom-utils.js";
+import AbstractView from "./abstract.js";
 
 const createTripControlsTemplate = () => {
   return (
@@ -9,24 +9,8 @@ const createTripControlsTemplate = () => {
   );
 };
 
-export default class Control {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Control extends AbstractView {
   getTemplate() {
     return createTripControlsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

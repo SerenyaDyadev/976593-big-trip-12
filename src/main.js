@@ -8,7 +8,7 @@ import DayView from "./view/day.js";
 import EventItemView from "./view/event-item.js";
 import AddEditView from "./view/add-edit-event.js";
 import {generateEvent} from "./mock/event.js";
-import {render, RenderPosition} from "./dom-utils.js";
+import {render, RenderPosition} from "./utils/dom-utils.js";
 
 const EVENT_COUNT = 17;
 

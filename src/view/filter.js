@@ -23,7 +23,7 @@ const createTripFilterTemplate = () => {
   );
 };
 
-export default class TripFilter {
+export default class Filter {
   constructor() {
     this._element = null;
   }

@@ -177,7 +177,7 @@ const createTripAddEditEvent = (event) => {
   );
 };
 
-export default class TripEdit {
+export default class AddEdit {
   constructor(event = BLANK_EVENT) {
     this._event = event;
     this._element = null;

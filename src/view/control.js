@@ -9,7 +9,7 @@ const createTripControlsTemplate = () => {
   );
 };
 
-export default class TripControls {
+export default class Control {
   constructor() {
     this._element = null;
   }

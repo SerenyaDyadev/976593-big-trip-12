@@ -1,21 +1,16 @@
-import TripInfoView from "./view/trip-info.js";
-import TripControlView from "./view/trip-controls.js";
-import TripFilterView from "./view/trip-filter.js";
-import TripSortView from "./view/trip-sort-events.js";
-import TripEditView from "./view/event-add-edit.js";
-import TripListDaysView from "./view/trip-list-days.js";
-import ListEventsView from "./view/list-events.js";
-import DayItemView from "./view/day-item.js";
-// import ListDaysView from "./view/list-days.js";
-import ListDaysView from "./view/list-day2.js";
-
-import EventItemView from "./view/event-item.js";
+import InfoView from "./view/info.js";
+import ControlView from "./view/control.js";
+import FilterView from "./view/filter.js";
+import SortView from "./view/sort.js";
 import NoEventView from "./view/no-event.js";
+import ListDaysView from "./view/list-days.js";
+import DayView from "./view/day.js";
+import EventItemView from "./view/event-item.js";
+import AddEditView from "./view/add-edit-event.js";
 import {generateEvent} from "./mock/event.js";
-import {getYearMonthDayStamp} from "./date-utils.js";
 import {render, RenderPosition} from "./dom-utils.js";
 
-const EVENT_COUNT = 5;
+const EVENT_COUNT = 17;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((event1, event2) => {
   if (event1.time[0] > event2.time[0]) {
@@ -29,18 +24,18 @@ const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((event1, ev
 
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripMainInfoElement = siteHeader.querySelector(`.trip-main`);
-render(siteTripMainInfoElement, new TripInfoView(events).getElement(), RenderPosition.AFTERBEGIN);
+render(siteTripMainInfoElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
 
 const siteTripControlsElement = siteHeader.querySelector(`.trip-main__trip-controls`);
-render(siteTripControlsElement, new TripControlView().getElement(), RenderPosition.BEFOREEND);
-render(siteTripControlsElement, new TripFilterView().getElement(), RenderPosition.BEFOREEND);
+render(siteTripControlsElement, new ControlView().getElement());
+render(siteTripControlsElement, new FilterView().getElement());
 
 
 const siteTripEvents = document.querySelector(`.trip-events`);
 
 const renderEvent = (eventListElement, event) => {
   const eventComponent = new EventItemView(event);
-  const eventEditComponent = new TripEditView(event);
+  const eventEditComponent = new AddEditView(event);
 
   const replaceCardToForm = () => {
     eventListElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
@@ -74,57 +69,33 @@ const renderEvent = (eventListElement, event) => {
 
 const renderListEvents = (listContainer, listEvents) => {
   if (listEvents.length === 0) {
-    render(listContainer, new NoEventView().getElement(), RenderPosition.BEFOREEND);
+    render(listContainer, new NoEventView().getElement());
     return;
   }
 
-  render(siteTripEvents, new TripSortView().getElement(), RenderPosition.BEFOREEND);
+  render(siteTripEvents, new SortView().getElement());
 
+  const daysList = new ListDaysView();
+  render(listContainer, daysList.getElement());
 
-  render(siteTripEvents, new ListDaysView().getElement(), RenderPosition.BEFOREEND);
-
-
-  // render(siteTripEvents, new ListDaysView(listEvents).getElement(), RenderPosition.BEFOREEND);
-
-  // render(listContainer, new TripListDaysView(listEvents).getElement(), RenderPosition.BEFOREEND);
-
-  const eventsByDays = new Map();
+  let dayNumber = 1;
+  let dayDate = null;
+  let dayView = null;
 
   for (let event of listEvents) {
-    const date = getYearMonthDayStamp(event.time[0]);
-    const day = eventsByDays.get(date);
-
-    if (day) {
-      day.push(event);
+    const eventDayDate = event.time[0].getDate();
+    if (dayDate === eventDayDate) {
+      renderEvent(dayView.getEventsList(), event);
     } else {
-      eventsByDays.set(date, Array.of(event));
+      dayView = new DayView(event.time[0], dayNumber);
+
+      render(daysList.getElement(), dayView.getElement());
+      renderEvent(dayView.getEventsList(), event);
+
+      dayNumber++;
+      dayDate = eventDayDate;
     }
   }
-
-  console.log(listContainer.childNodes[8]);
-  console.log(listContainer.lastChild);
-
-  console.log(eventsByDays.keys());
-  console.log(eventsByDays.values());
-
-  for (let eventsInDay of eventsByDays.keys()) {
-    const index = 1
-    console.log(eventsInDay);
-    // console.log(eventsInDay.values());
-
-    // render(listContainer.lastChild, new DayItemView(eventsInDay).getElement(), RenderPosition.BEFOREEND);
-  }
-
-    /*
-    const days = listContainer.querySelectorAll(`.trip-days__item`);
-
-    for (let i = 0; i < days.length; i++) {
-      for (let j = 0; j < listEvents.length; j++) {
-        if (days[i].querySelector(`.day__date`).getAttribute(`datetime`) === getYearMonthDayStamp(listEvents[j].time[0])) {
-          renderEvent(days[i].querySelector(`.trip-events__list`), listEvents[j]);
-        }
-      }
-    }*/
 };
 
 renderListEvents(siteTripEvents, events);

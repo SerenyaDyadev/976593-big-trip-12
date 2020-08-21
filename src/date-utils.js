@@ -49,7 +49,7 @@ export const getDurationTemplate = (minutesDuration) => {
   return (days + hours + mins);
 };
 
-export const getSortDatesEndDaysForTemplate = (events) => {
+export const getSortDatesEndDaysForTemplate11 = (events) => {
   const daysForTemplate = {};
   for (let i = 0; i < events.length; i++) {
     let key = getDayMonthStamp(events[i].time[0]);

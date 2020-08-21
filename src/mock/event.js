@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomElement} from "../utils/date-utils.js";
+import {getRandomInteger, getRandomElement} from "../utils/common.js";
 import {EVENT_TYPES, DESTINATIONS, DESCRIPTIONS, OFFER_LIST} from "../const.js";
 
 const getTimeStamp = (maxMinutsGap, maxDaysGap) => {

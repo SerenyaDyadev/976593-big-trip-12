@@ -1,4 +1,4 @@
-import {createElement2} from "../dom-utils.js";
+import {createElement} from "../dom-utils.js";
 import {getSortDatesEndDaysForTemplate} from "../date-utils.js";
 
 const createDayItems = (events) => {
@@ -31,7 +31,7 @@ export default class ListDays {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement2(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

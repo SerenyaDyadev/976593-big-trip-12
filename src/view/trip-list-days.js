@@ -10,7 +10,6 @@ const createDayItems = (events) => {
         <span class="day__counter">${index + 1}</span>
         <time class="day__date" datetime="${dates[index]}">${days[index].toUpperCase()}</time>
       </div>
-      <ul class="trip-events__list"></ul>
     </li>`).join(`\n`);
 };
 

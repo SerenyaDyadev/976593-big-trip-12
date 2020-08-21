@@ -41,6 +41,14 @@ export default class Trip {
       replace(eventComponent, eventEditComponent);
     };
 
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        evt.preventDefault();
+        replaceFormToCard();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
     eventComponent.setEditClickHandler(() => {
       replaceCardToForm();
       document.addEventListener(`keydown`, onEscKeyDown);

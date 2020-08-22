@@ -1,7 +1,7 @@
 import AbstractView from "./abstract.js";
 import {getYearMonthDayStamp, getDayMonthStamp} from "../utils/date-utils.js";
 
-const createDayItem = (date, index) => {
+const createDayTemplate = (date, index) => {
   const dateStamp = getYearMonthDayStamp(date);
   const dayStamp = getDayMonthStamp(date).toUpperCase();
 
@@ -24,7 +24,7 @@ export default class Day extends AbstractView {
   }
 
   getTemplate() {
-    return createDayItem(this._date, this._index);
+    return createDayTemplate(this._date, this._index);
   }
 
   getEventsList() {

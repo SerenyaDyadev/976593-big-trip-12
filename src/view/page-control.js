@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 
-const createTripControlsTemplate = () => {
+const createPageControlTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
       <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
@@ -9,8 +9,8 @@ const createTripControlsTemplate = () => {
   );
 };
 
-export default class Control extends AbstractView {
+export default class PageControl extends AbstractView {
   getTemplate() {
-    return createTripControlsTemplate();
+    return createPageControlTemplate();
   }
 }

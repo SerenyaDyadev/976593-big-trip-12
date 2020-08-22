@@ -1,7 +1,7 @@
 import AbstractView from "./abstract.js";
 import {getMonthStamp, getDayStamp} from "../utils/date-utils.js";
 
-const createTripInfoTemplate = (events) => {
+const createInfoTemplate = (events) => {
 
   if (events.length === 0) {
     return (
@@ -44,6 +44,6 @@ export default class Info extends AbstractView {
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._events);
+    return createInfoTemplate(this._events);
   }
 }

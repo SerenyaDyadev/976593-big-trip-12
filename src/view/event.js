@@ -54,7 +54,7 @@ const createEventItem = (event) => {
   );
 };
 
-export default class EventItem extends AbstractView {
+export default class Event extends AbstractView {
   constructor(event) {
     super();
     this._event = event;

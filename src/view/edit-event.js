@@ -41,7 +41,7 @@ const getOffersTemplate = (offers, offerPrices) => {
   );
 };
 
-const createTripAddEditEvent = (event) => {
+const createEditEventTemplate = (event) => {
   const {
     eventType,
     destination,
@@ -186,7 +186,7 @@ export default class AddEdit extends AbstractView {
   }
 
   getTemplate() {
-    return createTripAddEditEvent(this.event);
+    return createEditEventTemplate(this.event);
   }
 
   _formSubmitHandler(evt) {

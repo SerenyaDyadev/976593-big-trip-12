@@ -1,9 +1,9 @@
 import SortView from "../view/sort.js";
-import NoEventView from "../view/no-event.js";
-import ListDaysView from "../view/list-days.js";
+import NoEventView from "../view/no-events.js";
+import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
-import EventItemView from "../view/event-item.js";
-import AddEditView from "../view/add-edit-event.js";
+import EventView from "../view/event.js";
+import EventEditView from "../view/edit-event.js";
 import {render, replace} from "../utils/dom-utils.js";
 
 export default class Trip {
@@ -11,7 +11,7 @@ export default class Trip {
     this._listContainer = listContainer;
 
     this._sortComponent = new SortView();
-    this._listDaysComponent = new ListDaysView();
+    this._listDaysComponent = new TripDaysView();
     this._noEventComponent = new NoEventView();
   }
 
@@ -30,8 +30,8 @@ export default class Trip {
   }
 
   _renderEvent(eventListElement, event) {
-    const eventComponent = new EventItemView(event);
-    const eventEditComponent = new AddEditView(event);
+    const eventComponent = new EventView(event);
+    const eventEditComponent = new EventEditView(event);
 
     const replaceCardToForm = () => {
       replace(eventEditComponent, eventComponent);

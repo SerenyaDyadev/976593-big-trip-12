@@ -1,5 +1,5 @@
-import {createElement} from "../dom-utils.js";
-import {getYearMonthDayStamp, getDayMonthStamp} from "../date-utils";
+import AbstractView from "./abstract.js";
+import {getYearMonthDayStamp, getDayMonthStamp} from "../utils/date-utils.js";
 
 const createDayItem = (date, index) => {
   const dateStamp = getYearMonthDayStamp(date);
@@ -16,30 +16,18 @@ const createDayItem = (date, index) => {
   );
 };
 
-export default class Day {
+export default class Day extends AbstractView {
   constructor(date, index) {
+    super();
     this._date = date;
     this._index = index;
-    this._element = null;
   }
 
   getTemplate() {
     return createDayItem(this._date, this._index);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
   getEventsList() {
     return this.getElement().querySelector(`.trip-events__list`);
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

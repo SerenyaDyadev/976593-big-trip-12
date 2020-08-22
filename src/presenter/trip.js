@@ -4,7 +4,7 @@ import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
 import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
-import {render, replace} from "../utils/dom-utils.js";
+import {render, replace, escDown} from "../utils/dom-utils.js";
 
 export default class Trip {
   constructor(listContainer) {
@@ -42,7 +42,7 @@ export default class Trip {
     };
 
     const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
+      if (escDown(evt.key)) {
         evt.preventDefault();
         replaceFormToCard();
         document.removeEventListener(`keydown`, onEscKeyDown);

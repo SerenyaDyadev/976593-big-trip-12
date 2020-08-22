@@ -65,3 +65,7 @@ export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
+
+export const escDown = (event) => {
+  return event === `Escape` || event === `Esc`;
+};

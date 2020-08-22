@@ -35,7 +35,7 @@ const createTripSortEventsTemplate = () => {
   );
 };
 
-export default class TripSort {
+export default class Sort {
   constructor() {
     this._element = null;
   }

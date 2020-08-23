@@ -1,7 +1,7 @@
-import {getMonthStamp, getDayStamp} from "../date-utils.js";
-import {createElement} from "../dom-utils.js";
+import AbstractView from "./abstract.js";
+import {getMonthStamp, getDayStamp} from "../utils/date-utils.js";
 
-const createTripInfoTemplate = (events) => {
+const createInfoTemplate = (events) => {
 
   if (events.length === 0) {
     return (
@@ -37,25 +37,13 @@ const createTripInfoTemplate = (events) => {
   }
 };
 
-export default class Info {
+export default class Info extends AbstractView {
   constructor(events) {
+    super();
     this._events = events;
-    this._element = null;
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return createInfoTemplate(this._events);
   }
 }

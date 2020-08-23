@@ -1,5 +1,5 @@
-import {createElement} from "../dom-utils.js";
-import {getHoursMinutsStamp, getYearMonthDayStamp, getDurationTemplate} from "../date-utils.js";
+import AbstractView from "./abstract.js";
+import {getHoursMinutsStamp, getYearMonthDayStamp, getDurationTemplate} from "../utils/date-utils.js";
 
 const createOffersTemplates = (offers, offerPrices, maxOffersLength) => {
 
@@ -54,25 +54,25 @@ const createEventItem = (event) => {
   );
 };
 
-export default class EventItem {
+export default class Event extends AbstractView {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEventItem(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }

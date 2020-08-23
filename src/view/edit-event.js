@@ -1,5 +1,5 @@
-import {getFullDateForTeplate} from "../date-utils.js";
-import {createElement} from "../dom-utils.js";
+import AbstractView from "./abstract.js";
+import {getFullDateForTeplate} from "../utils/date-utils.js";
 
 const BLANK_EVENT = {
   eventType: ` `,
@@ -41,7 +41,7 @@ const getOffersTemplate = (offers, offerPrices) => {
   );
 };
 
-const createTripAddEditEvent = (event) => {
+const createEditEventTemplate = (event) => {
   const {
     eventType,
     destination,
@@ -177,25 +177,25 @@ const createTripAddEditEvent = (event) => {
   );
 };
 
-export default class AddEdit {
+export default class AddEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
-    this._event = event;
-    this._element = null;
+    super();
+
+    this.event = event;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
-    return createTripAddEditEvent(this._event);
+    return createEditEventTemplate(this.event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 }

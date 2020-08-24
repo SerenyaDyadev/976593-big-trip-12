@@ -5,24 +5,56 @@ import DayView from "../view/day.js";
 import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
 import {render, replace, escDown} from "../utils/dom-utils.js";
+import {sortTime, sortPrice} from "../utils/date-utils.js";
+import {SortType} from "../const.js";
 
 export default class Trip {
   constructor(listContainer) {
     this._listContainer = listContainer;
+    this._currentSortType = SortType.EVENT;
 
     this._sortComponent = new SortView();
     this._listDaysComponent = new TripDaysView();
     this._noEventComponent = new NoEventView();
+
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(listEvents) {
     this._listEvents = listEvents.slice();
+    this._sourcedListEvents = listEvents.slice();
 
+    this._renderListEvents();
+  }
+
+  _sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.TIME:
+        this._listEvents.sort(sortTime);
+        break;
+      case SortType.PRICE:
+        this._listEvents.sort(sortPrice);
+        break;
+      default:
+        this._listEvents = this._sourcedListEvents.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortEvents(sortType);
+    this._clearListEvents();
     this._renderListEvents();
   }
 
   _renderSort() {
     render(this._listContainer, this._sortComponent);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderNoTasks() {
@@ -94,5 +126,10 @@ export default class Trip {
         dayDate = eventDayDate;
       }
     }
+  }
+
+  _clearListEvents() {
+    // console.log(`clear`);
+    this._listDaysComponent.getElement().innerHTML = ``;
   }
 }

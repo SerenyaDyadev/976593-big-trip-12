@@ -26,3 +26,9 @@ export const OFFER_LIST = {
   Sightseeing: [],
   Restaurant: [`Two persons`, `Dinner`]
 };
+
+export const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};

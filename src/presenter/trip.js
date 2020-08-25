@@ -7,7 +7,6 @@ import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
 import {render, replace, escDown} from "../utils/dom-utils.js";
 import {sortByTime, sortByPrice} from "../utils/date-utils.js";
-// import {SortType} from "../const.js";
 
 export default class Trip {
   constructor(listContainer) {

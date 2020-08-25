@@ -3,9 +3,8 @@ import {SortType} from "../view/sort.js";
 import NoEventView from "../view/no-events.js";
 import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
-import EventView from "../view/event.js";
-import EventEditView from "../view/edit-event.js";
-import {render, replace, escDown} from "../utils/dom-utils.js";
+import EventPresenter from "./event.js";
+import {render} from "../utils/dom-utils.js";
 import {sortByTime, sortByPrice} from "../utils/date-utils.js";
 
 export default class Trip {
@@ -62,36 +61,8 @@ export default class Trip {
   }
 
   _renderEvent(eventListElement, event) {
-    const eventComponent = new EventView(event);
-    const eventEditComponent = new EventEditView(event);
-
-    const replaceCardToForm = () => {
-      replace(eventEditComponent, eventComponent);
-    };
-
-    const replaceFormToCard = () => {
-      replace(eventComponent, eventEditComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (escDown(evt.key)) {
-        evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    eventComponent.setEditClickHandler(() => {
-      replaceCardToForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    eventEditComponent.setFormSubmitHandler(() => {
-      replaceFormToCard();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(eventListElement, eventComponent);
+    const eventPresenter = new EventPresenter(eventListElement);
+    eventPresenter.init(event);
   }
 
   _renderDay(dayView) {

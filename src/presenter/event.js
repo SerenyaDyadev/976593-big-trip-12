@@ -4,14 +4,14 @@ import {render, replace, escDown} from "../utils/dom-utils.js";
 
 export default class Event {
   constructor(eventListElement) {
-    this._eventListElement = eventListElement;
+    this._eventListContainer = eventListElement;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   init(event) {
@@ -23,17 +23,17 @@ export default class Event {
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
-    render(this._eventListElement, this._event);
+    render(this._eventListContainer, this._eventComponent);
   }
 
   _replaceCardToForm() {
     replace(this._eventEditComponent, this._eventComponent);
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _replaceFormToCard() {
     replace(this._eventComponent, this._eventEditComponent);
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _onEscKeyDown(evt) {

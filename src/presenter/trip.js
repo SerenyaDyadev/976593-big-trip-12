@@ -1,12 +1,13 @@
 import SortView from "../view/sort.js";
+import {SortType} from "../view/sort.js";
 import NoEventView from "../view/no-events.js";
 import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
 import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
 import {render, replace, escDown} from "../utils/dom-utils.js";
-import {sortTime, sortPrice} from "../utils/date-utils.js";
-import {SortType} from "../const.js";
+import {sortByTime, sortByPrice} from "../utils/date-utils.js";
+// import {SortType} from "../const.js";
 
 export default class Trip {
   constructor(listContainer) {
@@ -30,10 +31,10 @@ export default class Trip {
   _sortEvents(sortType) {
     switch (sortType) {
       case SortType.TIME:
-        this._listEvents.sort(sortTime);
+        this._listEvents.sort(sortByTime);
         break;
       case SortType.PRICE:
-        this._listEvents.sort(sortPrice);
+        this._listEvents.sort(sortByPrice);
         break;
       default:
         this._listEvents = this._sourcedListEvents.slice();
@@ -129,7 +130,6 @@ export default class Trip {
   }
 
   _clearListEvents() {
-    // console.log(`clear`);
     this._listDaysComponent.getElement().innerHTML = ``;
   }
 }

@@ -1,5 +1,10 @@
 import AbstractView from "./abstract.js";
-import {SortType} from "../const.js";
+
+export const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};
 
 const createSortTemplate = () => {
   return (

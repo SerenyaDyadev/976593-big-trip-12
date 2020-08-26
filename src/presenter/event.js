@@ -1,10 +1,10 @@
 import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
-import {render, replace, escDown} from "../utils/dom-utils.js";
+import {render, replace, remove, escDown} from "../utils/dom-utils.js";
 
 export default class Event {
-  constructor(eventListElement) {
-    this._eventListContainer = eventListElement;
+  constructor(eventListContainer) {
+    this._eventListContainer = eventListContainer;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
@@ -17,13 +17,38 @@ export default class Event {
   init(event) {
     this._event = event;
 
+    const prevEventComponent = this._eventComponent;
+    const prevEventEditComponent = this._eventEditComponent;
+
     this._eventComponent = new EventView(event);
     this._eventEditComponent = new EventEditView(event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
-    render(this._eventListContainer, this._eventComponent);
+
+    if (prevEventComponent === null || prevEventEditComponent === null) {
+      render(this._eventListContainer, this._eventComponent);
+      return;
+    }
+
+    if (this._eventListContainer.getElement().contains(prevEventComponent.getElement())) {
+      console.log(`event`);
+      replace(this._eventComponent, prevEventComponent);
+    }
+
+    if (this._eventListContainer.getElement().contains(prevEventEditComponent.getElement())) {
+      console.log(`edit`);
+      replace(this._eventEditComponent, prevEventEditComponent);
+    }
+
+    remove(prevEventComponent);
+    remove(prevEventEditComponent);
+  }
+
+  destroy() {
+    remove(this._eventComponent);
+    remove(this._eventEditComponent);
   }
 
   _replaceCardToForm() {

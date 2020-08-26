@@ -4,13 +4,14 @@ import NoEventView from "../view/no-events.js";
 import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
 import EventPresenter from "./event.js";
-import {render} from "../utils/dom-utils.js";
+import {render, remove} from "../utils/dom-utils.js";
 import {sortByTime, sortByPrice} from "../utils/date-utils.js";
 
 export default class Trip {
   constructor(listContainer) {
     this._listContainer = listContainer;
     this._currentSortType = SortType.EVENT;
+    this._eventPresenter = {};
 
     this._sortComponent = new SortView();
     this._listDaysComponent = new TripDaysView();
@@ -63,6 +64,8 @@ export default class Trip {
   _renderEvent(eventListElement, event) {
     const eventPresenter = new EventPresenter(eventListElement);
     eventPresenter.init(event);
+
+    this._eventPresenter[event.id] = eventPresenter;
   }
 
   _renderDay(dayView) {
@@ -100,6 +103,10 @@ export default class Trip {
   }
 
   _clearListEvents() {
-    this._listDaysComponent.getElement().innerHTML = ``;
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.destroy());
+    remove(this._listDaysComponent);
+    this._eventPresenter = {};
   }
 }

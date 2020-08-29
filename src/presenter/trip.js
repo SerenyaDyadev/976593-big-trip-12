@@ -4,6 +4,7 @@ import NoEventView from "../view/no-events.js";
 import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
 import EventPresenter from "./event.js";
+import {updateItem} from "../utils/common.js";
 import {render, remove} from "../utils/dom-utils.js";
 import {sortByTime, sortByPrice} from "../utils/date-utils.js";
 
@@ -17,6 +18,7 @@ export default class Trip {
     this._listDaysComponent = new TripDaysView();
     this._noEventComponent = new NoEventView();
 
+    this._handleEventChange = this._handleEventChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
@@ -25,6 +27,12 @@ export default class Trip {
     this._sourcedListEvents = listEvents.slice();
 
     this._renderListEvents();
+  }
+
+  _handleEventChange(updatedEvent) {
+    this._boardTasks = updateItem(this._listEvents, updatedEvent);
+    this._sourcedListEvents = updateItem(this._sourcedListEvents, updatedEvent);
+    this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
   _sortEvents(sortType) {

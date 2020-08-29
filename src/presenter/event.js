@@ -26,19 +26,16 @@ export default class Event {
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
-
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._eventListContainer, this._eventComponent);
       return;
     }
 
     if (this._eventListContainer.getElement().contains(prevEventComponent.getElement())) {
-      console.log(`event`);
       replace(this._eventComponent, prevEventComponent);
     }
 
     if (this._eventListContainer.getElement().contains(prevEventEditComponent.getElement())) {
-      console.log(`edit`);
       replace(this._eventEditComponent, prevEventEditComponent);
     }
 

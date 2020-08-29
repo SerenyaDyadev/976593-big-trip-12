@@ -26,6 +26,7 @@ export const generateEvent = () => {
 
   return {
     id: generateId(),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     eventType,
     destination: getRandomElement(DESTINATIONS),
     offers,

@@ -201,7 +201,7 @@ const createEditEventTemplate = (event) => {
 export default class AddEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
-    this._data = event;
+    this._data = AddEdit.parseEventToData(event);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
@@ -216,7 +216,7 @@ export default class AddEdit extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._data);
+    this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
   }
 
   _favoriteClickHandler() {
@@ -234,5 +234,22 @@ export default class AddEdit extends SmartView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  static parseEventToData(event) {
+    return Object.assign(
+        {},
+        event
+    );
+  }
+
+  static parseDataToEvent(data) {
+    data = Object.assign({}, data);
+
+    if (data.isFavorite !== data.isFavoriteFlag) {
+      data.isFavoriteFlag = data.isFavorite;
+    }
+
+    return data;
   }
 }

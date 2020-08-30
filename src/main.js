@@ -5,7 +5,7 @@ import TripPresenter from "./presenter/trip.js";
 import {generateEvent} from "./mock/event.js";
 import {render, RenderPosition} from "./utils/dom-utils.js";
 
-const EVENT_COUNT = 5;
+const EVENT_COUNT = 2;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((event1, event2) => {
   if (event1.time[0] > event2.time[0]) {

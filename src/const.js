@@ -1,6 +1,6 @@
 export const EVENT_TYPES = [`taxi`, `bus`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`, `train`];
 
-export const DESTINATIONS = [`Moscow`, `SaintPeterb`, `Voronezh`, `RostovOnDon`, `Krasnodar`, `Sochi`];
+export const DESTINATIONS = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`];
 
 export const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.Cras aliquet varius magna, non porta ligula feugiat eget.`,

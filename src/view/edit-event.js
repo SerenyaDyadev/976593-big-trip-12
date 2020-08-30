@@ -1,5 +1,7 @@
 import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
+import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
+import {getRandomElement} from "../utils/common.js";
 
 const BLANK_EVENT = {
   isFavorite: `true`,
@@ -58,7 +60,7 @@ const createFavoriteTemplate = (isFavorite) => {
 const createEditEventTemplate = (event) => {
   const {
     isFavorite,
-    isFavoriteFlag,
+    isChange,
     eventType,
     destination,
     offers,
@@ -71,7 +73,7 @@ const createEditEventTemplate = (event) => {
 
   let [startTime, endTime] = time;
 
-  const isSubmitDisabled = isFavorite === isFavoriteFlag;
+  const isSubmitDisabled = !isChange;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -147,7 +149,7 @@ const createEditEventTemplate = (event) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${eventType[0].toUpperCase() + eventType.slice(1)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -205,6 +207,7 @@ export default class AddEdit extends SmartView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -222,16 +225,27 @@ export default class AddEdit extends SmartView {
     this.getElement()
       .querySelector(`.event__type-wrapper`)
       .addEventListener(`change`, this._typeChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`change`, this._destinationChangeHandler);
   }
 
   _typeChangeHandler(evt) {
-    console.log(evt);
-    console.log(`_typeChangeHandler(evt)`);
+    if (evt.target.value !== `on`) {
+      this.updateData({
+        isChange: true,
+        eventType: evt.target.value,
+        offers: OFFER_LIST[evt.target.value],
+      });
+    }
+  }
 
-    // evt.preventDefault();
-    // this.updateData({
-      // color: evt.target.value
-    // });
+  _destinationChangeHandler(evt) {
+    this.updateData({
+      isChange: true,
+      destination: evt.target.value,
+      description: getRandomElement(DESCRIPTIONS)
+    });
   }
 
   _formSubmitHandler(evt) {
@@ -240,8 +254,9 @@ export default class AddEdit extends SmartView {
   }
 
   _favoriteClickHandler() {
-    this._callback.favoriteClick(this._data);
+    // this._callback.favoriteClick(this._data);
     this.updateData({
+      isChange: true,
       isFavorite: !this._data.isFavorite
     });
   }
@@ -265,10 +280,6 @@ export default class AddEdit extends SmartView {
 
   static parseDataToEvent(data) {
     data = Object.assign({}, data);
-
-    if (data.isFavorite !== data.isFavoriteFlag) {
-      data.isFavoriteFlag = data.isFavorite;
-    }
 
     return data;
   }

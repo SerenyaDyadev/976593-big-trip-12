@@ -1,4 +1,4 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
 
 const BLANK_EVENT = {
@@ -58,6 +58,7 @@ const createFavoriteTemplate = (isFavorite) => {
 const createEditEventTemplate = (event) => {
   const {
     isFavorite,
+    isFavoriteFlag,
     eventType,
     destination,
     offers,
@@ -69,6 +70,8 @@ const createEditEventTemplate = (event) => {
   } = event;
 
   let [startTime, endTime] = time;
+
+  const isSubmitDisabled = isFavorite === isFavoriteFlag;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -173,7 +176,7 @@ const createEditEventTemplate = (event) => {
               <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
 
           ${createFavoriteTemplate(isFavorite)}
@@ -195,13 +198,10 @@ const createEditEventTemplate = (event) => {
   );
 };
 
-export default class AddEdit extends AbstractView {
+export default class AddEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
     this._data = event;
-    // console.log(this._data);
-    // console.log(`this._data`);
-    // this._event = event;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
@@ -210,31 +210,8 @@ export default class AddEdit extends AbstractView {
     return createEditEventTemplate(this._data);
   }
 
-  updateData(update) {
-    // console.log(`update`);
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    // console.log(`update-element addEdit`);
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null; // Чтобы окончательно "убить" ссылку на prevElement
+  restoreHandlers() {
+    this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
   _formSubmitHandler(evt) {
@@ -243,7 +220,6 @@ export default class AddEdit extends AbstractView {
   }
 
   _favoriteClickHandler() {
-    // console.log(`_favoriteClickHandler`);
     this._callback.favoriteClick(this._data);
     this.updateData({
       isFavorite: !this._data.isFavorite

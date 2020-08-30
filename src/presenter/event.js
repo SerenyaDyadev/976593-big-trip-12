@@ -4,8 +4,6 @@ import {render, replace, remove, escDown} from "../utils/dom-utils.js";
 
 export default class Event {
   constructor(eventListContainer, changeData) {
-    console.log(changeData);
-    console.log(`changeData event presenter`);
     this._eventListContainer = eventListContainer;
 
     this._changeData = changeData;
@@ -88,9 +86,6 @@ export default class Event {
   }
 
   _handleFormSubmit(event) {
-    console.log(event);
-    console.log(` hendlerFormEventpresenter`);
-
     this._changeData(event);
     this._replaceFormToCard();
   }

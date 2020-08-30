@@ -23,10 +23,11 @@ export const generateEvent = () => {
   const offers = OFFER_LIST[eventType];
   const offerPrices = new Array(offers.length).fill().map(() => getRandomInteger(0, 100));
   const {time, duration} = getTimeStamp(maxMinutsGap, maxDaysGap);
-
+  const isFavorite = Boolean(getRandomInteger(0, 1));
   return {
     id: generateId(),
-    isFavorite: Boolean(getRandomInteger(0, 1)),
+    isFavorite,
+    isFavoriteFlag: isFavorite,
     eventType,
     destination: getRandomElement(DESTINATIONS),
     offers,
@@ -38,3 +39,5 @@ export const generateEvent = () => {
     photoPlace: `http://picsum.photos/248/152?r=${Math.random()}`
   };
 };
+
+// isFavoriteFlag - пока временное решение

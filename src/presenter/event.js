@@ -3,14 +3,19 @@ import EventEditView from "../view/edit-event.js";
 import {render, replace, remove, escDown} from "../utils/dom-utils.js";
 
 export default class Event {
-  constructor(eventListContainer) {
+  constructor(eventListContainer, changeData) {
+    console.log(changeData);
+    console.log(`changeData event presenter`);
     this._eventListContainer = eventListContainer;
+
+    this._changeData = changeData;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
@@ -24,6 +29,7 @@ export default class Event {
     this._eventEditComponent = new EventEditView(event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
+    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -31,11 +37,11 @@ export default class Event {
       return;
     }
 
-    if (this._eventListContainer.getElement().contains(prevEventComponent.getElement())) {
+    if (this._eventListContainer.contains(prevEventComponent.getElement())) {
       replace(this._eventComponent, prevEventComponent);
     }
 
-    if (this._eventListContainer.getElement().contains(prevEventEditComponent.getElement())) {
+    if (this._eventListContainer.contains(prevEventEditComponent.getElement())) {
       replace(this._eventEditComponent, prevEventEditComponent);
     }
 
@@ -69,7 +75,23 @@ export default class Event {
     this._replaceCardToForm();
   }
 
-  _handleFormSubmit() {
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._event,
+            {
+              isFavorite: !this._event.isFavorite
+            }
+        )
+    );
+  }
+
+  _handleFormSubmit(event) {
+    console.log(event);
+    console.log(` hendlerFormEventpresenter`);
+
+    this._changeData(event);
     this._replaceFormToCard();
   }
 }

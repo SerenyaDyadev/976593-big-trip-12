@@ -30,7 +30,9 @@ export default class Trip {
   }
 
   _handleEventChange(updatedEvent) {
-    this._boardTasks = updateItem(this._listEvents, updatedEvent);
+    console.log(updatedEvent);
+    console.log(`updatedEvent presenter`);
+    this._listEvents = updateItem(this._listEvents, updatedEvent);
     this._sourcedListEvents = updateItem(this._sourcedListEvents, updatedEvent);
     this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
@@ -70,7 +72,7 @@ export default class Trip {
   }
 
   _renderEvent(eventListElement, event) {
-    const eventPresenter = new EventPresenter(eventListElement);
+    const eventPresenter = new EventPresenter(eventListElement, this._handleEventChange);
     eventPresenter.init(event);
 
     this._eventPresenter[event.id] = eventPresenter;

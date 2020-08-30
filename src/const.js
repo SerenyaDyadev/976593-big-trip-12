@@ -1,4 +1,4 @@
-export const EVENT_TYPES = [`Taxi`, `Bus`, `Ship`, `Transport`, `Drive`, `Flight`, `Check`, `Sightseeing`, `Restaurant`];
+export const EVENT_TYPES = [`taxi`, `bus`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`, `train`];
 
 export const DESTINATIONS = [`Moscow`, `SaintPeterb`, `Voronezh`, `RostovOnDon`, `Krasnodar`, `Sochi`];
 
@@ -16,13 +16,14 @@ export const DESCRIPTIONS = [
 
 
 export const OFFER_LIST = {
-  Taxi: [`Order Uber`, `Taxi Minivan`, `Business Class`],
-  Bus: [`Comfort Chair`, `Bisiness Chair`],
-  Ship: [`Lux`],
-  Transport: [`Comfort ticket`, `Bisiness ticket`],
-  Drive: [`Motorbike`, `Sedan`, `MiniBus`],
-  Flight: [`Add luggage`, `Switch to comfort class`, `Add meal`, `Choose seats`, `Travel by train`],
-  Check: [],
-  Sightseeing: [],
-  Restaurant: [`Two persons`, `Dinner`]
+  "taxi": [`Order Uber`, `Taxi Minivan`, `Business Class`],
+  "bus": [`Comfort Chair`, `Bisiness Chair`],
+  "ship": [`Lux`],
+  "transport": [`Comfort ticket`, `Bisiness ticket`],
+  "drive": [`Motorbike`, `Sedan`, `MiniBus`],
+  "flight": [`Add luggage`, `Switch to comfort class`, `Add meal`, `Choose seats`, `Travel by train`],
+  "check-in": [],
+  "sightseeing": [],
+  "restaurant": [`Two persons`, `Dinner`],
+  "train": [`VIP`, `Tea`, `Comfort cupe`]
 };

@@ -2,6 +2,9 @@ import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
 import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
 import {getRandomElement} from "../utils/common.js";
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
   isFavorite: `true`,

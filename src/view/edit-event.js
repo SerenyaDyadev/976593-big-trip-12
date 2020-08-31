@@ -254,7 +254,6 @@ export default class AddEdit extends SmartView {
   }
 
   _favoriteClickHandler() {
-    // this._callback.favoriteClick(this._data);
     this.updateData({
       isChange: true,
       isFavorite: !this._data.isFavorite
@@ -280,7 +279,7 @@ export default class AddEdit extends SmartView {
 
   static parseDataToEvent(data) {
     data = Object.assign({}, data);
-
+    data.isChange = false;
     return data;
   }
 }

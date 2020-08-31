@@ -1,7 +1,10 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
+import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
+import {getRandomElement} from "../utils/common.js";
 
 const BLANK_EVENT = {
+  isFavorite: `true`,
   eventType: ` `,
   destination: ` `,
   offers: [],
@@ -41,8 +44,23 @@ const getOffersTemplate = (offers, offerPrices) => {
   );
 };
 
+const createFavoriteTemplate = (isFavorite) => {
+
+  return (`
+          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
+          <label class="event__favorite-btn" for="event-favorite-1">
+            <span class="visually-hidden">Add to favorite</span>
+              <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+                <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+              </svg>
+          </label>`
+  );
+};
+
 const createEditEventTemplate = (event) => {
   const {
+    isFavorite,
+    isChange,
     eventType,
     destination,
     offers,
@@ -55,13 +73,15 @@ const createEditEventTemplate = (event) => {
 
   let [startTime, endTime] = time;
 
+  const isSubmitDisabled = !isChange;
+
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${eventType}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
               <div class="event__type-list">
@@ -127,9 +147,9 @@ const createEditEventTemplate = (event) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${eventType} to
+              ${eventType[0].toUpperCase() + eventType.slice(1)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -158,8 +178,11 @@ const createEditEventTemplate = (event) => {
               <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
+
+          ${createFavoriteTemplate(isFavorite)}
+
         </header>
           <section class="event__details">
             ${getOffersTemplate(offers, offerPrices)}
@@ -177,25 +200,92 @@ const createEditEventTemplate = (event) => {
   );
 };
 
-export default class AddEdit extends AbstractView {
+export default class AddEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
-
-    this.event = event;
+    this._data = AddEdit.parseEventToData(event);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+
+    this._setInnerHandlers();
+  }
+
+  reset(event) {
+    this.updateData(
+        AddEdit.parseEventToData(event)
+    );
   }
 
   getTemplate() {
-    return createEditEventTemplate(this.event);
+    return createEditEventTemplate(this._data);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__type-wrapper`)
+      .addEventListener(`change`, this._typeChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`change`, this._destinationChangeHandler);
+  }
+
+  _typeChangeHandler(evt) {
+    if (evt.target.value !== `on`) {
+      this.updateData({
+        isChange: true,
+        eventType: evt.target.value,
+        offers: OFFER_LIST[evt.target.value],
+      });
+    }
+  }
+
+  _destinationChangeHandler(evt) {
+    this.updateData({
+      isChange: true,
+      destination: evt.target.value,
+      description: getRandomElement(DESCRIPTIONS)
+    });
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
+  }
+
+  _favoriteClickHandler() {
+    this.updateData({
+      isChange: true,
+      isFavorite: !this._data.isFavorite
+    });
   }
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  static parseEventToData(event) {
+    return Object.assign(
+        {},
+        event
+    );
+  }
+
+  static parseDataToEvent(data) {
+    data = Object.assign({}, data);
+    data.isChange = false;
+    return data;
   }
 }

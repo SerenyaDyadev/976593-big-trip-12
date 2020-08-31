@@ -18,6 +18,7 @@ export default class Trip {
     this._listDaysComponent = new TripDaysView();
     this._noEventComponent = new NoEventView();
 
+    this._handleModeChange = this._handleModeChange.bind(this);
     this._handleEventChange = this._handleEventChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
@@ -27,6 +28,12 @@ export default class Trip {
     this._sourcedListEvents = listEvents.slice();
 
     this._renderListEvents();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _handleEventChange(updatedEvent) {
@@ -72,7 +79,7 @@ export default class Trip {
   }
 
   _renderEvent(eventListElement, event) {
-    const eventPresenter = new EventPresenter(eventListElement, this._handleEventChange);
+    const eventPresenter = new EventPresenter(eventListElement, this._handleEventChange, this._handleModeChange);
     eventPresenter.init(event);
 
     this._eventPresenter[event.id] = eventPresenter;

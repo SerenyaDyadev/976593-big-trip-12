@@ -65,6 +65,7 @@ export default class Event {
   _onEscKeyDown(evt) {
     if (escDown(evt.key)) {
       evt.preventDefault();
+      this._eventEditComponent.reset(this._event);
       this._replaceFormToCard();
     }
   }

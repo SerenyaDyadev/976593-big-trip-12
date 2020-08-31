@@ -212,6 +212,12 @@ export default class AddEdit extends SmartView {
     this._setInnerHandlers();
   }
 
+  reset(event) {
+    this.updateData(
+        AddEdit.parseEventToData(event)
+    );
+  }
+
   getTemplate() {
     return createEditEventTemplate(this._data);
   }

@@ -7,15 +7,16 @@ import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  isFavorite: `true`,
-  eventType: ` `,
-  destination: ` `,
-  offers: [],
-  offerPrices: [],
-  time: [`00-00`, `00-00`],
-  price: 0,
-  description: ``,
-  photoPlace: `http://picsum.photos/248/152?r=${Math.random()}`
+  "isFavorite": `true`,
+  "eventType": ` `,
+  "destination": ` `,
+  "offers": [],
+  "offerPrices": [],
+  "date_from": `00-00`,
+  "date_to": `00-00`,
+  "price": 0,
+  "description": ``,
+  "photoPlace": `http://picsum.photos/248/152?r=${Math.random()}`
 };
 
 
@@ -68,13 +69,14 @@ const createEditEventTemplate = (event) => {
     destination,
     offers,
     offerPrices,
-    time,
+    date_from: startTime,
+    date_to: endTime,
     price,
     description,
     photoPlace
   } = event;
 
-  let [startTime, endTime] = time;
+  // let [startTime, endTime] = time;
 
   const isSubmitDisabled = !isChange;
 
@@ -206,16 +208,24 @@ const createEditEventTemplate = (event) => {
 export default class AddEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
+    console.log(event);
     this._data = AddEdit.parseEventToData(event);
+    this._datepicker = null;
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepickerStartTime();
+    // this._setDatepickerEndTime();
   }
 
   reset(event) {
+    console.log(event);
+
     this.updateData(
         AddEdit.parseEventToData(event)
     );
@@ -227,7 +237,44 @@ export default class AddEdit extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepickerStartTime();
+    // this._setDatepickerEndTime();
     this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setDatepickerStartTime() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    this._datepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.date_from,
+          onChange: this._startTimeChangeHandler // На событие flatpickr передаём наш колбэк
+        }
+    );
+  }
+
+
+  _setDatepickerEndTime() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    this._datepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.time[1],
+          onChange: this._endTimeChangeHandler // На событие flatpickr передаём наш колбэк
+        }
+    );
   }
 
   _setInnerHandlers() {
@@ -256,6 +303,25 @@ export default class AddEdit extends SmartView {
       description: getRandomElement(DESCRIPTIONS)
     });
   }
+
+  _startTimeChangeHandler(startTime) {
+    // console.log(startTime);
+    // console.log(this._data);
+
+    this.updateData({
+      "date_from": startTime
+    });
+  }
+
+  // _endTimeChangeHandler(endTime) {
+  //   console.log(endTime);
+  //   console.log(this._data.time);
+
+  //   // this.updateData({
+  //   // time[0] = startTime
+  //   // });
+  // }
+
 
   _formSubmitHandler(evt) {
     evt.preventDefault();

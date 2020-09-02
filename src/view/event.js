@@ -18,8 +18,8 @@ const createOffersTemplates = (offers, offerPrices, maxOffersLength) => {
 
 const createEventItem = (event) => {
   const maxOffersLength = 3;
-  const {eventType, destination, time, duration, price, offers, offerPrices} = event;
-  const [startTime, endTime] = time;
+  const {eventType, destination, price, offers, offerPrices, date_from: startTime, date_to: endTime} = event;
+  // const [startTime, endTime] = time;
 
   return (
     `<li class="trip-events__item">
@@ -35,7 +35,7 @@ const createEventItem = (event) => {
                         &mdash;
             <time class="event__end-time" datetime=${getYearMonthDayStamp(endTime)}>${getHoursMinutsStamp(endTime)}</time>
           </p>
-          <p class="event__duration">${getDurationTemplate(duration)}</p>
+          <p class="event__duration">{getDurationTemplate(duration)}</p>
         </div>
 
         <p class="event__price">

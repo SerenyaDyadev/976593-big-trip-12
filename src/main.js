@@ -8,9 +8,9 @@ import {render, RenderPosition} from "./utils/dom-utils.js";
 const EVENT_COUNT = 19;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((event1, event2) => {
-  if (event1.time[0] > event2.time[0]) {
+  if (event1.date_from > event2.date_from) {
     return 1;
-  } else if (event1.time[0] < event2.time[0]) {
+  } else if (event1.date_from < event2.date_from) {
     return -1;
   } else {
     return 0;

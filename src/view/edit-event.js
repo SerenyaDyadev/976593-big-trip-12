@@ -63,20 +63,22 @@ const createFavoriteTemplate = (isFavorite) => {
 
 const createEditEventTemplate = (event) => {
   const {
-    isFavorite,
-    isChange,
-    eventType,
-    destination,
-    offers,
-    offerPrices,
-    date_from: startTime,
-    date_to: endTime,
-    price,
-    description,
-    photoPlace
+    "isFavorite": isFavorite,
+    "isChange": isChange,
+    "eventType": eventType,
+    "destination": destination,
+    "offers": offers,
+    "offerPrices": offerPrices,
+    "date_from": dateFrom,
+    "date_to": dateTo,
+    "price": price,
+    "description": description,
+    "photoPlace": photoPlace
   } = event;
 
-  // let [startTime, endTime] = time;
+
+  const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
+  const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
 
   const isSubmitDisabled = !isChange;
 
@@ -167,12 +169,12 @@ const createEditEventTemplate = (event) => {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getFullDateForTeplate(startTime).replace(`,`, ``)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}" readonly>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getFullDateForTeplate(endTime).replace(`,`, ``)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}" readonly>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -208,24 +210,23 @@ const createEditEventTemplate = (event) => {
 export default class AddEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
-    console.log(event);
+
     this._data = AddEdit.parseEventToData(event);
-    this._datepicker = null;
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
+    this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatepickerStartTime();
-    // this._setDatepickerEndTime();
+    this._setDatepickers();
   }
 
   reset(event) {
-    console.log(event);
-
     this.updateData(
         AddEdit.parseEventToData(event)
     );
@@ -237,42 +238,38 @@ export default class AddEdit extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this._setDatepickerStartTime();
-    // this._setDatepickerEndTime();
+    this._setDatepickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
-  _setDatepickerStartTime() {
-    if (this._datepicker) {
-      this._datepicker.destroy();
-      this._datepicker = null;
+  _setDatepickers() {
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
     }
 
-    this._datepicker = flatpickr(
+    this._datepickerStart = flatpickr(
         this.getElement().querySelector(`#event-start-time-1`),
         {
           enableTime: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.date_from,
-          onChange: this._startTimeChangeHandler // На событие flatpickr передаём наш колбэк
+          minDate: new Date(),
+          onChange: this._startTimeChangeHandler
         }
     );
-  }
 
-
-  _setDatepickerEndTime() {
-    if (this._datepicker) {
-      this._datepicker.destroy();
-      this._datepicker = null;
-    }
-
-    this._datepicker = flatpickr(
-        this.getElement().querySelector(`#event-start-time-1`),
+    this._datepickerEnd = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
         {
           enableTime: true,
           dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.time[1],
-          onChange: this._endTimeChangeHandler // На событие flatpickr передаём наш колбэк
+          defaultDate: this._data.date_to,
+          minDate: this._data.date_from,
+          onChange: this._endTimeChangeHandler
         }
     );
   }
@@ -304,24 +301,19 @@ export default class AddEdit extends SmartView {
     });
   }
 
-  _startTimeChangeHandler(startTime) {
-    // console.log(startTime);
-    // console.log(this._data);
-
+  _startTimeChangeHandler([time]) {
     this.updateData({
-      "date_from": startTime
+      "isChange": true,
+      "date_from": time,
     });
   }
 
-  // _endTimeChangeHandler(endTime) {
-  //   console.log(endTime);
-  //   console.log(this._data.time);
-
-  //   // this.updateData({
-  //   // time[0] = startTime
-  //   // });
-  // }
-
+  _endTimeChangeHandler([time]) {
+    this.updateData({
+      "isChange": true,
+      "date_to": time,
+    });
+  }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();

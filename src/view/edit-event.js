@@ -2,17 +2,21 @@ import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
 import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
 import {getRandomElement} from "../utils/common.js";
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  isFavorite: `true`,
-  eventType: ` `,
-  destination: ` `,
-  offers: [],
-  offerPrices: [],
-  time: [`00-00`, `00-00`],
-  price: 0,
-  description: ``,
-  photoPlace: `http://picsum.photos/248/152?r=${Math.random()}`
+  "isFavorite": `true`,
+  "eventType": ` `,
+  "destination": ` `,
+  "offers": [],
+  "offerPrices": [],
+  "date_from": `00-00`,
+  "date_to": `00-00`,
+  "price": 0,
+  "description": ``,
+  "photoPlace": `http://picsum.photos/248/152?r=${Math.random()}`
 };
 
 
@@ -59,19 +63,22 @@ const createFavoriteTemplate = (isFavorite) => {
 
 const createEditEventTemplate = (event) => {
   const {
-    isFavorite,
-    isChange,
-    eventType,
-    destination,
-    offers,
-    offerPrices,
-    time,
-    price,
-    description,
-    photoPlace
+    "isFavorite": isFavorite,
+    "isChange": isChange,
+    "eventType": eventType,
+    "destination": destination,
+    "offers": offers,
+    "offerPrices": offerPrices,
+    "date_from": dateFrom,
+    "date_to": dateTo,
+    "price": price,
+    "description": description,
+    "photoPlace": photoPlace
   } = event;
 
-  let [startTime, endTime] = time;
+
+  const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
+  const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
 
   const isSubmitDisabled = !isChange;
 
@@ -162,12 +169,12 @@ const createEditEventTemplate = (event) => {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getFullDateForTeplate(startTime).replace(`,`, ``)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}" readonly>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getFullDateForTeplate(endTime).replace(`,`, ``)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}" readonly>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -203,13 +210,20 @@ const createEditEventTemplate = (event) => {
 export default class AddEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
+
     this._data = AddEdit.parseEventToData(event);
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
+    this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepickers();
   }
 
   reset(event) {
@@ -224,7 +238,40 @@ export default class AddEdit extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setDatepickers() {
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
+
+    this._datepickerStart = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.date_from,
+          minDate: new Date(),
+          onChange: this._startTimeChangeHandler
+        }
+    );
+
+    this._datepickerEnd = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.date_to,
+          minDate: this._data.date_from,
+          onChange: this._endTimeChangeHandler
+        }
+    );
   }
 
   _setInnerHandlers() {
@@ -251,6 +298,20 @@ export default class AddEdit extends SmartView {
       isChange: true,
       destination: evt.target.value,
       description: getRandomElement(DESCRIPTIONS)
+    });
+  }
+
+  _startTimeChangeHandler([time]) {
+    this.updateData({
+      "isChange": true,
+      "date_from": time,
+    });
+  }
+
+  _endTimeChangeHandler([time]) {
+    this.updateData({
+      "isChange": true,
+      "date_to": time,
     });
   }
 

@@ -19,7 +19,7 @@ const createInfoTemplate = (events) => {
       totalPrice += events[i].price;
     }
 
-    const dates = new Array(events.length).fill().map((element, index) => getMonthStamp(events[index].time[0]).toUpperCase() + ` ` + getDayStamp(events[index].time[0])).sort();
+    const dates = new Array(events.length).fill().map((element, index) => getMonthStamp(events[index].date_from).toUpperCase() + ` ` + getDayStamp(events[index].date_from)).sort();
 
     return (
       `<section class="trip-main__trip-info  trip-info">

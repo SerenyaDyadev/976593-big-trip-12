@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const getFullDateForTeplate = (date) => {
   return date.toLocaleString(`en-GB`, {year: `2-digit`, month: `numeric`, day: `numeric`, hour: `numeric`, minute: `numeric`});
 };
@@ -22,31 +24,18 @@ export const getHoursMinutsStamp = (date) => {
   return date.toLocaleString(`en-GB`, {hour: `numeric`, minute: `numeric`});
 };
 
-export const getDurationTemplate = (minutesDuration) => {
-  const oneHourInMinutes = 60;
-  const oneDayInHours = 24;
-  const minLengthTimeStamp = 2;
-  const hoursDuration = minutesDuration / oneHourInMinutes;
+export const getDurationTemplate = (startTime, endTime) => {
+  if (!(startTime instanceof Date) || !(endTime instanceof Date)) {
+    return ``;
+  }
 
-  let days = Math.floor(hoursDuration / oneDayInHours) + `D` !== `0D`
-    ? Math.floor(hoursDuration / oneDayInHours) + `D`
-    : ``;
+  const duratuon = startTime - endTime;
 
-  days = days.length === minLengthTimeStamp
-    ? `0` + days
-    : days;
+  const days = moment.duration(duratuon).days() !== 0 ? moment.duration(duratuon, `d`).days() + `D` : ``;
+  const hours = moment.duration(duratuon).hours() !== 0 ? moment.duration(duratuon).hours() + `H` : ``;
+  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : `0M`;
 
-  let hours = Math.floor(hoursDuration % oneDayInHours) + `H` !== `0H`
-    ? Math.floor(hoursDuration % oneDayInHours) + `H`
-    : ``;
-
-  hours = hours.length === minLengthTimeStamp
-    ? `0` + hours
-    : hours;
-
-  const mins = Math.floor(minutesDuration % oneHourInMinutes) + `M`;
-
-  return (days + hours + mins);
+  return (days + hours + minutes);
 };
 
 export const sortByTime = (eventA, eventB) =>

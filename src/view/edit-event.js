@@ -292,7 +292,6 @@ export default class AddEdit extends SmartView {
           UserAction.UPDATE_EVENT,
           UpdateType.MINOR,
           {
-            // isChange: true,
             eventType: evt.target.value,
             offers: OFFER_LIST[evt.target.value],
           });
@@ -306,7 +305,6 @@ export default class AddEdit extends SmartView {
         UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          // isChange: true,
           destination: evt.target.value,
           description: getRandomElement(DESCRIPTIONS)
         });
@@ -319,7 +317,6 @@ export default class AddEdit extends SmartView {
         UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          // "isChange": true,
           "date_from": time,
         });
   }
@@ -331,7 +328,6 @@ export default class AddEdit extends SmartView {
         UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          // "isChange": true,
           "date_to": time,
         });
   }
@@ -350,7 +346,6 @@ export default class AddEdit extends SmartView {
         UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          // isChange: true,
           isFavorite: !this._data.isFavorite
         });
   }

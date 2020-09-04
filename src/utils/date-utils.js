@@ -29,13 +29,17 @@ export const getDurationTemplate = (startTime, endTime) => {
     return ``;
   }
 
+  const checkTemplateItem = (item) => {
+    return item.length !== 0 && item.length < 3 ? `0` + item : item;
+  };
+
   const duratuon = startTime - endTime;
 
-  const days = moment.duration(duratuon).days() !== 0 ? moment.duration(duratuon, `d`).days() + `D` : ``;
+  const days = moment.duration(duratuon).days() !== 0 ? moment.duration(duratuon).days() + `D` : ``;
   const hours = moment.duration(duratuon).hours() !== 0 ? moment.duration(duratuon).hours() + `H` : ``;
-  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : `0M`;
+  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : ``;
 
-  return (days + hours + minutes);
+  return (checkTemplateItem(days) + checkTemplateItem(hours) + checkTemplateItem(minutes));
 };
 
 export const sortByTime = (eventA, eventB) =>

@@ -24,18 +24,15 @@ export const generateEvent = () => {
   const offerPrices = new Array(offers.length).fill().map(() => getRandomInteger(0, 100));
   const {time} = getTimeStamp(maxMinutsGap, maxDaysGap);
   const isFavorite = Boolean(getRandomInteger(0, 1));
-  // const dateFrom = time[0];
-  // const dateTo = time[1];
 
   return {
     "id": generateId(),
-    "isChange": false,
+    // "isChange": false,
     "isFavorite": isFavorite,
     "eventType": eventType,
     "destination": getRandomElement(DESTINATIONS),
     "offers": offers,
     "offerPrices": offerPrices,
-    // "time": time,
     "date_from": time[0],
     "date_to": time[1],
     "price": getRandomInteger(0, 100),
@@ -44,4 +41,3 @@ export const generateEvent = () => {
   };
 };
 
-// isFavoriteFlag - пока временное решение

@@ -61,10 +61,10 @@ const createFavoriteTemplate = (isFavorite) => {
   );
 };
 
-const createEditEventTemplate = (event) => {
+const createEditEventTemplate = (oldEvent) => {
   const {
     "isFavorite": isFavorite,
-    "isChange": isChange,
+    // "isChange": isChange,
     "eventType": eventType,
     "destination": destination,
     "offers": offers,
@@ -74,13 +74,15 @@ const createEditEventTemplate = (event) => {
     "price": price,
     "description": description,
     "photoPlace": photoPlace
-  } = event;
-
+  } = oldEvent;
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
 
-  const isSubmitDisabled = !isChange;
+  // console.log(Object.toJSON(this._data) === Object.toJSON(event));
+  // console.log(Object.toJSON(oldEvent) === Object.toJSON(oldEvent));
+  // const isSubmitDisabled = !isChange;
+  const isSubmitDisabled = false;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -216,7 +218,7 @@ export default class AddEdit extends SmartView {
     this._datepickerEnd = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
@@ -285,11 +287,12 @@ export default class AddEdit extends SmartView {
 
   _typeChangeHandler(evt) {
     if (evt.target.value !== `on`) {
+      console.log(`_typeChangeHandler`);
       this.updateData(
-          UserAction.UPDATE_TASK,
+          UserAction.UPDATE_EVENT,
           UpdateType.MINOR,
           {
-            isChange: true,
+            // isChange: true,
             eventType: evt.target.value,
             offers: OFFER_LIST[evt.target.value],
           });
@@ -297,47 +300,57 @@ export default class AddEdit extends SmartView {
   }
 
   _destinationChangeHandler(evt) {
+    console.log(`_destinationChangeHandler`);
+
     this.updateData(
-        UserAction.UPDATE_TASK,
+        UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          isChange: true,
+          // isChange: true,
           destination: evt.target.value,
           description: getRandomElement(DESCRIPTIONS)
         });
   }
 
   _startTimeChangeHandler([time]) {
+    console.log(`_startTimeChangeHandler`);
+
     this.updateData(
-        UserAction.UPDATE_TASK,
+        UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          "isChange": true,
+          // "isChange": true,
           "date_from": time,
         });
   }
 
   _endTimeChangeHandler([time]) {
+    console.log(`_endTimeChangeHandler`);
+
     this.updateData(
-        UserAction.UPDATE_TASK,
+        UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          "isChange": true,
+          // "isChange": true,
           "date_to": time,
         });
   }
 
   _formSubmitHandler(evt) {
+    console.log(`_formSubmitHandler`);
+
     evt.preventDefault();
     this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
   }
 
-  _favoriteClickHandler() {
+  _handleFavoriteClick() {
+    console.log(`_favoriteClickHandler`);
+
     this.updateData(
-        UserAction.UPDATE_TASK,
+        UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         {
-          isChange: true,
+          // isChange: true,
           isFavorite: !this._data.isFavorite
         });
   }
@@ -349,7 +362,7 @@ export default class AddEdit extends SmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._handleFavoriteClick);
   }
 
   static parseEventToData(event) {

@@ -19,7 +19,7 @@ const events = new Array(EVENT_COUNT).fill().map(generateEvent).sort((event1, ev
 });
 
 const eventsModel = new EventsModel();
-eventsModel.setTasks(events);
+eventsModel.setEvents(events);
 
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripMainInfoElement = siteHeader.querySelector(`.trip-main`);

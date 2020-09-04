@@ -1,7 +1,7 @@
 import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
 import {render, replace, remove, escDown} from "../utils/dom-utils.js";
-import {UserAction, UpdateType} from "../const.js";
+// import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -91,10 +91,7 @@ export default class Event {
   }
 
   _handleFormSubmit(event) {
-    this._changeData(
-        UserAction.UPDATE_TASK,
-        UpdateType.MINOR,
-        event);
+    this._changeData(event);
     this._replaceFormToCard();
   }
 }

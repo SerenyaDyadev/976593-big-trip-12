@@ -39,7 +39,7 @@ export const getDurationTemplate = (startTime, endTime) => {
 };
 
 export const sortByTime = (eventA, eventB) =>
-  eventB.time[0].getDate() - eventA.time[0].getDate();
+  eventB.date_from.getDate() - eventA.date_from.getDate();
 
 export const sortByPrice = (eventA, eventB) =>
   eventA.price - eventB.price;

@@ -1,6 +1,6 @@
 import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
-import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
+import {DESCRIPTIONS, OFFER_LIST, UserAction, UpdateType} from "../const.js";
 import {getRandomElement} from "../utils/common.js";
 import flatpickr from "flatpickr";
 
@@ -285,34 +285,46 @@ export default class AddEdit extends SmartView {
 
   _typeChangeHandler(evt) {
     if (evt.target.value !== `on`) {
-      this.updateData({
-        isChange: true,
-        eventType: evt.target.value,
-        offers: OFFER_LIST[evt.target.value],
-      });
+      this.updateData(
+          UserAction.UPDATE_TASK,
+          UpdateType.MINOR,
+          {
+            isChange: true,
+            eventType: evt.target.value,
+            offers: OFFER_LIST[evt.target.value],
+          });
     }
   }
 
   _destinationChangeHandler(evt) {
-    this.updateData({
-      isChange: true,
-      destination: evt.target.value,
-      description: getRandomElement(DESCRIPTIONS)
-    });
+    this.updateData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
+        {
+          isChange: true,
+          destination: evt.target.value,
+          description: getRandomElement(DESCRIPTIONS)
+        });
   }
 
   _startTimeChangeHandler([time]) {
-    this.updateData({
-      "isChange": true,
-      "date_from": time,
-    });
+    this.updateData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
+        {
+          "isChange": true,
+          "date_from": time,
+        });
   }
 
   _endTimeChangeHandler([time]) {
-    this.updateData({
-      "isChange": true,
-      "date_to": time,
-    });
+    this.updateData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
+        {
+          "isChange": true,
+          "date_to": time,
+        });
   }
 
   _formSubmitHandler(evt) {
@@ -321,10 +333,13 @@ export default class AddEdit extends SmartView {
   }
 
   _favoriteClickHandler() {
-    this.updateData({
-      isChange: true,
-      isFavorite: !this._data.isFavorite
-    });
+    this.updateData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
+        {
+          isChange: true,
+          isFavorite: !this._data.isFavorite
+        });
   }
 
   setFormSubmitHandler(callback) {

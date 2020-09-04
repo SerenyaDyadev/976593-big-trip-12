@@ -1,6 +1,7 @@
 import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
 import {render, replace, remove, escDown} from "../utils/dom-utils.js";
+import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -20,7 +21,6 @@ export default class Event {
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
@@ -90,20 +90,11 @@ export default class Event {
     this._replaceCardToForm();
   }
 
-  _handleFavoriteClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._event,
-            {
-              isFavorite: !this._event.isFavorite
-            }
-        )
-    );
-  }
-
   _handleFormSubmit(event) {
-    this._changeData(event);
+    this._changeData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
+        event);
     this._replaceFormToCard();
   }
 }

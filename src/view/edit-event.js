@@ -290,7 +290,7 @@ export default class AddEdit extends SmartView {
       console.log(`_typeChangeHandler`);
       this.updateData(
           UserAction.UPDATE_EVENT,
-          UpdateType.MINOR,
+          UpdateType.PATCH,
           {
             eventType: evt.target.value,
             offers: OFFER_LIST[evt.target.value],
@@ -344,7 +344,7 @@ export default class AddEdit extends SmartView {
 
     this.updateData(
         UserAction.UPDATE_EVENT,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         {
           isFavorite: !this._data.isFavorite
         });

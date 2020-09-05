@@ -6,6 +6,7 @@ import DayView from "../view/day.js";
 import EventPresenter from "./event.js";
 import {render, remove} from "../utils/dom-utils.js";
 import {sortByTime, sortByPrice} from "../utils/date-utils.js";
+import {UserAction, UpdateType} from "../const.js";
 
 export default class Trip {
   constructor(listContainer, eventsModel) {
@@ -14,7 +15,8 @@ export default class Trip {
     this._currentSortType = SortType.EVENT;
     this._eventPresenter = {};
 
-    this._sortComponent = new SortView();
+    this._sortComponent = null;
+
     this._listDaysComponent = new TripDaysView();
     this._noEventComponent = new NoEventView();
 
@@ -76,14 +78,38 @@ export default class Trip {
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this._eventsModel.updateEvent(updateType, update);
+        break;
+      case UserAction.ADD_EVENT:
+        this._eventsModel.addEvent(updateType, update);
+        break;
+      case UserAction.DELETE_EVENT:
+        this._eventsModel.deleteEvent(updateType, update);
+        break;
+    }
   }
 
   _handleModelEvent(updateType, data) {
     console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this._eventPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        this._clearListEvents();
+        this._renderListEvents();
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        this._clearListEvents({resetSortType: true});
+        this._renderListEvents();
+        break;
+    }
   }
 
   _handleSortTypeChange(sortType) {
@@ -92,13 +118,19 @@ export default class Trip {
     }
 
     this._currentSortType = sortType;
-    this._clearListEvents();
+    this._clearListEvents({resetRenderedTaskCount: true});
     this._renderListEvents();
   }
 
   _renderSort() {
-    render(this._listContainer, this._sortComponent);
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
+    this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._listContainer, this._sortComponent);
   }
 
   _renderNoEvents() {
@@ -146,11 +178,28 @@ export default class Trip {
     }
   }
 
-  _clearListEvents() {
+  // _clearListEvents() {
+  //   Object
+  //     .values(this._eventPresenter)
+  //     .forEach((presenter) => presenter.destroy());
+  //   remove(this._listDaysComponent);
+  //   this._eventPresenter = {};
+  // }
+
+  _clearListEvents({resetSortType = false} = {}) {
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
     remove(this._listDaysComponent);
-    this._eventPresenter = {};
+    this._taskPresenter = {};
+
+    remove(this._sortComponent);
+    // remove(this._noTaskComponent);
+
+    // this._renderListEvents();
+
+    if (resetSortType) {
+      this._currentSortType = SortType.EVENT;
+    }
   }
 }

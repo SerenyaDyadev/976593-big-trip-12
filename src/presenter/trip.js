@@ -118,6 +118,7 @@ export default class Trip {
     }
 
     this._currentSortType = sortType;
+    this._sortEvents(sortType);
     this._clearListEvents({resetRenderedTaskCount: true});
     this._renderListEvents();
   }

@@ -96,28 +96,28 @@ export default class Trip {
     }
   }
 
-  _sortEvents(sortType) {
-    switch (sortType) {
-      case SortType.TIME:
-        this._getEvents().sort(sortByTime);
-        break;
-      case SortType.PRICE:
-        this._getEvents().sort(sortByPrice);
-        break;
-      default:
-        this._getEvents = this._sourcedListEvents.slice();
-    }
+  // _sortEvents(sortType) {
+  //   switch (sortType) {
+  //     case SortType.TIME:
+  //       this._getEvents().sort(sortByTime);
+  //       break;
+  //     case SortType.PRICE:
+  //       this._getEvents().sort(sortByPrice);
+  //       break;
+  //     default:
+  //       this._getEvents() = this._tasksModel.getTasks();
+  //   }
 
-    this._currentSortType = sortType;
-  }
+  //   this._currentSortType = sortType;
+  // }
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
-    // this._currentSortType = sortType;
-    this._sortEvents(sortType);
+    this._currentSortType = sortType;
+    // this._sortEvents(sortType);
     this._clearListEvents({resetRenderedTaskCount: true});
     this._renderListEvents();
   }

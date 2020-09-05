@@ -28,6 +28,11 @@ export const OFFER_LIST = {
   "train": [`VIP`, `Tea`, `Comfort cupe`]
 };
 
+export const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};
 
 export const UserAction = {
   UPDATE_EVENT: `UPDATE_EVENT`,

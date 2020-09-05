@@ -1,12 +1,11 @@
 import SortView from "../view/sort.js";
-import {SortType} from "../view/sort.js";
 import NoEventView from "../view/no-events.js";
 import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
 import EventPresenter from "./event.js";
 import {render, remove} from "../utils/dom-utils.js";
 import {sortByTime, sortByPrice} from "../utils/date-utils.js";
-import {UserAction, UpdateType} from "../const.js";
+import {SortType, UserAction, UpdateType} from "../const.js";
 
 export default class Trip {
   constructor(listContainer, eventsModel) {
@@ -23,7 +22,6 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-    // this._handleEventChange = this._handleEventChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._eventsModel.addObserver(this._handleModelEvent);
@@ -58,20 +56,6 @@ export default class Trip {
   // this._eventPresenter[updatedEvent.id].init(updatedEvent);
   // }
 
-  // _sortEvents(sortType) {
-  //   // switch (sortType) {
-  //   //   case SortType.TIME:
-  //   //     this._listEvents.sort(sortByTime);
-  //   //     break;
-  //   //   case SortType.PRICE:
-  //   //     this._listEvents.sort(sortByPrice);
-  //   //     break;
-  //   //   default:
-  //   //     this._listEvents = this._sourcedListEvents.slice();
-  //   // }
-
-  //   this._currentSortType = sortType;
-  // }
   _handleViewAction(actionType, updateType, update) {
     console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
@@ -112,12 +96,27 @@ export default class Trip {
     }
   }
 
+  _sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.TIME:
+        this._getEvents().sort(sortByTime);
+        break;
+      case SortType.PRICE:
+        this._getEvents().sort(sortByPrice);
+        break;
+      default:
+        this._getEvents = this._sourcedListEvents.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
-    this._currentSortType = sortType;
+    // this._currentSortType = sortType;
     this._sortEvents(sortType);
     this._clearListEvents({resetRenderedTaskCount: true});
     this._renderListEvents();

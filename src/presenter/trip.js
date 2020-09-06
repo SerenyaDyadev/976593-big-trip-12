@@ -38,18 +38,9 @@ export default class Trip {
   }
 
   _getEvents() {
-
     const filterType = this._filterModel.getFilter();
-    // console.log(filterType);
-    // console.log(`filterType`);
     const events = this._eventsModel.getEvents();
-    // console.log(events);
-    // console.log(`events before filtered`);
     const filtredEvents = filter[filterType](events);
-    // console.log(filtredEvents);
-    // console.log(filter[filterType]);
-    // console.log(`filtredEvents`);
-
 
     switch (this._currentSortType) {
       case SortType.EVENT:
@@ -184,6 +175,7 @@ export default class Trip {
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
     remove(this._listDaysComponent);
+    remove(this._noEventComponent);
     this._taskPresenter = {};
 
     remove(this._sortComponent);

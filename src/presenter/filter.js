@@ -1,6 +1,5 @@
 import FilterView from "../view/filter.js";
 import {render, remove, replace} from "../utils/dom-utils.js";
-// import {filter} from "../utils/filter.js";
 import {UpdateType} from "../const.js";
 
 export default class Filter {

@@ -1,7 +1,7 @@
 import FilterView from "../view/filter.js";
 import {render, remove, replace} from "../utils/dom-utils.js";
-import {filter} from "../utils/filter.js";
-import {FilterType, UpdateType} from "../const.js";
+// import {filter} from "../utils/filter.js";
+import {UpdateType} from "../const.js";
 
 export default class Filter {
   constructor(filterContainer, filterModel, eventsModel) {
@@ -21,13 +21,12 @@ export default class Filter {
 
   init() {
     this._currentFilter = this._filterModel.getFilter();
-    // console.log(`11`)
-    const filters = this._getFilters();
+
     const prevFilterComponent = this._filterComponent;
 
     this._filterComponent = new FilterView(this._currentFilter);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
-    // console.log(`11`)
+
     if (prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent);
       return;
@@ -48,45 +47,4 @@ export default class Filter {
 
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
-
-  _getFilters() {
-    const events = this._eventsModel.getEvents();
-
-    console.log(events);
-    console.log(` filterPresenter Events`);
-  }
-
-  //   return [
-  //     {
-  //       type: FilterType.ALL,
-  //       name: `All`,
-  //       count: filter[FilterType.ALL](tasks).length
-  //     },
-  //     {
-  //       type: FilterType.OVERDUE,
-  //       name: `Overdue`,
-  //       count: filter[FilterType.OVERDUE](tasks).length
-  //     },
-  //     {
-  //       type: FilterType.TODAY,
-  //       name: `Today`,
-  //       count: filter[FilterType.TODAY](tasks).length
-  //     },
-  //     {
-  //       type: FilterType.FAVORITES,
-  //       name: `Favorites`,
-  //       count: filter[FilterType.FAVORITES](tasks).length
-  //     },
-  //     {
-  //       type: FilterType.REPEATING,
-  //       name: `Repeating`,
-  //       count: filter[FilterType.REPEATING](tasks).length
-  //     },
-  //     {
-  //       type: FilterType.ARCHIVE,
-  //       name: `Archive`,
-  //       count: filter[FilterType.ARCHIVE](tasks).length
-  //     }
-  //   ];
-  // }
 }

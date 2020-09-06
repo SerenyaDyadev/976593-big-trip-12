@@ -40,6 +40,7 @@ const createSortTemplate = (currentSortType) => {
 export default class Sort extends AbstractView {
   constructor(currentSortType) {
     super();
+
     this._currentSortType = currentSortType;
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }

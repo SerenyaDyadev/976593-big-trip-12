@@ -47,7 +47,7 @@ export const UpdateType = {
 };
 
 export const FilterType = {
-  EVERITHING: `everything`,
+  EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`
 };

@@ -272,7 +272,7 @@ export default class AddEdit extends SmartView {
           enableTime: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.date_from,
-          minDate: new Date(),
+          // minDate: new Date(),
           onChange: this._startTimeChangeHandler
         }
     );

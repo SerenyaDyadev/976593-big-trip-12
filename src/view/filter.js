@@ -5,7 +5,7 @@ const createFilterTemplate = (currentFilterType) => {
   return (
     `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
-        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" ${currentFilterType === FilterType.EVRYTHING ? `checked` : ``}>
+        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" ${currentFilterType === FilterType.EVERYTHING ? `checked` : ``}>
           <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
       </div>
 
@@ -16,7 +16,7 @@ const createFilterTemplate = (currentFilterType) => {
 
       <div class="trip-filters__filter">
         <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${currentFilterType === FilterType.PAST ? `checked` : ``}>
-        <label class="trip-filters__filter-label" for="filter-past">Past</label>
+        <label class="trip-filters__filter-label" for="filter-past"">Past</label>
       </div>
 
       <button class="visually-hidden" type="submit">Accept filter</button>
@@ -27,7 +27,6 @@ const createFilterTemplate = (currentFilterType) => {
 export default class Filter extends AbstractView {
   constructor(currentFilterType) {
     super();
-    // this._filters = filters;
     this._currentFilter = currentFilterType;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
@@ -37,12 +36,9 @@ export default class Filter extends AbstractView {
   }
 
   _filterTypeChangeHandler(evt) {
-    console.log(evt.target.tagName);
-    // if (evt.target.tagName !== `LABEL`) {
-    //   return;
-    // }
-    // evt.preventDefault();
-    // this._callback.filterTypeChange(evt.target.value);
+    if (evt.target.tagName === `INPUT`) {
+      this._callback.filterTypeChange(evt.target.value);
+    }
   }
 
   setFilterTypeChangeHandler(callback) {

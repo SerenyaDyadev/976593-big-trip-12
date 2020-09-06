@@ -1,6 +1,6 @@
 import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
-import {DESCRIPTIONS, OFFER_LIST, UserAction, UpdateType} from "../const.js";
+import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
 import {getRandomElement} from "../utils/common.js";
 import flatpickr from "flatpickr";
 
@@ -64,7 +64,6 @@ const createFavoriteTemplate = (isFavorite) => {
 const createEditEventTemplate = (oldEvent) => {
   const {
     "isFavorite": isFavorite,
-    // "isChange": isChange,
     "eventType": eventType,
     "destination": destination,
     "offers": offers,
@@ -188,7 +187,7 @@ const createEditEventTemplate = (oldEvent) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
 
           ${createFavoriteTemplate(isFavorite)}
 
@@ -218,6 +217,7 @@ export default class AddEdit extends SmartView {
     this._datepickerEnd = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
@@ -226,6 +226,18 @@ export default class AddEdit extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepickers();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
   }
 
   reset(event) {
@@ -242,6 +254,7 @@ export default class AddEdit extends SmartView {
     this._setInnerHandlers();
     this._setDatepickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setDatepickers() {
@@ -289,8 +302,6 @@ export default class AddEdit extends SmartView {
     if (evt.target.value !== `on`) {
       console.log(`_typeChangeHandler`);
       this.updateData(
-          UserAction.UPDATE_EVENT,
-          UpdateType.PATCH,
           {
             eventType: evt.target.value,
             offers: OFFER_LIST[evt.target.value],
@@ -302,8 +313,6 @@ export default class AddEdit extends SmartView {
     console.log(`_destinationChangeHandler`);
 
     this.updateData(
-        UserAction.UPDATE_EVENT,
-        UpdateType.MINOR,
         {
           destination: evt.target.value,
           description: getRandomElement(DESCRIPTIONS)
@@ -314,8 +323,6 @@ export default class AddEdit extends SmartView {
     console.log(`_startTimeChangeHandler`);
 
     this.updateData(
-        UserAction.UPDATE_EVENT,
-        UpdateType.MINOR,
         {
           "date_from": time,
         });
@@ -325,8 +332,6 @@ export default class AddEdit extends SmartView {
     console.log(`_endTimeChangeHandler`);
 
     this.updateData(
-        UserAction.UPDATE_EVENT,
-        UpdateType.MINOR,
         {
           "date_to": time,
         });
@@ -343,8 +348,6 @@ export default class AddEdit extends SmartView {
     console.log(`_favoriteClickHandler`);
 
     this.updateData(
-        UserAction.UPDATE_EVENT,
-        UpdateType.PATCH,
         {
           isFavorite: !this._data.isFavorite
         });
@@ -358,6 +361,17 @@ export default class AddEdit extends SmartView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._handleFavoriteClick);
+  }
+
+  _formDeleteClickHandler(evt) {
+    console.log(`_formDeleteClickHandler`);
+    evt.preventDefault();
+    this._callback.deleteClick(AddEdit.parseDataToEvent(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 
   static parseEventToData(event) {

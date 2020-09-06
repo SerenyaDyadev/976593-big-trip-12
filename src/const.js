@@ -45,3 +45,9 @@ export const UpdateType = {
   MINOR: `MINOR`,
   MAJOR: `MAJOR`
 };
+
+export const FilterType = {
+  EVERITHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};

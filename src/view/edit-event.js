@@ -15,7 +15,7 @@ const BLANK_EVENT = {
   "offerPrices": [],
   "date_from": ``,
   "date_to": ``,
-  "price": 0,
+  "price": ``,
   "description": ``,
   "photoPlace": false
 };
@@ -76,7 +76,7 @@ const createFavoriteTemplate = (isFavorite) => {
   );
 };
 
-const createEditEventTemplate = (oldEvent) => {
+const createEditEventTemplate = (event) => {
   const {
     "isFavorite": isFavorite,
     "eventType": eventType,
@@ -88,7 +88,7 @@ const createEditEventTemplate = (oldEvent) => {
     "price": price,
     "description": description,
     "photoPlace": photoPlace
-  } = oldEvent;
+  } = event;
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
@@ -195,7 +195,7 @@ const createEditEventTemplate = (oldEvent) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-              <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+              <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>

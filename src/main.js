@@ -10,13 +10,6 @@ import {render, RenderPosition} from "./utils/dom-utils.js";
 const EVENT_COUNT = 12;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
-// const filters = [
-//   {
-//     type: `all`,
-//     name: `ALL`,
-//     count: 0
-//   }
-// ];
 
 const eventsModel = new EventsModel();
 eventsModel.setEvents(events);
@@ -36,3 +29,8 @@ const siteTripEvents = document.querySelector(`.trip-events`);
 const tripPresenter = new TripPresenter(siteTripEvents, eventsModel, filterModel);
 filterPresenter.init();
 tripPresenter.init(events);
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  tripPresenter.createEvent();
+});

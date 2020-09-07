@@ -37,7 +37,7 @@ export const getDurationTemplate = (startTime, endTime) => {
 
   const days = moment.duration(duratuon).days() !== 0 ? moment.duration(duratuon).days() + `D` : ``;
   const hours = moment.duration(duratuon).hours() !== 0 ? moment.duration(duratuon).hours() + `H` : ``;
-  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : ``;
+  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : `M`;
 
   return (hasZero(days) + hasZero(hours) + hasZero(minutes));
 };

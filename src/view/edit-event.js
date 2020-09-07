@@ -7,16 +7,16 @@ import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  "isFavorite": `true`,
-  "eventType": ` `,
-  "destination": ` `,
+  "isFavorite": `false`,
+  "eventType": `Taxi`,
+  "destination": ``,
   "offers": [],
   "offerPrices": [],
-  "date_from": `00-00`,
-  "date_to": `00-00`,
+  "date_from": ``,
+  "date_to": ``,
   "price": 0,
   "description": ``,
-  "photoPlace": `http://picsum.photos/248/152?r=${Math.random()}`
+  "photoPlace": false
 };
 
 
@@ -45,6 +45,20 @@ const getOffersTemplate = (offers, offerPrices) => {
       ${getOffers(offers, offerPrices)}
       </div>
     </section>`
+  );
+};
+
+const createPhotoTeplate = (photoPlace) => {
+  if (!photoPlace) {
+    return ``;
+  }
+
+  return (
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+        <img class="event__photo" src=${photoPlace} alt="Event photo">
+      </div>
+    </div>`
   );
 };
 
@@ -78,9 +92,6 @@ const createEditEventTemplate = (oldEvent) => {
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
 
-  // console.log(Object.toJSON(this._data) === Object.toJSON(event));
-  // console.log(Object.toJSON(oldEvent) === Object.toJSON(oldEvent));
-  // const isSubmitDisabled = !isChange;
   const isSubmitDisabled = false;
 
   return (
@@ -157,7 +168,7 @@ const createEditEventTemplate = (oldEvent) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${eventType[0].toUpperCase() + eventType.slice(1)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1" autocomplete="off">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -198,10 +209,8 @@ const createEditEventTemplate = (oldEvent) => {
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${description}</p>
 
-              <div class="event__photos-container">
-                <div class="event__photos-tape">
-                  <img class="event__photo" src=${photoPlace} alt="Event photo">
-              </div>
+              ${createPhotoTeplate(photoPlace)}
+
             </section>
           </section>
           </form>`
@@ -272,7 +281,6 @@ export default class AddEdit extends SmartView {
           enableTime: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.date_from,
-          // minDate: new Date(),
           onChange: this._startTimeChangeHandler
         }
     );
@@ -300,7 +308,6 @@ export default class AddEdit extends SmartView {
 
   _typeChangeHandler(evt) {
     if (evt.target.value !== `on`) {
-      console.log(`_typeChangeHandler`);
       this.updateData(
           {
             eventType: evt.target.value,
@@ -310,7 +317,6 @@ export default class AddEdit extends SmartView {
   }
 
   _destinationChangeHandler(evt) {
-    console.log(`_destinationChangeHandler`);
 
     this.updateData(
         {
@@ -320,8 +326,6 @@ export default class AddEdit extends SmartView {
   }
 
   _startTimeChangeHandler([time]) {
-    console.log(`_startTimeChangeHandler`);
-
     this.updateData(
         {
           "date_from": time,
@@ -329,8 +333,6 @@ export default class AddEdit extends SmartView {
   }
 
   _endTimeChangeHandler([time]) {
-    console.log(`_endTimeChangeHandler`);
-
     this.updateData(
         {
           "date_to": time,
@@ -338,15 +340,11 @@ export default class AddEdit extends SmartView {
   }
 
   _formSubmitHandler(evt) {
-    console.log(`_formSubmitHandler`);
-
     evt.preventDefault();
     this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
   }
 
   _handleFavoriteClick() {
-    console.log(`_favoriteClickHandler`);
-
     this.updateData(
         {
           isFavorite: !this._data.isFavorite
@@ -364,7 +362,6 @@ export default class AddEdit extends SmartView {
   }
 
   _formDeleteClickHandler(evt) {
-    console.log(`_formDeleteClickHandler`);
     evt.preventDefault();
     this._callback.deleteClick(AddEdit.parseDataToEvent(this._data));
   }

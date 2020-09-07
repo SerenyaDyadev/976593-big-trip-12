@@ -1,7 +1,7 @@
 import {getRandomInteger, getRandomElement} from "../utils/common.js";
 import {EVENT_TYPES, DESTINATIONS, DESCRIPTIONS, OFFER_LIST} from "../const.js";
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const getTimeStamp = (maxMinutsGap, maxDaysGap) => {
   let currentDate = new Date();

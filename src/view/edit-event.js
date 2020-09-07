@@ -1,3 +1,4 @@
+import he from "he";
 import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
 import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
@@ -168,7 +169,7 @@ const createEditEventTemplate = (oldEvent) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${eventType[0].toUpperCase() + eventType.slice(1)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1" autocomplete="off">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination)}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>

@@ -233,6 +233,7 @@ export default class AddEdit extends SmartView {
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
     this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepickers();
@@ -305,6 +306,9 @@ export default class AddEdit extends SmartView {
     this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`change`, this._destinationChangeHandler);
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`change`, this._priceChangeHandler);
   }
 
   _typeChangeHandler(evt) {
@@ -318,7 +322,6 @@ export default class AddEdit extends SmartView {
   }
 
   _destinationChangeHandler(evt) {
-
     this.updateData(
         {
           destination: evt.target.value,
@@ -349,6 +352,13 @@ export default class AddEdit extends SmartView {
     this.updateData(
         {
           isFavorite: !this._data.isFavorite
+        });
+  }
+
+  _priceChangeHandler(evt) {
+    this.updateData(
+        {
+          price: Number(evt.target.value)
         });
   }
 

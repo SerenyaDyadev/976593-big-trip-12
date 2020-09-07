@@ -1,7 +1,7 @@
 import {getRandomInteger, getRandomElement} from "../utils/common.js";
 import {EVENT_TYPES, DESTINATIONS, DESCRIPTIONS, OFFER_LIST} from "../const.js";
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const getTimeStamp = (maxMinutsGap, maxDaysGap) => {
   let currentDate = new Date();
@@ -24,18 +24,14 @@ export const generateEvent = () => {
   const offerPrices = new Array(offers.length).fill().map(() => getRandomInteger(0, 100));
   const {time} = getTimeStamp(maxMinutsGap, maxDaysGap);
   const isFavorite = Boolean(getRandomInteger(0, 1));
-  // const dateFrom = time[0];
-  // const dateTo = time[1];
 
   return {
     "id": generateId(),
-    "isChange": false,
     "isFavorite": isFavorite,
     "eventType": eventType,
     "destination": getRandomElement(DESTINATIONS),
     "offers": offers,
     "offerPrices": offerPrices,
-    // "time": time,
     "date_from": time[0],
     "date_to": time[1],
     "price": getRandomInteger(0, 100),
@@ -44,4 +40,3 @@ export const generateEvent = () => {
   };
 };
 
-// isFavoriteFlag - пока временное решение

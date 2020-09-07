@@ -1,3 +1,4 @@
+import he from "he";
 import SmartView from "./smart.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
 import {DESCRIPTIONS, OFFER_LIST} from "../const.js";
@@ -7,16 +8,16 @@ import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  "isFavorite": `true`,
-  "eventType": ` `,
-  "destination": ` `,
+  "isFavorite": `false`,
+  "eventType": `Taxi`,
+  "destination": ``,
   "offers": [],
   "offerPrices": [],
-  "date_from": `00-00`,
-  "date_to": `00-00`,
-  "price": 0,
+  "date_from": ``,
+  "date_to": ``,
+  "price": ``,
   "description": ``,
-  "photoPlace": `http://picsum.photos/248/152?r=${Math.random()}`
+  "photoPlace": false
 };
 
 
@@ -48,6 +49,20 @@ const getOffersTemplate = (offers, offerPrices) => {
   );
 };
 
+const createPhotoTeplate = (photoPlace) => {
+  if (!photoPlace) {
+    return ``;
+  }
+
+  return (
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+        <img class="event__photo" src=${photoPlace} alt="Event photo">
+      </div>
+    </div>`
+  );
+};
+
 const createFavoriteTemplate = (isFavorite) => {
 
   return (`
@@ -64,7 +79,6 @@ const createFavoriteTemplate = (isFavorite) => {
 const createEditEventTemplate = (event) => {
   const {
     "isFavorite": isFavorite,
-    "isChange": isChange,
     "eventType": eventType,
     "destination": destination,
     "offers": offers,
@@ -76,11 +90,10 @@ const createEditEventTemplate = (event) => {
     "photoPlace": photoPlace
   } = event;
 
-
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
 
-  const isSubmitDisabled = !isChange;
+  const isSubmitDisabled = false;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -156,7 +169,7 @@ const createEditEventTemplate = (event) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${eventType[0].toUpperCase() + eventType.slice(1)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1" autocomplete="off">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination)}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -182,11 +195,11 @@ const createEditEventTemplate = (event) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-              <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+              <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
 
           ${createFavoriteTemplate(isFavorite)}
 
@@ -197,10 +210,8 @@ const createEditEventTemplate = (event) => {
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${description}</p>
 
-              <div class="event__photos-container">
-                <div class="event__photos-tape">
-                  <img class="event__photo" src=${photoPlace} alt="Event photo">
-              </div>
+              ${createPhotoTeplate(photoPlace)}
+
             </section>
           </section>
           </form>`
@@ -216,7 +227,8 @@ export default class AddEdit extends SmartView {
     this._datepickerEnd = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
@@ -224,6 +236,18 @@ export default class AddEdit extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepickers();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
   }
 
   reset(event) {
@@ -240,6 +264,7 @@ export default class AddEdit extends SmartView {
     this._setInnerHandlers();
     this._setDatepickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setDatepickers() {
@@ -257,7 +282,6 @@ export default class AddEdit extends SmartView {
           enableTime: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.date_from,
-          minDate: new Date(),
           onChange: this._startTimeChangeHandler
         }
     );
@@ -285,34 +309,35 @@ export default class AddEdit extends SmartView {
 
   _typeChangeHandler(evt) {
     if (evt.target.value !== `on`) {
-      this.updateData({
-        isChange: true,
-        eventType: evt.target.value,
-        offers: OFFER_LIST[evt.target.value],
-      });
+      this.updateData(
+          {
+            eventType: evt.target.value,
+            offers: OFFER_LIST[evt.target.value],
+          });
     }
   }
 
   _destinationChangeHandler(evt) {
-    this.updateData({
-      isChange: true,
-      destination: evt.target.value,
-      description: getRandomElement(DESCRIPTIONS)
-    });
+
+    this.updateData(
+        {
+          destination: evt.target.value,
+          description: getRandomElement(DESCRIPTIONS)
+        });
   }
 
   _startTimeChangeHandler([time]) {
-    this.updateData({
-      "isChange": true,
-      "date_from": time,
-    });
+    this.updateData(
+        {
+          "date_from": time,
+        });
   }
 
   _endTimeChangeHandler([time]) {
-    this.updateData({
-      "isChange": true,
-      "date_to": time,
-    });
+    this.updateData(
+        {
+          "date_to": time,
+        });
   }
 
   _formSubmitHandler(evt) {
@@ -320,11 +345,11 @@ export default class AddEdit extends SmartView {
     this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
   }
 
-  _favoriteClickHandler() {
-    this.updateData({
-      isChange: true,
-      isFavorite: !this._data.isFavorite
-    });
+  _handleFavoriteClick() {
+    this.updateData(
+        {
+          isFavorite: !this._data.isFavorite
+        });
   }
 
   setFormSubmitHandler(callback) {
@@ -334,7 +359,17 @@ export default class AddEdit extends SmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._handleFavoriteClick);
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(AddEdit.parseDataToEvent(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 
   static parseEventToData(event) {

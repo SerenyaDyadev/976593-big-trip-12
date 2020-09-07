@@ -29,17 +29,35 @@ export const getDurationTemplate = (startTime, endTime) => {
     return ``;
   }
 
+  const hasZero = (item) => {
+    return item.length !== 0 && item.length < 3 ? `0` + item : item;
+  };
+
   const duratuon = startTime - endTime;
 
-  const days = moment.duration(duratuon).days() !== 0 ? moment.duration(duratuon, `d`).days() + `D` : ``;
+  const days = moment.duration(duratuon).days() !== 0 ? moment.duration(duratuon).days() + `D` : ``;
   const hours = moment.duration(duratuon).hours() !== 0 ? moment.duration(duratuon).hours() + `H` : ``;
-  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : `0M`;
+  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : `M`;
 
-  return (days + hours + minutes);
+  return (hasZero(days) + hasZero(hours) + hasZero(minutes));
 };
 
 export const sortByTime = (eventA, eventB) =>
-  eventB.time[0].getDate() - eventA.time[0].getDate();
+  eventB.date_from.getDate() - eventA.date_from.getDate();
 
 export const sortByPrice = (eventA, eventB) =>
   eventA.price - eventB.price;
+
+export const sortByEvent = (eventA, eventB) => {
+  if (eventA.date_from > eventB.date_from) {
+    return 1;
+  } else if (eventA.date_from < eventB.date_from) {
+    return -1;
+  } else {
+    return 0;
+  }
+};
+
+export const isTimeChange = (dateA, dateB) => {
+  return dateA === dateB ? true : false;
+};

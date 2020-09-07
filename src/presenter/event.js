@@ -1,6 +1,8 @@
 import EventView from "../view/event.js";
 import EventEditView from "../view/edit-event.js";
 import {render, replace, remove, escDown} from "../utils/dom-utils.js";
+import {UserAction, UpdateType} from "../const.js";
+import {isTimeChange} from "../utils/date-utils.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -20,7 +22,8 @@ export default class Event {
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
@@ -36,6 +39,7 @@ export default class Event {
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._eventListContainer, this._eventComponent);
@@ -90,20 +94,22 @@ export default class Event {
     this._replaceCardToForm();
   }
 
-  _handleFavoriteClick() {
+  _handleFormSubmit(update) {
+    const isMinorUpdate = isTimeChange(this._event.date_from, update.date_from);
     this._changeData(
-        Object.assign(
-            {},
-            this._event,
-            {
-              isFavorite: !this._event.isFavorite
-            }
-        )
+        UserAction.UPDATE_EVENT,
+        isMinorUpdate ? UpdateType.PATCH : UpdateType.MINOR,
+        update
     );
+
+    this._replaceFormToCard();
   }
 
-  _handleFormSubmit(event) {
-    this._changeData(event);
-    this._replaceFormToCard();
+  _handleDeleteClick(event) {
+    this._changeData(
+        UserAction.DELETE_EVENT,
+        UpdateType.MINOR,
+        event
+    );
   }
 }

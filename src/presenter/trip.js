@@ -31,19 +31,26 @@ export default class Trip {
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._eventsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._eventNewPresenter = new EventNewPresenter(this._listContainer, this._handleViewAction);
   }
 
   init() {
     this._renderListEvents();
+    this._eventsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+  }
+
+  destroy() {
+    this._clearListEvents({resetSortType: true});
+    remove(this._sortComponent);
+
+    this._eventsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   createEvent() {
-    this._currentSortType = SortType.EVENT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    // this._currentSortType = SortType.EVENT;
+    // this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._eventNewPresenter.init();
   }
 

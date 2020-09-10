@@ -63,12 +63,12 @@ export const isTimeChange = (dateA, dateB) => {
 };
 
 
-export const getDuration = (duration) => {
+// export const getDuration = (duration) => {
 
-  // const days = moment.duration(duration).days() !== 0 ? moment.duration(duration).days() : ``;
-  // const hours = moment.duration(duration).hours() !== 0 ? moment.duration(duration).hours() : ``;
-  const hours = moment(duration).format(`H`);
+//   // const days = moment.duration(duration).days() !== 0 ? moment.duration(duration).days() : ``;
+//   // const hours = moment.duration(duration).hours() !== 0 ? moment.duration(duration).hours() : ``;
+//   const hours = moment(duration).format(`H`);
 
-  // return (hasZero(days) + hasZero(hours) + hasZero(minutes));
-  return (hours);
-};
+//   // return (hasZero(days) + hasZero(hours) + hasZero(minutes));
+//   return (hours);
+// };

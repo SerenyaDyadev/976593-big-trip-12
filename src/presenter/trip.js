@@ -42,15 +42,12 @@ export default class Trip {
 
   destroy() {
     this._clearListEvents({resetSortType: true});
-    remove(this._sortComponent);
 
     this._eventsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   createEvent() {
-    // this._currentSortType = SortType.EVENT;
-    // this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._eventNewPresenter.init();
   }
 

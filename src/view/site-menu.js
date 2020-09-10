@@ -24,9 +24,6 @@ export default class SiteMenu extends AbstractView {
   _menuClickHandler(evt) {
     evt.preventDefault();
     this._callback.menuClick(evt.target.id);
-    // console.log(evt.target.outerText === MenuItem.TABLE);
-    // console.log(evt);
-    // console.log(evt.target.id);
   }
 
   setMenuClickHandler(callback) {
@@ -36,15 +33,15 @@ export default class SiteMenu extends AbstractView {
   }
 
   setMenuItem(menuItem) {
-    console.log(menuItem);
+    const element = this.getElement().querySelector(`.trip-tabs__btn--active`);
+    if (element) {
+      element.classList.remove(`trip-tabs__btn--active`);
+    }
+
     const item = this.getElement().querySelector(`#${menuItem}`);
-    console.log(item);
-    console.log(`setMenuItem(menuItem)`);
 
     if (item !== null) {
       item.classList.add(`trip-tabs__btn--active`);
     }
   }
 }
-
-// trip-tabs__btn--active

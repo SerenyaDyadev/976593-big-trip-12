@@ -7,7 +7,7 @@ import EventPresenter from "./event.js";
 import EventNewPresenter from "./add-event.js";
 import {render, remove, RenderPosition} from "../utils/dom-utils.js";
 import {sortByEvent, sortByTime, sortByPrice} from "../utils/date-utils.js";
-import {SortType, UserAction, UpdateType, FilterType} from "../const.js";
+import {SortType, UserAction, UpdateType} from "../const.js";
 import {filter} from "../utils/filter.js";
 
 export default class Trip {

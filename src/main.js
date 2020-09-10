@@ -8,7 +8,7 @@ import {generateEvent} from "./mock/event.js";
 import {render} from "./utils/dom-utils.js";
 import {MenuItem} from "./const.js";
 
-const EVENT_COUNT = 12;
+const EVENT_COUNT = 6;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 

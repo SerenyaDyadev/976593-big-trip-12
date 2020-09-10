@@ -33,11 +33,11 @@ export const getDurationTemplate = (startTime, endTime) => {
     return item.length !== 0 && item.length < 3 ? `0` + item : item;
   };
 
-  const duratuon = startTime - endTime;
+  const duration = startTime - endTime;
 
-  const days = moment.duration(duratuon).days() !== 0 ? moment.duration(duratuon).days() + `D` : ``;
-  const hours = moment.duration(duratuon).hours() !== 0 ? moment.duration(duratuon).hours() + `H` : ``;
-  const minutes = moment.duration(duratuon).minutes() !== 0 ? moment.duration(duratuon).minutes() + `M` : `M`;
+  const days = moment.duration(duration).days() !== 0 ? moment.duration(duration).days() + `D` : ``;
+  const hours = moment.duration(duration).hours() !== 0 ? moment.duration(duration).hours() + `H` : ``;
+  const minutes = moment.duration(duration).minutes() !== 0 ? moment.duration(duration).minutes() + `M` : `M`;
 
   return (hasZero(days) + hasZero(hours) + hasZero(minutes));
 };
@@ -60,4 +60,15 @@ export const sortByEvent = (eventA, eventB) => {
 
 export const isTimeChange = (dateA, dateB) => {
   return dateA === dateB ? true : false;
+};
+
+
+export const getDuration = (duration) => {
+
+  // const days = moment.duration(duration).days() !== 0 ? moment.duration(duration).days() : ``;
+  // const hours = moment.duration(duration).hours() !== 0 ? moment.duration(duration).hours() : ``;
+  const hours = moment(duration).format(`H`);
+
+  // return (hasZero(days) + hasZero(hours) + hasZero(minutes));
+  return (hours);
 };

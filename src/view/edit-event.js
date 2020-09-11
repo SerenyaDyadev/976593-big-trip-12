@@ -17,7 +17,7 @@ const BLANK_EVENT = {
   destination: {
     name: ``,
     description: ``,
-    photos: false
+    pictures: false
   },
   offers: ``
 };
@@ -26,11 +26,11 @@ const getOffers = (offers) => {
 
   return new Array(offers.length).fill().map((element, index) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[index].offerTitle.replace(` `)}" type="checkbox" name="event-offer-luggage">
-      <label class="event__offer-label" for="event-offer-${offers[index].offerTitle.replace(` `)}">
-        <span class="event__offer-title">${offers[index].offerTitle}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[index].title.replace(` `)}" type="checkbox" name="event-offer-luggage">
+      <label class="event__offer-label" for="event-offer-${offers[index].title.replace(` `)}">
+        <span class="event__offer-title">${offers[index].title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offers[index].offerPrice}</span>
+        <span class="event__offer-price">${offers[index].price}</span>
       </label>
     </div>`).join(`,`);
 };
@@ -50,19 +50,19 @@ const getOffersTemplate = (offers) => {
   );
 };
 
-const getPhotoTemplate = (photos) => {
-  return new Array(photos.length).fill().map((element, index) => `<img class="event__photo" src="${photos[index].src}" alt="${photos[index].description}">`).join(`,`);
+const getPhotoTemplate = (pictures) => {
+  return new Array(pictures.length).fill().map((element, index) => `<img class="event__photo" src="${pictures[index].src}" alt="${pictures[index].description}">`).join(`,`);
 };
 
-const createPhotoTeplate = (photos) => {
-  if (!photos) {
+const createPhotoTeplate = (pictures) => {
+  if (!pictures) {
     return ``;
   }
 
   return (
     `<div class="event__photos-container">
       <div class="event__photos-tape">
-       ${getPhotoTemplate(photos)}
+       ${getPhotoTemplate(pictures)}
       </div>
     </div>`);
 };
@@ -96,7 +96,7 @@ const createEditEventTemplate = (event) => {
     destination: {
       name,
       description,
-      photos
+      pictures
     },
     offers,
   } = event;
@@ -223,7 +223,7 @@ const createEditEventTemplate = (event) => {
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${description}</p>
 
-              ${createPhotoTeplate(photos)}
+              ${createPhotoTeplate(pictures)}
 
             </section>
           </section>

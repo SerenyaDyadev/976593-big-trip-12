@@ -44,7 +44,6 @@ export const generateEvent = () => {
   const maxDaysGap = 4;
   const eventType = getRandomElement(Object.values(EVENT_TYPES[getRandomInteger(0, EVENT_TYPES.length - 1)]));
   const photos = new Array(getRandomInteger(0, 6)).fill(``).map(() => getPhotoObject());
-  const offers = getOffers(OFFER_LIST[eventType]);
   const {time} = getTimeStamp(maxMinutsGap, maxDaysGap);
   const isFavorite = Boolean(getRandomInteger(0, 1));
 
@@ -60,6 +59,6 @@ export const generateEvent = () => {
     },
     price: getRandomInteger(0, 100),
     isFavorite,
-    offers,
+    offers: getOffers(OFFER_LIST[eventType]),
   };
 };

@@ -6,8 +6,10 @@ export default class Points extends Observer {
     this._events = [];
   }
 
-  setEvents(events) {
+  setEvents(updateType, events) {
     this._events = events.slice();
+
+    this._notify(updateType);
   }
 
   getEvents() {
@@ -52,5 +54,50 @@ export default class Points extends Observer {
     ];
 
     this._notify(updateType);
+  }
+
+  static adaptToClient(event) {
+    const adaptedEvent = Object.assign(
+        {},
+        event,
+        {
+          price: event.base_price,
+          isFavorite: event.is_favorite,
+          eventType: event.type,
+          dateFrom: event.date_from !== null ? new Date(event.date_from) : event.date_from,
+          dateTo: event.date_to !== null ? new Date(event.date_to) : event.date_to,
+        }
+    );
+
+
+    delete adaptedEvent.base_price;
+    delete adaptedEvent.is_favorite;
+    delete adaptedEvent.type;
+    delete adaptedEvent.date_from;
+    delete adaptedEvent.date_to;
+
+    return adaptedEvent;
+  }
+
+  static adaptToServer(event) {
+    const adaptedEvent = Object.assign(
+        {},
+        event,
+        {
+          "base_price": event.price,
+          "is_favorite": event.isFavorite,
+          "type": event.eventType,
+          "date_from": event.dateFrom instanceof Date ? event.dateFrom.toISOString() : null,
+          "date_to": event.dateTo instanceof Date ? event.dateTo.toISOString() : null,
+        }
+    );
+
+    delete adaptedEvent.price;
+    delete adaptedEvent.isFavorite;
+    delete adaptedEvent.eventType;
+    delete adaptedEvent.dateFrom;
+    delete adaptedEvent.dateTo;
+
+    return adaptedEvent;
   }
 }

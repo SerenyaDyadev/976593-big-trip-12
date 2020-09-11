@@ -1,3 +1,5 @@
+import EventModel from "./model/points.js";
+
 const Method = {
   GET: `GET`,
   PUT: `PUT`
@@ -16,17 +18,19 @@ export default class Api {
 
   getEvents() {
     return this._load({url: `points`})
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then((tasks) => tasks.map(EventModel.adaptToClient));
   }
 
-  updateEvent(point) {
+  updateEvent(event) {
     return this._load({
-      url: `points/${point.id}`,
+      url: `points/${event.id}`,
       method: Method.PUT,
-      body: JSON.stringify(point),
+      body: JSON.stringify(EventModel.adaptToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(EventModel.adaptToClient);
   }
 
   _load({

@@ -11,9 +11,9 @@ const createOffersTemplates = (offers, maxOffersLength) => {
 
   return new Array(templateLength).fill().map((element, index) =>
     `<li class="event__offer">
-      <span class="event__offer-title">${offers[index].offerTitle}</span>
+      <span class="event__offer-title">${offers[index].title}</span>
         &plus;
-        &euro;&nbsp;<span class="event__offer-price">${offers[index].offerPrice}</span>
+        &euro;&nbsp;<span class="event__offer-price">${offers[index].price}</span>
     </li>`
   ).join(` `);
 };
@@ -22,7 +22,6 @@ const createEventItem = (event) => {
 
   const maxOffersLength = 3;
   const {eventType, destination, price, offers, dateFrom: startTime, dateTo: endTime} = event;
-
 
   return (
     `<li class="trip-events__item">

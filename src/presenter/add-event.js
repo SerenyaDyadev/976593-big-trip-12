@@ -1,5 +1,5 @@
 import EventEditView from "../view/edit-event.js";
-import {generateId} from "../mock/event.js";
+import {generateId} from "../utils/common.js";
 import {render, remove, escDown, RenderPosition} from "../utils/dom-utils.js";
 import {UserAction, UpdateType} from "../const.js";
 

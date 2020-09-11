@@ -4,21 +4,21 @@ import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
 import EventsModel from "./model/points.js";
 import FilterModel from "./model/filter.js";
-import {generateEvent} from "./mock/event.js";
-import {render, remove} from "./utils/dom-utils.js";
-import {MenuItem} from "./const.js";
+// import {generateEvent} from "./mock/event.js";
+import {render, remove, RenderPosition} from "./utils/dom-utils.js";
+import {MenuItem, UpdateType} from "./const.js";
 import Api from "./api.js";
 
-const EVENT_COUNT = 10;
+// const EVENT_COUNT = 10;
 
-const events = new Array(EVENT_COUNT).fill().map(generateEvent);
-console.log(events);
+// const events = new Array(EVENT_COUNT).fill().map(generateEvent);
+// console.log(events);
 
 
-// const AUTHORIZATION = `Basic nfkor2u3e3e2hdiuw`;
-// const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
+const AUTHORIZATION = `Basic nfkor2u3e3e2hdiuw`;
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 
-// const api = new Api(END_POINT, AUTHORIZATION);
+const api = new Api(END_POINT, AUTHORIZATION);
 
 // api.getEvents().then((events) => {
 //   console.log(events);
@@ -30,14 +30,13 @@ console.log(events);
 
 
 const eventsModel = new EventsModel();
-eventsModel.setEvents(events);
+// eventsModel.setEvents(events);
 
 const filterModel = new FilterModel();
 
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripControlsElement = siteHeader.querySelector(`.trip-main__trip-controls`);
 const siteMenuComponent = new SiteMenuView();
-render(siteTripControlsElement, siteMenuComponent);
 
 let statisticsComponent = null;
 
@@ -59,13 +58,11 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-siteMenuComponent.setMenuItem(MenuItem.TABLE);
 
 const filterPresenter = new FilterPresenter(siteTripControlsElement, filterModel, eventsModel);
 
 const siteTripEvents = document.querySelector(`.trip-events`);
-const tripPresenter = new TripPresenter(siteTripEvents, eventsModel, filterModel);
+const tripPresenter = new TripPresenter(siteTripEvents, eventsModel, filterModel, api);
 filterPresenter.init();
 tripPresenter.init();
 
@@ -73,3 +70,17 @@ document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (e
   evt.preventDefault();
   tripPresenter.createEvent();
 });
+
+api.getEvents()
+  .then((events) => {
+    eventsModel.setEvents(UpdateType.INIT, events);
+    render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+    siteMenuComponent.setMenuItem(MenuItem.TABLE);
+  })
+  .catch(() => {
+    eventsModel.setEvents(UpdateType.INIT, []);
+    render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+    siteMenuComponent.setMenuItem(MenuItem.TABLE);
+  });

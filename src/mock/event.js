@@ -16,27 +16,50 @@ const getTimeStamp = (maxMinutsGap, maxDaysGap) => {
   return {time};
 };
 
+const getPhotoObject = () =>{
+  return {
+    src: `http://picsum.photos/248/152?r=${Math.random()}`,
+    description: getRandomElement(DESCRIPTIONS),
+  };
+};
+
+const getOffersObject = (title) => {
+  return {
+    offerTitle: title,
+    offerPrice: getRandomInteger(0, 100),
+  };
+};
+
+const getOffers = (eventType) => {
+  if (eventType.length) {
+    return new Array(eventType.length).fill(``).map((el, index) => getOffersObject(eventType[index]));
+  }
+
+  return null;
+};
+
+
 export const generateEvent = () => {
   const maxMinutsGap = 120;
   const maxDaysGap = 4;
-  const eventType = getRandomElement(EVENT_TYPES);
-  const offers = OFFER_LIST[eventType];
-  const offerPrices = new Array(offers.length).fill().map(() => getRandomInteger(0, 100));
+  const eventType = getRandomElement(Object.values(EVENT_TYPES[getRandomInteger(0, EVENT_TYPES.length - 1)]));
+  const photos = new Array(getRandomInteger(0, 6)).fill(``).map(() => getPhotoObject());
+  const offers = getOffers(OFFER_LIST[eventType]);
   const {time} = getTimeStamp(maxMinutsGap, maxDaysGap);
   const isFavorite = Boolean(getRandomInteger(0, 1));
 
   return {
-    "id": generateId(),
-    "isFavorite": isFavorite,
-    "eventType": eventType,
-    "destination": getRandomElement(DESTINATIONS),
-    "offers": offers,
-    "offerPrices": offerPrices,
-    "date_from": time[0],
-    "date_to": time[1],
-    "price": getRandomInteger(0, 100),
-    "description": getRandomElement(DESCRIPTIONS),
-    "photoPlace": `http://picsum.photos/248/152?r=${Math.random()}`
+    id: generateId(),
+    eventType,
+    dateFrom: time[0],
+    dateTo: time[1],
+    destination: {
+      name: getRandomElement(DESTINATIONS),
+      description: getRandomElement(DESCRIPTIONS),
+      photos
+    },
+    price: getRandomInteger(0, 100),
+    isFavorite,
+    offers,
   };
 };
-

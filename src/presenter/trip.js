@@ -170,11 +170,11 @@ export default class Trip {
     let day = null;
 
     for (let event of this._getEvents()) {
-      const eventDayDate = event.date_from.getDate();
+      const eventDayDate = event.dateFrom.getDate();
       if (dayDate === eventDayDate) {
         this._renderEvent(day.getEventsList(), event);
       } else {
-        day = new DayView(event.date_from, dayNumber);
+        day = new DayView(event.dateFrom, dayNumber);
 
         this._renderDay(day);
         this._renderEvent(day.getEventsList(), event);

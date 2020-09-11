@@ -8,34 +8,35 @@ import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  "isFavorite": `false`,
-  "eventType": `Taxi`,
-  "destination": ``,
-  "offers": [],
-  "offerPrices": [],
-  "date_from": ``,
-  "date_to": ``,
-  "price": ``,
-  "description": ``,
-  "photoPlace": false
+  blankEvent: true,
+  isFavorite: false,
+  price: ``,
+  dateFrom: ``,
+  dateTo: ``,
+  eventType: `Taxi`,
+  destination: {
+    name: ``,
+    description: ``,
+    photos: false
+  },
+  offers: ``
 };
 
-
-const getOffers = (offers, offerPrices) => {
+const getOffers = (offers) => {
 
   return new Array(offers.length).fill().map((element, index) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[index].replace(` `)}" type="checkbox" name="event-offer-luggage">
-      <label class="event__offer-label" for="event-offer-${offers[index].replace(` `)}">
-        <span class="event__offer-title">${offers[index]}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[index].offerTitle.replace(` `)}" type="checkbox" name="event-offer-luggage">
+      <label class="event__offer-label" for="event-offer-${offers[index].offerTitle.replace(` `)}">
+        <span class="event__offer-title">${offers[index].offerTitle}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offerPrices[index]}</span>
+        <span class="event__offer-price">${offers[index].offerPrice}</span>
       </label>
     </div>`).join(`,`);
 };
 
-const getOffersTemplate = (offers, offerPrices) => {
-  if (offers.length === 0) {
+const getOffersTemplate = (offers) => {
+  if (!offers) {
     return ``;
   }
 
@@ -43,24 +44,27 @@ const getOffersTemplate = (offers, offerPrices) => {
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-      ${getOffers(offers, offerPrices)}
+      ${getOffers(offers)}
       </div>
     </section>`
   );
 };
 
-const createPhotoTeplate = (photoPlace) => {
-  if (!photoPlace) {
+const getPhotoTemplate = (photos) => {
+  return new Array(photos.length).fill().map((element, index) => `<img class="event__photo" src="${photos[index].src}" alt="${photos[index].description}">`).join(`,`);
+};
+
+const createPhotoTeplate = (photos) => {
+  if (!photos) {
     return ``;
   }
 
   return (
     `<div class="event__photos-container">
       <div class="event__photos-tape">
-        <img class="event__photo" src=${photoPlace} alt="Event photo">
+       ${getPhotoTemplate(photos)}
       </div>
-    </div>`
-  );
+    </div>`);
 };
 
 const createFavoriteTemplate = (isFavorite) => {
@@ -77,17 +81,24 @@ const createFavoriteTemplate = (isFavorite) => {
 };
 
 const createEditEventTemplate = (event) => {
+  let action = `Delete`;
+
+  if (event.blankEvent) {
+    action = `Cancel`;
+  }
+
   const {
-    "isFavorite": isFavorite,
-    "eventType": eventType,
-    "destination": destination,
-    "offers": offers,
-    "offerPrices": offerPrices,
-    "date_from": dateFrom,
-    "date_to": dateTo,
-    "price": price,
-    "description": description,
-    "photoPlace": photoPlace
+    isFavorite,
+    price,
+    dateFrom,
+    dateTo,
+    eventType,
+    destination: {
+      name,
+      description,
+      photos
+    },
+    offers,
   } = event;
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
@@ -169,7 +180,7 @@ const createEditEventTemplate = (event) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${eventType[0].toUpperCase() + eventType.slice(1)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination)}" list="destination-list-1" autocomplete="off">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -199,18 +210,20 @@ const createEditEventTemplate = (event) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__reset-btn" type="reset">${action}</button>
 
           ${createFavoriteTemplate(isFavorite)}
 
         </header>
           <section class="event__details">
-            ${getOffersTemplate(offers, offerPrices)}
-            <section class="event__section  event__section--destination">
+
+            ${getOffersTemplate(offers)}
+
+          <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${description}</p>
 
-              ${createPhotoTeplate(photoPlace)}
+              ${createPhotoTeplate(photos)}
 
             </section>
           </section>
@@ -282,7 +295,7 @@ export default class AddEdit extends SmartView {
         {
           enableTime: true,
           dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.date_from,
+          defaultDate: this._data.dateFrom,
           onChange: this._startTimeChangeHandler
         }
     );
@@ -292,8 +305,8 @@ export default class AddEdit extends SmartView {
         {
           enableTime: true,
           dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.date_to,
-          minDate: this._data.date_from,
+          defaultDate: this._data.dateTo,
+          minDate: this._data.dateFrom,
           onChange: this._endTimeChangeHandler
         }
     );
@@ -324,22 +337,24 @@ export default class AddEdit extends SmartView {
   _destinationChangeHandler(evt) {
     this.updateData(
         {
-          destination: evt.target.value,
-          description: getRandomElement(DESCRIPTIONS)
+          destination: {
+            name: evt.target.value,
+            description: getRandomElement(DESCRIPTIONS)
+          }
         });
   }
 
   _startTimeChangeHandler([time]) {
     this.updateData(
         {
-          "date_from": time,
+          dateFrom: time,
         });
   }
 
   _endTimeChangeHandler([time]) {
     this.updateData(
         {
-          "date_to": time,
+          dateTo: time,
         });
   }
 
@@ -391,7 +406,6 @@ export default class AddEdit extends SmartView {
 
   static parseDataToEvent(data) {
     data = Object.assign({}, data);
-    data.isChange = false;
     return data;
   }
 }

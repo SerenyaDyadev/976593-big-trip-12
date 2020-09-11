@@ -1,6 +1,30 @@
-export const EVENT_TYPES = [`taxi`, `bus`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`, `train`];
+const TRANSPORTS = {
+  TAXI: `taxi`,
+  BUS: `bus`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  TRAIN: `train`,
+};
 
-export const DESTINATIONS = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`];
+const PLACES = {
+  CHECK_IN: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`
+};
+
+export const EVENT_TYPES = [
+  TRANSPORTS,
+  PLACES
+];
+
+export const DESTINATIONS = [
+  `Amsterdam`,
+  `Geneva`,
+  `Chamonix`,
+  `Saint Petersburg`
+];
 
 export const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.Cras aliquet varius magna, non porta ligula feugiat eget.`,

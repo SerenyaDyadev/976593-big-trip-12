@@ -2,24 +2,26 @@ import he from "he";
 import AbstractView from "./abstract.js";
 import {getHoursMinutsStamp, getYearMonthDayStamp, getDurationTemplate} from "../utils/date-utils.js";
 
-const createOffersTemplates = (offers, offerPrices, maxOffersLength) => {
-
-  offers.slice().sort(() => Math.random() - 0.5);
+const createOffersTemplates = (offers, maxOffersLength) => {
+  if (!offers) {
+    return ``;
+  }
 
   const templateLength = offers.length > maxOffersLength ? maxOffersLength : offers.length;
 
   return new Array(templateLength).fill().map((element, index) =>
     `<li class="event__offer">
-      <span class="event__offer-title">${offers[index]}</span>
+      <span class="event__offer-title">${offers[index].offerTitle}</span>
         &plus;
-        &euro;&nbsp;<span class="event__offer-price">${offerPrices[index]}</span>
+        &euro;&nbsp;<span class="event__offer-price">${offers[index].offerPrice}</span>
     </li>`
   ).join(` `);
 };
 
 const createEventItem = (event) => {
+
   const maxOffersLength = 3;
-  const {eventType, destination, price, offers, offerPrices, date_from: startTime, date_to: endTime} = event;
+  const {eventType, destination, price, offers, dateFrom: startTime, dateTo: endTime} = event;
 
 
   return (
@@ -28,7 +30,7 @@ const createEventItem = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
         </div>
-          <h3 class="event__title">${eventType[0].toUpperCase() + eventType.slice(1)} To ${he.encode(destination)}</h3>
+          <h3 class="event__title">${eventType[0].toUpperCase() + eventType.slice(1)} To ${he.encode(destination.name)}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
@@ -45,7 +47,7 @@ const createEventItem = (event) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${createOffersTemplates(offers, offerPrices, maxOffersLength)}
+          ${createOffersTemplates(offers, maxOffersLength)}
         </ul>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>

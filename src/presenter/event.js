@@ -95,7 +95,7 @@ export default class Event {
   }
 
   _handleFormSubmit(update) {
-    const isMinorUpdate = isTimeChange(this._event.date_from, update.date_from);
+    const isMinorUpdate = isTimeChange(this._event.dateFrom, update.dateFrom);
     this._changeData(
         UserAction.UPDATE_EVENT,
         isMinorUpdate ? UpdateType.PATCH : UpdateType.MINOR,

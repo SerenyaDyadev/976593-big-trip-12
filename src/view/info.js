@@ -2,7 +2,7 @@ import AbstractView from "./abstract.js";
 import {getMonthStamp, getDayStamp} from "../utils/date-utils.js";
 
 const createInfoTemplate = (events) => {
-  // console.log(events);
+  console.log(events);
 
   if (events.length === 0) {
     return (

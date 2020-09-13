@@ -4,7 +4,7 @@ import NoEventView from "../view/no-events.js";
 import LoadingView from "../view/loading.js";
 import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
-import EventPresenter from "./event.js";
+import EventPresenter, {State as EventPresenterViewState} from "./event.js";
 import EventNewPresenter from "./add-event.js";
 import {render, remove, RenderPosition} from "../utils/dom-utils.js";
 import {sortByEvent, sortByTime, sortByPrice} from "../utils/date-utils.js";
@@ -81,16 +81,19 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
         this._api.updateEvent(update).then((response) => {
           this._eventsModel.updateEvent(updateType, response);
         });
         break;
       case UserAction.ADD_EVENT:
+        this._eventNewPresenter.setSaving();
         this._api.updateEvent(update).then((response) => {
           this._eventsModel.addEvent(updateType, response);
         });
         break;
       case UserAction.DELETE_EVENT:
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
         this._api.deleteEvent(update).then(() => {
           this._eventsModel.deleteEvent(updateType, update);
         });

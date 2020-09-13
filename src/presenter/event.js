@@ -9,6 +9,12 @@ const Mode = {
   EDITING: `EDITING`
 };
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`
+};
+
+
 export default class Event {
   constructor(eventListContainer, changeData, changeMode) {
     this._eventListContainer = eventListContainer;
@@ -53,6 +59,7 @@ export default class Event {
 
     if (this._mode === Mode.EDITING) {
       replace(this._eventEditComponent, prevEventEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevEventComponent);
@@ -67,6 +74,23 @@ export default class Event {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToCard();
+    }
+  }
+
+  setViewState(state) {
+    switch (state) {
+      case State.SAVING:
+        this._eventEditComponent.updateData({
+          isDeleting: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._eventEditComponent.updateData({
+          isSaving: true,
+          isDeleting: true
+        });
+        break;
     }
   }
 
@@ -102,8 +126,6 @@ export default class Event {
         isMinorUpdate ? UpdateType.PATCH : UpdateType.MINOR,
         update
     );
-
-    this._replaceFormToCard();
   }
 
   _handleDeleteClick(event) {

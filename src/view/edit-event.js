@@ -78,8 +78,9 @@ const createFavoriteTemplate = (isFavorite) => {
 };
 
 const createEditEventTemplate = (addDestinations, addOffers, event) => {
-  let action = `Delete`;
+  console.log(event);
   let {offers} = event;
+  console.log(offers);
   const {
     isFavorite,
     price,
@@ -91,11 +92,11 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
       description,
       pictures
     },
-    isDisabled,
     isSaving,
-    isCancel,
     isDeleting
   } = event;
+
+  let action = isDeleting ? `deleting...` : `Delete`;
 
   if (event.blankEvent) {
     action = `Cancel`;
@@ -105,8 +106,6 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
-
-  const isSubmitDisabled = false;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -208,7 +207,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
               <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? `Saving...` : `Save`}</button>
           <button class="event__reset-btn" type="reset">${action}</button>
 
           ${createFavoriteTemplate(isFavorite)}
@@ -403,9 +402,7 @@ export default class AddEdit extends SmartView {
         {},
         event,
         {
-          isDisable: false,
           isSaving: false,
-          isCancel: false,
           isDeleting: false
         }
     );
@@ -414,9 +411,7 @@ export default class AddEdit extends SmartView {
   static parseDataToEvent(data) {
     data = Object.assign({}, data);
 
-    delete data.isDisabled;
     delete data.isSaving;
-    delete data.isCancel;
     delete data.isDeleting;
 
     return data;

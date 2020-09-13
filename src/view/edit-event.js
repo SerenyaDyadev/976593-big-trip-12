@@ -90,7 +90,11 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
       name,
       description,
       pictures
-    }
+    },
+    isDisabled,
+    isSaving,
+    isCancel,
+    isDeleting
   } = event;
 
   if (event.blankEvent) {
@@ -397,12 +401,24 @@ export default class AddEdit extends SmartView {
   static parseEventToData(event) {
     return Object.assign(
         {},
-        event
+        event,
+        {
+          isDisable: false,
+          isSaving: false,
+          isCancel: false,
+          isDeleting: false
+        }
     );
   }
 
   static parseDataToEvent(data) {
     data = Object.assign({}, data);
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isCancel;
+    delete data.isDeleting;
+
     return data;
   }
 }

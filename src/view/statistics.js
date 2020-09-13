@@ -172,15 +172,15 @@ const renderTimeSpendChart = (timeSpendCtx, events) => {
 
   for (let event of events) {
     let durationValue = 0;
-    const duration = event.date_to - event.date_from;
+    const duration = event.dateTo - event.dateFrom;
 
-    const target = destinations.get(event.destination.toUpperCase());
+    const target = destinations.get(event.destination.name.toUpperCase());
     if (!target) {
       durationValue = duration;
-      destinations.set(event.destination.toUpperCase(), durationValue);
+      destinations.set(event.destination.name.toUpperCase(), durationValue);
     } else {
       durationValue = target + duration;
-      destinations.set(event.destination.toUpperCase(), durationValue);
+      destinations.set(event.destination.name.toUpperCase(), durationValue);
     }
   }
 

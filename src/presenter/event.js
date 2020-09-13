@@ -9,12 +9,20 @@ const Mode = {
   EDITING: `EDITING`
 };
 
-export default class Event {
-  constructor(eventListContainer, changeData, changeMode) {
-    this._eventListContainer = eventListContainer;
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`
+};
 
+
+export default class Event {
+  constructor(eventListContainer, changeData, changeMode, addDestinations, addOffers) {
+    this._eventListContainer = eventListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+
+    this._addOffers = addOffers;
+    this._addDestinations = addDestinations;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
@@ -23,6 +31,7 @@ export default class Event {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleFavoriteClick = this._handleDeleteClick.bind(this);
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -34,12 +43,12 @@ export default class Event {
     const prevEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventView(event);
-    this._eventEditComponent = new EventEditView(event);
+    this._eventEditComponent = new EventEditView(this._addDestinations, this._addOffers, event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
-    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._eventListContainer, this._eventComponent);
@@ -51,7 +60,8 @@ export default class Event {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._eventEditComponent, prevEventEditComponent);
+      replace(this._eventComponent, prevEventEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevEventComponent);
@@ -66,6 +76,23 @@ export default class Event {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToCard();
+    }
+  }
+
+  setViewState(state) {
+    switch (state) {
+      case State.SAVING:
+        this._eventEditComponent.updateData({
+          isSaving: true,
+          isDeleting: false
+        });
+        break;
+      case State.DELETING:
+        this._eventEditComponent.updateData({
+          isSaving: false,
+          isDeleting: true
+        });
+        break;
     }
   }
 
@@ -95,14 +122,12 @@ export default class Event {
   }
 
   _handleFormSubmit(update) {
-    const isMinorUpdate = isTimeChange(this._event.date_from, update.date_from);
+    const isMinorUpdate = isTimeChange(this._event.dateFrom, update.dateFrom);
     this._changeData(
         UserAction.UPDATE_EVENT,
         isMinorUpdate ? UpdateType.PATCH : UpdateType.MINOR,
         update
     );
-
-    this._replaceFormToCard();
   }
 
   _handleDeleteClick(event) {

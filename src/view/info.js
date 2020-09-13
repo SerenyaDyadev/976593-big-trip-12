@@ -2,6 +2,7 @@ import AbstractView from "./abstract.js";
 import {getMonthStamp, getDayStamp} from "../utils/date-utils.js";
 
 const createInfoTemplate = (events) => {
+
   if (events.length === 0) {
     return (
       `<section class="trip-main__trip-info  trip-info">
@@ -11,7 +12,7 @@ const createInfoTemplate = (events) => {
       </section>`
     );
   } else {
-    let destinations = new Array(events.length).fill().map((element, index) => events[index].destination);
+    let destinations = new Array(events.length).fill().map((element, index) => events[index].destination.name);
 
     let destinationsTemplate = destinations.join(`,`).replace(/,/g, ` &mdash; `);
 
@@ -24,7 +25,7 @@ const createInfoTemplate = (events) => {
       totalPrice += events[i].price;
     }
 
-    const dates = new Array(events.length).fill().map((element, index) => getMonthStamp(events[index].date_from).toUpperCase() + ` ` + getDayStamp(events[index].date_from)).sort();
+    const dates = new Array(events.length).fill().map((element, index) => getMonthStamp(events[index].dateFrom).toUpperCase() + ` ` + getDayStamp(events[index].dateFrom)).sort();
 
     return (
       `<section class="trip-main__trip-info  trip-info">

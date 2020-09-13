@@ -1,5 +1,4 @@
 import EventEditView from "../view/edit-event.js";
-import {generateId} from "../mock/event.js";
 import {render, remove, escDown, RenderPosition} from "../utils/dom-utils.js";
 import {UserAction, UpdateType} from "../const.js";
 
@@ -15,12 +14,15 @@ export default class EventNew {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init() {
+  init(addDestinations, addOffers) {
+    this._addDestinations = addDestinations;
+    this._addOffers = addOffers;
+
     if (this._eventEditComponent !== null) {
       return;
     }
 
-    this._eventEditComponent = new EventEditView();
+    this._eventEditComponent = new EventEditView(this._addDestinations, this._addOffers);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
@@ -40,13 +42,18 @@ export default class EventNew {
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
+  setSaving() {
+    this._eventEditComponent.updateData({
+      isDeleting: true,
+      isSaving: true
+    });
+  }
+
   _handleFormSubmit(event) {
     this._changeData(
         UserAction.ADD_EVENT,
         UpdateType.MINOR,
-        // Пока у нас нет сервера, который бы после сохранения
-        // выдывал честный id задачи, нам нужно позаботиться об этом самим
-        Object.assign({id: generateId()}, event)
+        event
     );
     this.destroy();
   }

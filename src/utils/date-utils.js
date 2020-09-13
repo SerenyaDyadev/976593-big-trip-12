@@ -43,15 +43,15 @@ export const getDurationTemplate = (startTime, endTime) => {
 };
 
 export const sortByTime = (eventA, eventB) =>
-  eventB.date_from.getDate() - eventA.date_from.getDate();
+  eventB.dateFrom.getDate() - eventA.dateFrom.getDate();
 
 export const sortByPrice = (eventA, eventB) =>
   eventA.price - eventB.price;
 
 export const sortByEvent = (eventA, eventB) => {
-  if (eventA.date_from > eventB.date_from) {
+  if (eventA.dateFrom > eventB.dateFrom) {
     return 1;
-  } else if (eventA.date_from < eventB.date_from) {
+  } else if (eventA.dateFrom < eventB.dateFrom) {
     return -1;
   } else {
     return 0;
@@ -61,14 +61,3 @@ export const sortByEvent = (eventA, eventB) => {
 export const isTimeChange = (dateA, dateB) => {
   return dateA === dateB ? true : false;
 };
-
-
-// export const getDuration = (duration) => {
-
-//   // const days = moment.duration(duration).days() !== 0 ? moment.duration(duration).days() : ``;
-//   // const hours = moment.duration(duration).hours() !== 0 ? moment.duration(duration).hours() : ``;
-//   const hours = moment(duration).format(`H`);
-
-//   // return (hasZero(days) + hasZero(hours) + hasZero(minutes));
-//   return (hours);
-// };

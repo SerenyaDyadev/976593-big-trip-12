@@ -88,7 +88,7 @@ export default class Trip {
         break;
       case UserAction.ADD_EVENT:
         this._eventNewPresenter.setSaving();
-        this._api.updateEvent(update).then((response) => {
+        this._api.addEvent(update).then((response) => {
           this._eventsModel.addEvent(updateType, response);
         });
         break;
@@ -161,8 +161,8 @@ export default class Trip {
   }
 
   _renderEvent(eventListElement, event) {
-    const eventPresenter = new EventPresenter(eventListElement, this._handleViewAction, this._handleModeChange);
-    eventPresenter.init(this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers(), event);
+    const eventPresenter = new EventPresenter(eventListElement, this._handleViewAction, this._handleModeChange, this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers());
+    eventPresenter.init(event);
 
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -180,8 +180,6 @@ export default class Trip {
       this._renderLoading();
       return;
     }
-    // console.log(this._eventsModel.getAddDestinations());
-    // console.log(`this._eventsModel.getAddDestinations()`);
 
     if (this._getEvents().length === 0) {
       this._renderNoEvents();

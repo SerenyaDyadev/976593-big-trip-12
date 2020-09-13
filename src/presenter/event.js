@@ -16,10 +16,13 @@ export const State = {
 
 
 export default class Event {
-  constructor(eventListContainer, changeData, changeMode) {
+  constructor(eventListContainer, changeData, changeMode, addDestinations, addOffers) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+
+    this._addOffers = addOffers;
+    this._addDestinations = addDestinations;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
@@ -28,18 +31,16 @@ export default class Event {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleFavoriteClick = this._handleDeleteClick.bind(this);
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
-  init(addDestinations, addOffers, event) {
+  init(event) {
     this._event = event;
-    this._addOffers = addOffers;
-    this._addDestinations = addDestinations;
 
     const prevEventComponent = this._eventComponent;
     const prevEventEditComponent = this._eventEditComponent;
-
 
     this._eventComponent = new EventView(event);
     this._eventEditComponent = new EventEditView(this._addDestinations, this._addOffers, event);
@@ -47,6 +48,7 @@ export default class Event {
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._eventListContainer, this._eventComponent);
@@ -58,7 +60,7 @@ export default class Event {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._eventEditComponent, prevEventEditComponent);
+      replace(this._eventComponent, prevEventEditComponent);
       this._mode = Mode.DEFAULT;
     }
 
@@ -81,13 +83,13 @@ export default class Event {
     switch (state) {
       case State.SAVING:
         this._eventEditComponent.updateData({
-          isDeleting: true,
-          isSaving: true
+          isSaving: true,
+          isDeleting: false
         });
         break;
       case State.DELETING:
         this._eventEditComponent.updateData({
-          isSaving: true,
+          isSaving: false,
           isDeleting: true
         });
         break;

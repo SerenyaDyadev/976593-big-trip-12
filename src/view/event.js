@@ -19,7 +19,6 @@ const createOffersTemplates = (offers, maxOffersLength) => {
 };
 
 const createEventItem = (event) => {
-
   const maxOffersLength = 3;
   const {eventType, destination, price, offers, dateFrom: startTime, dateTo: endTime} = event;
 
@@ -60,7 +59,6 @@ export default class Event extends AbstractView {
   constructor(event) {
     super();
     this._event = event;
-
     this._editClickHandler = this._editClickHandler.bind(this);
   }
 

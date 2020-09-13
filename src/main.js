@@ -9,7 +9,7 @@ import {MenuItem, UpdateType} from "./const.js";
 import Api from "./api.js";
 
 const AUTHORIZATION = `Basic nfkor2u3e3e2hdiuw`;
-const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 

@@ -6,21 +6,20 @@ import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  blankEvent: true,
   isFavorite: false,
   price: ``,
   dateFrom: ``,
   dateTo: ``,
-  eventType: `Taxi`,
+  eventType: `taxi`,
   destination: {
     name: ``,
     description: ``,
     pictures: false
   },
-  offers: ``
+  offers: []
 };
 
-const getOffers = (offers) => {
+const getOffersList = (offers) => {
 
   return new Array(offers.length).fill().map((element, index) =>
     `<div class="event__offer-selector">
@@ -39,7 +38,7 @@ const getOffersTemplate = (offers) => {
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-      ${getOffers(offers)}
+      ${getOffersList(offers)}
       </div>
     </section>`
   );
@@ -78,9 +77,9 @@ const createFavoriteTemplate = (isFavorite) => {
 };
 
 const createEditEventTemplate = (addDestinations, addOffers, event) => {
-  console.log(event);
+
   let {offers} = event;
-  console.log(offers);
+
   const {
     isFavorite,
     price,
@@ -96,9 +95,9 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
     isDeleting
   } = event;
 
-  let action = isDeleting ? `deleting...` : `Delete`;
+  let action = isDeleting ? `Deleting...` : `Delete`;
 
-  if (event.blankEvent) {
+  if (offers.length === 0) {
     action = `Cancel`;
     offers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
   }
@@ -315,6 +314,9 @@ export default class AddEdit extends SmartView {
     this.getElement()
       .querySelector(`.event__type-wrapper`)
       .addEventListener(`change`, this._typeChangeHandler);
+    this.getElement()
+      .querySelector(`.event__type-wrapper`)
+      .addEventListener(`change`, this._offersChangeHandler);
     this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`change`, this._destinationChangeHandler);

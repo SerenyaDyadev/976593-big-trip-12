@@ -24,7 +24,6 @@ export default class Trip {
     this._sortComponent = null;
     this._infoComponent = null;
 
-
     this._listDaysComponent = new TripDaysView();
     this._noEventComponent = new NoEventView();
     this._loadingComponent = new LoadingView();
@@ -32,8 +31,6 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-
-
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._eventNewPresenter = new EventNewPresenter(this._listContainer, this._handleViewAction);
@@ -53,7 +50,7 @@ export default class Trip {
   }
 
   createEvent() {
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers());
   }
 
   _getEvents() {
@@ -113,6 +110,7 @@ export default class Trip {
         break;
       case UpdateType.INIT:
         this._isLoading = false;
+        this._clearListEvents();
         remove(this._loadingComponent);
         this._renderListEvents();
         break;
@@ -157,7 +155,7 @@ export default class Trip {
 
   _renderEvent(eventListElement, event) {
     const eventPresenter = new EventPresenter(eventListElement, this._handleViewAction, this._handleModeChange);
-    eventPresenter.init(event);
+    eventPresenter.init(this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers(), event);
 
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -175,6 +173,8 @@ export default class Trip {
       this._renderLoading();
       return;
     }
+    // console.log(this._eventsModel.getAddDestinations());
+    // console.log(`this._eventsModel.getAddDestinations()`);
 
     if (this._getEvents().length === 0) {
       this._renderNoEvents();

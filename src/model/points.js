@@ -4,6 +4,8 @@ export default class Points extends Observer {
   constructor() {
     super();
     this._events = [];
+    this._addOffers = [];
+    this._addDestinations = [];
   }
 
   setEvents(updateType, events) {
@@ -14,6 +16,32 @@ export default class Points extends Observer {
 
   getEvents() {
     return this._events;
+  }
+
+  setAddOffers(updateType, offers) {
+    this._addOffers = offers.slice();
+    // console.log(this._addOffers);
+    // console.log(`setAddOffers`);
+    this._notify(updateType);
+  }
+
+  getAddOffers() {
+    // console.log(this._addOffers);
+    // console.log(`getAddOffers`);
+    return this._addOffers;
+  }
+
+  setAddDestinations(updateType, destinations) {
+    this._addDestinations = destinations.slice();
+    // console.log(this._addDestinations);
+    // console.log(`setAddDestinations`);
+    this._notify(updateType);
+  }
+
+  getAddDestinations() {
+    // console.log(this._addDestinations);
+    // console.log(`getAddDestinations`);
+    return this._addDestinations;
   }
 
   updateEvent(updateType, update) {

@@ -22,6 +22,16 @@ export default class Api {
       .then((tasks) => tasks.map(EventModel.adaptToClient));
   }
 
+  getAddDestinations() {
+    return this._load({url: `destinations`})
+      .then(Api.toJSON);
+  }
+
+  getAddOffers() {
+    return this._load({url: `offers`})
+      .then(Api.toJSON);
+  }
+
   updateEvent(event) {
     return this._load({
       url: `points/${event.id}`,

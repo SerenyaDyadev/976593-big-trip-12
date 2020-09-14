@@ -49,6 +49,17 @@ export default class EventNew {
     });
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this._eventEditComponent.updateData({
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._eventEditComponent.shake(resetFormState);
+  }
+
   _handleFormSubmit(event) {
     this._changeData(
         UserAction.ADD_EVENT,

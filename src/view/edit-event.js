@@ -19,26 +19,36 @@ const BLANK_EVENT = {
   offers: []
 };
 
-const getOffersList = (offers) => {
+const isChecked = (teplateElement, eventOffers) => {
+  const checked = eventOffers.some((el) => el.title === teplateElement);
 
-  return new Array(offers.length).fill().map((element, index) =>
+  if (!checked) {
+    return ``;
+  }
+
+  return `checked`;
+};
+
+const getOffersList = (eventOffers, templateOffers) => {
+
+  return new Array(templateOffers.length).fill().map((element, index) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[index].title}" type="checkbox" name="event-offer-luggage">
-      <label class="event__offer-label" for="event-offer-${offers[index].title}">
-        <span class="event__offer-title">${offers[index].title}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${templateOffers[index].title}" type="checkbox" name="event-offer-luggage" ${isChecked(templateOffers[index].title, eventOffers)}>
+      <label class="event__offer-label" for="event-offer-${templateOffers[index].title}">
+        <span class="event__offer-title">${templateOffers[index].title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offers[index].price}</span>
+        <span class="event__offer-price">${templateOffers[index].price}</span>
       </label>
     </div>`).join(`,`);
 };
 
-const getOffersTemplate = (offers) => {
+const getOffersTemplate = (eventOffers, templateOffers) => {
 
   return (
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-      ${getOffersList(offers)}
+      ${getOffersList(eventOffers, templateOffers)}
       </div>
     </section>`
   );
@@ -57,7 +67,7 @@ const createPhotoTeplate = (pictures) => {
     </div>`);
 };
 
-const dataList = (addDestinations) => {
+const destinationsList = (addDestinations) => {
 
   return new Array(addDestinations.length).fill().map((element, index) => `<option value="${addDestinations[index].name}"></option>`).join(`,`);
 };
@@ -77,9 +87,6 @@ const createFavoriteTemplate = (isFavorite) => {
 };
 
 const createEditEventTemplate = (addDestinations, addOffers, event) => {
-
-  let {offers} = event;
-
   const {
     isFavorite,
     price,
@@ -91,17 +98,18 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
       description,
       pictures
     },
+    offers: eventOffers,
     isSaving,
     isDeleting
   } = event;
 
   let action = isDeleting ? `Deleting...` : `Delete`;
 
-  if (offers.length === 0) {
+  if (eventOffers.length === 0) {
     action = `Cancel`;
-    offers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
   }
 
+  const templateOffers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
@@ -182,7 +190,9 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
-              ${dataList(addDestinations)}
+
+              ${destinationsList(addDestinations)}
+
             </datalist>
           </div>
 
@@ -214,7 +224,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
         </header>
           <section class="event__details">
 
-            ${getOffersTemplate(offers)}
+            ${getOffersTemplate(eventOffers, templateOffers)}
 
           <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>

@@ -60,39 +60,8 @@ document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (e
   tripPresenter.createEvent();
 });
 
-// api.getAddDestinations()
-//   .then((destinations) => {
-//     eventsModel.setAddDestinations(UpdateType.INIT, destinations);
-//   })
-//   .catch(() => {
-//     eventsModel.setAddDestinations(UpdateType.INIT, []);
-//   });
-
-// api.getAddOffers()
-//   .then((offers) => {
-//     eventsModel.setAddOffers(UpdateType.INIT, offers);
-//   })
-//   .catch(() => {
-//     eventsModel.setAddOffers(UpdateType.INIT, []);
-//   });
-
-// apiWithProvider.getEvents()
-//   .then((events) => {
-//     eventsModel.setEvents(UpdateType.INIT, events);
-//     render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-//     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-//     siteMenuComponent.setMenuItem(MenuItem.TABLE);
-//   })
-//   .catch(() => {
-//     eventsModel.setEvents(UpdateType.INIT, []);
-//     render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-//     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-//     siteMenuComponent.setMenuItem(MenuItem.TABLE);
-//   });
-
-Promise.all([api.getAddDestinations(), api.getAddOffers(), apiWithProvider.getEvents()])
+Promise.all([api.getAddDestinations(), api.getAddOffers(), api.getEvents()])
 .then((values) => {
-  console.log(values);
   eventsModel.setAddDestinations(values[0]);
   eventsModel.setAddOffers(values[1]);
   eventsModel.setEvents(UpdateType.INIT, values[2]);
@@ -101,22 +70,22 @@ Promise.all([api.getAddDestinations(), api.getAddOffers(), apiWithProvider.getEv
   siteMenuComponent.setMenuItem(MenuItem.TABLE);
 });
 
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
-      console.log(`ServiceWorker available`); // eslint-disable-line
-    }).catch(() => {
-      // Действие, в случае ошибки при регистрации ServiceWorker
-      console.error(`ServiceWorker isn't available`); // eslint-disable-line
-    });
-});
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`)
+//     .then(() => {
+//       // Действие, в случае успешной регистрации ServiceWorker
+//       console.log(`ServiceWorker available`); // eslint-disable-line
+//     }).catch(() => {
+//       // Действие, в случае ошибки при регистрации ServiceWorker
+//       console.error(`ServiceWorker isn't available`); // eslint-disable-line
+//     });
+// });
 
-window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [offline]`, ``);
-  apiWithProvider.sync();
-});
+// window.addEventListener(`online`, () => {
+//   document.title = document.title.replace(` [offline]`, ``);
+//   apiWithProvider.sync();
+// });
 
-window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
-});
+// window.addEventListener(`offline`, () => {
+//   document.title += ` [offline]`;
+// });

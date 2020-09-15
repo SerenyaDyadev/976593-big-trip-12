@@ -331,26 +331,24 @@ export default class AddEdit extends SmartView {
   }
 
   _offerChangeHandler(evt) {
-    console.log(evt);
-    console.log(evt.target.children[0].textContent);
-    console.log(Number(evt.target.children[1].textContent));
-    console.log(evt.target.name);
 
-    // const inputName = (evt.target.name).slice(0, 1).toUpperCase() + (evt.target.name).slice(1).replace(/-/g, ` `);
+    const offers = this._data.offers.map((offer) => Object.assign({}, offer));
+    const offerIndex = offers.findIndex((it) => it.title === evt.target.outerText);
 
-    // console.log(this._addOffers);
-//
-    // console.log(this._addOffers.find((offer) => offer.t === evt.target.name).price);
-    // console.log((evt.target.name).join(` `));
+    if (offerIndex < 0) {
+      const templateOffers = this._addOffers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
+      const newOffer = templateOffers.find((it) => it.title === evt.target.outerText);
+      if (newOffer) {
+        offers.push(newOffer);
+      }
+    } else {
+      offers.splice(offerIndex, 1);
+    }
 
-        this.updateData(
+    this.updateData(
         {
-          offers: [{
-            title: evt.target.children[0].textContent,
-            price: Number(evt.target.children[1].textContent)
-          }]
+          offers,
         });
-
   }
 
   _typeChangeHandler(evt) {

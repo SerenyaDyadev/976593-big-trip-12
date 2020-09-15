@@ -33,25 +33,13 @@ const getOffersList = (eventOffers, templateOffers) => {
 
   return new Array(templateOffers.length).fill().map((element, index) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${templateOffers[index].title}" type="checkbox" name="event-offer-luggage" ${isChecked(templateOffers[index].title, eventOffers)}>
-      <label class="event__offer-label" for="event-offer-${templateOffers[index].title}">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}" type="checkbox" name="${templateOffers[index].title}" ${isChecked(templateOffers[index].title, eventOffers)}>
+      <label class="event__offer-label" for="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}">
         <span class="event__offer-title">${templateOffers[index].title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${templateOffers[index].price}</span>
       </label>
     </div>`).join(`,`);
-};
-
-const getOffersTemplate = (eventOffers, templateOffers) => {
-
-  return (
-    `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">
-      ${getOffersList(eventOffers, templateOffers)}
-      </div>
-    </section>`
-  );
 };
 
 const createPhotoTeplate = (pictures) => {
@@ -223,9 +211,12 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
 
         </header>
           <section class="event__details">
-
-            ${getOffersTemplate(eventOffers, templateOffers)}
-
+            <section class="event__section  event__section--offers">
+              <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+               <div class="event__available-offers">
+                  ${getOffersList(eventOffers, templateOffers)}
+               </div>
+            </section>
           <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${description}</p>
@@ -255,6 +246,7 @@ export default class AddEdit extends SmartView {
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
     this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._offerChangeHandler = this._offerChangeHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepickers();
@@ -333,6 +325,32 @@ export default class AddEdit extends SmartView {
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`change`, this._priceChangeHandler);
+    this.getElement()
+      .querySelector(`.event__available-offers`)
+      .addEventListener(`click`, this._offerChangeHandler);
+  }
+
+  _offerChangeHandler(evt) {
+    console.log(evt);
+    console.log(evt.target.children[0].textContent);
+    console.log(Number(evt.target.children[1].textContent));
+    console.log(evt.target.name);
+
+    // const inputName = (evt.target.name).slice(0, 1).toUpperCase() + (evt.target.name).slice(1).replace(/-/g, ` `);
+
+    // console.log(this._addOffers);
+//
+    // console.log(this._addOffers.find((offer) => offer.t === evt.target.name).price);
+    // console.log((evt.target.name).join(` `));
+
+        this.updateData(
+        {
+          offers: [{
+            title: evt.target.children[0].textContent,
+            price: Number(evt.target.children[1].textContent)
+          }]
+        });
+
   }
 
   _typeChangeHandler(evt) {

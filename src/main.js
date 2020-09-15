@@ -6,12 +6,19 @@ import EventsModel from "./model/points.js";
 import FilterModel from "./model/filter.js";
 import {render, remove, RenderPosition} from "./utils/dom-utils.js";
 import {MenuItem, UpdateType} from "./const.js";
-import Api from "./api.js";
+import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
 const AUTHORIZATION = `Basic nfkor2u3e3e2hdiuw`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v12`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
@@ -44,7 +51,7 @@ const handleSiteMenuClick = (menuItem) => {
 const filterPresenter = new FilterPresenter(siteTripControlsElement, filterModel, eventsModel);
 
 const siteTripEvents = document.querySelector(`.trip-events`);
-const tripPresenter = new TripPresenter(siteTripEvents, eventsModel, filterModel, api);
+const tripPresenter = new TripPresenter(siteTripEvents, eventsModel, filterModel, apiWithProvider);
 filterPresenter.init();
 tripPresenter.init();
 
@@ -69,7 +76,7 @@ api.getAddOffers()
     eventsModel.setAddOffers(UpdateType.INIT, []);
   });
 
-api.getEvents()
+apiWithProvider.getEvents()
   .then((events) => {
     eventsModel.setEvents(UpdateType.INIT, events);
     render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
@@ -82,3 +89,23 @@ api.getEvents()
     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
     siteMenuComponent.setMenuItem(MenuItem.TABLE);
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      // Действие, в случае успешной регистрации ServiceWorker
+      console.log(`ServiceWorker available`); // eslint-disable-line
+    }).catch(() => {
+      // Действие, в случае ошибки при регистрации ServiceWorker
+      console.error(`ServiceWorker isn't available`); // eslint-disable-line
+    });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

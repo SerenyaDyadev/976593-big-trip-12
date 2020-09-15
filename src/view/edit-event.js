@@ -19,29 +19,27 @@ const BLANK_EVENT = {
   offers: []
 };
 
-const getOffersList = (offers) => {
+const isChecked = (teplateElement, eventOffers) => {
+  const checked = eventOffers.some((el) => el.title === teplateElement);
 
-  return new Array(offers.length).fill().map((element, index) =>
-    `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers[index].title}" type="checkbox" name="event-offer-luggage">
-      <label class="event__offer-label" for="event-offer-${offers[index].title}">
-        <span class="event__offer-title">${offers[index].title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offers[index].price}</span>
-      </label>
-    </div>`).join(`,`);
+  if (!checked) {
+    return ``;
+  }
+
+  return `checked`;
 };
 
-const getOffersTemplate = (offers) => {
+const getOffersList = (eventOffers, templateOffers) => {
 
-  return (
-    `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">
-      ${getOffersList(offers)}
-      </div>
-    </section>`
-  );
+  return new Array(templateOffers.length).fill().map((element, index) =>
+    `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}" type="checkbox" name="${templateOffers[index].title}" ${isChecked(templateOffers[index].title, eventOffers)}>
+      <label class="event__offer-label" for="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}">
+        <span class="event__offer-title">${templateOffers[index].title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${templateOffers[index].price}</span>
+      </label>
+    </div>`).join(`,`);
 };
 
 const createPhotoTeplate = (pictures) => {
@@ -57,7 +55,7 @@ const createPhotoTeplate = (pictures) => {
     </div>`);
 };
 
-const dataList = (addDestinations) => {
+const destinationsList = (addDestinations) => {
 
   return new Array(addDestinations.length).fill().map((element, index) => `<option value="${addDestinations[index].name}"></option>`).join(`,`);
 };
@@ -77,9 +75,6 @@ const createFavoriteTemplate = (isFavorite) => {
 };
 
 const createEditEventTemplate = (addDestinations, addOffers, event) => {
-
-  let {offers} = event;
-
   const {
     isFavorite,
     price,
@@ -91,17 +86,18 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
       description,
       pictures
     },
+    offers: eventOffers,
     isSaving,
     isDeleting
   } = event;
 
   let action = isDeleting ? `Deleting...` : `Delete`;
 
-  if (offers.length === 0) {
+  if (eventOffers.length === 0) {
     action = `Cancel`;
-    offers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
   }
 
+  const templateOffers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
@@ -182,7 +178,9 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
-              ${dataList(addDestinations)}
+
+              ${destinationsList(addDestinations)}
+
             </datalist>
           </div>
 
@@ -213,9 +211,12 @@ const createEditEventTemplate = (addDestinations, addOffers, event) => {
 
         </header>
           <section class="event__details">
-
-            ${getOffersTemplate(offers)}
-
+            <section class="event__section  event__section--offers">
+              <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+               <div class="event__available-offers">
+                  ${getOffersList(eventOffers, templateOffers)}
+               </div>
+            </section>
           <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
               <p class="event__destination-description">${description}</p>
@@ -245,6 +246,7 @@ export default class AddEdit extends SmartView {
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
     this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._offerChangeHandler = this._offerChangeHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepickers();
@@ -323,6 +325,30 @@ export default class AddEdit extends SmartView {
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`change`, this._priceChangeHandler);
+    this.getElement()
+      .querySelector(`.event__available-offers`)
+      .addEventListener(`click`, this._offerChangeHandler);
+  }
+
+  _offerChangeHandler(evt) {
+
+    const offers = this._data.offers.map((offer) => Object.assign({}, offer));
+    const offerIndex = offers.findIndex((it) => it.title === evt.target.outerText);
+
+    if (offerIndex < 0) {
+      const templateOffers = this._addOffers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
+      const newOffer = templateOffers.find((it) => it.title === evt.target.outerText);
+      if (newOffer) {
+        offers.push(newOffer);
+      }
+    } else {
+      offers.splice(offerIndex, 1);
+    }
+
+    this.updateData(
+        {
+          offers,
+        });
   }
 
   _typeChangeHandler(evt) {

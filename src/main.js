@@ -10,7 +10,7 @@ import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const AUTHORIZATION = `Basic nfkor2u3e3e2hdiuw`;
+const AUTHORIZATION = `Basic kjgkjgv5476bv76rt`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -60,52 +60,32 @@ document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (e
   tripPresenter.createEvent();
 });
 
-api.getAddDestinations()
-  .then((destinations) => {
-    eventsModel.setAddDestinations(UpdateType.INIT, destinations);
-  })
-  .catch(() => {
-    eventsModel.setAddDestinations(UpdateType.INIT, []);
-  });
-
-api.getAddOffers()
-  .then((offers) => {
-    eventsModel.setAddOffers(UpdateType.INIT, offers);
-  })
-  .catch(() => {
-    eventsModel.setAddOffers(UpdateType.INIT, []);
-  });
-
-apiWithProvider.getEvents()
-  .then((events) => {
-    eventsModel.setEvents(UpdateType.INIT, events);
-    render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-    siteMenuComponent.setMenuItem(MenuItem.TABLE);
-  })
-  .catch(() => {
-    eventsModel.setEvents(UpdateType.INIT, []);
-    render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-    siteMenuComponent.setMenuItem(MenuItem.TABLE);
-  });
-
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
-      console.log(`ServiceWorker available`); // eslint-disable-line
-    }).catch(() => {
-      // Действие, в случае ошибки при регистрации ServiceWorker
-      console.error(`ServiceWorker isn't available`); // eslint-disable-line
-    });
+Promise.all([api.getAddDestinations(), api.getAddOffers(), api.getEvents()])
+.then((values) => {
+  eventsModel.setAddDestinations(values[0]);
+  eventsModel.setAddOffers(values[1]);
+  eventsModel.setEvents(UpdateType.INIT, values[2]);
+  render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
+  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  siteMenuComponent.setMenuItem(MenuItem.TABLE);
 });
 
-window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [offline]`, ``);
-  apiWithProvider.sync();
-});
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`)
+//     .then(() => {
+//       // Действие, в случае успешной регистрации ServiceWorker
+//       console.log(`ServiceWorker available`); // eslint-disable-line
+//     }).catch(() => {
+//       // Действие, в случае ошибки при регистрации ServiceWorker
+//       console.error(`ServiceWorker isn't available`); // eslint-disable-line
+//     });
+// });
 
-window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
-});
+// window.addEventListener(`online`, () => {
+//   document.title = document.title.replace(` [offline]`, ``);
+//   apiWithProvider.sync();
+// });
+
+// window.addEventListener(`offline`, () => {
+//   document.title += ` [offline]`;
+// });

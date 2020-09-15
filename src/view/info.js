@@ -20,10 +20,17 @@ const createInfoTemplate = (events) => {
       destinationsTemplate = destinations[0] + ` &mdash; ` + `...` + ` &mdash; ` + destinations[destinations.length - 1];
     }
 
-    let totalPrice = 0;
-    for (let i = 0; i < events.length; i++) {
-      totalPrice += events[i].price;
+    let eventsPrice = 0;
+    let offersPrice = 0;
+
+    for (let event of events) {
+      for (let offer of event.offers) {
+        offersPrice += offer.price;
+      }
+      eventsPrice += event.price;
     }
+
+    const totalPrice = eventsPrice + offersPrice;
 
     const dates = new Array(events.length).fill().map((element, index) => getMonthStamp(events[index].dateFrom).toUpperCase() + ` ` + getDayStamp(events[index].dateFrom)).sort();
 

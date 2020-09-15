@@ -1,4 +1,4 @@
-const TRANSPORTS = {
+export const TRANSPORTS = {
   TAXI: `taxi`,
   BUS: `bus`,
   SHIP: `ship`,

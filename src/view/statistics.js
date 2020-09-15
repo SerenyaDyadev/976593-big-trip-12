@@ -1,5 +1,6 @@
 import moment from "moment";
 import SmartView from "./smart.js";
+import {TRANSPORTS} from "../const.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -88,13 +89,19 @@ const renderMoneyChart = (moneyCtx, events) => {
 const renderTransportChart = (transportCtx, events) => {
   const transportCounts = new Map();
 
+  // TRANSPORTS.get()
+  console.log(events[0].eventType.toUpperCase());
+  console.log(events[0].eventType.toUpperCase() in TRANSPORTS);
+
   for (let event of events) {
-    const count = 1;
-    const type = transportCounts.get(event.eventType.toUpperCase());
-    if (!type) {
-      transportCounts.set(event.eventType.toUpperCase(), count);
-    } else {
-      transportCounts.set(event.eventType.toUpperCase(), count + 1);
+    if (event.eventType.toUpperCase() in TRANSPORTS) {
+      const count = 1;
+      const type = transportCounts.get(event.eventType.toUpperCase());
+      if (!type) {
+        transportCounts.set(event.eventType.toUpperCase(), count);
+      } else {
+        transportCounts.set(event.eventType.toUpperCase(), count + 1);
+      }
     }
   }
 

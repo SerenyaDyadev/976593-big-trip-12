@@ -135,10 +135,6 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
 
   let action = isDeleting ? `Deleting...` : `Delete`;
 
-  if (isNew) {
-    action = `Cancel`;
-  }
-
   const templateOffers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
@@ -192,8 +188,8 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
               <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? `Saving...` : `Save`}</button>
-          <button class="event__reset-btn" type="reset">${action}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? `disabled` : ``}> ${isSaving ? `Saving...` : `Save`}</button>
+          <button class="event__reset-btn" type="reset">${isNew ? `Cancel` : action}</button>
 
           ${createFavoriteTemplate(isFavorite)}
 
@@ -346,6 +342,7 @@ export default class AddEdit extends SmartView {
     this.updateData(
         {
           offers,
+          isDisabled: false
         });
   }
 
@@ -354,7 +351,8 @@ export default class AddEdit extends SmartView {
       this.updateData(
           {
             eventType: evt.target.value,
-            offers: []
+            offers: [],
+            isDisabled: false
           });
     }
   }
@@ -366,7 +364,8 @@ export default class AddEdit extends SmartView {
             name: evt.target.value,
             description: this._addDestinations.find((destination) => destination.name === evt.target.value).description,
             pictures: this._addDestinations.find((destination) => destination.name === evt.target.value).pictures
-          }
+          },
+          isDisabled: false
         });
   }
 
@@ -374,6 +373,7 @@ export default class AddEdit extends SmartView {
     this.updateData(
         {
           dateFrom: time,
+          isDisabled: false
         });
   }
 
@@ -381,6 +381,7 @@ export default class AddEdit extends SmartView {
     this.updateData(
         {
           dateTo: time,
+          isDisabled: false
         });
   }
 
@@ -437,14 +438,16 @@ export default class AddEdit extends SmartView {
   _handleFavoriteClick() {
     this.updateData(
         {
-          isFavorite: !this._data.isFavorite
+          isFavorite: !this._data.isFavorite,
+          isDisabled: false
         });
   }
 
   _priceChangeHandler(evt) {
     this.updateData(
         {
-          price: Number(evt.target.value)
+          price: Number(evt.target.value),
+          isDisabled: false
         });
   }
 
@@ -473,7 +476,7 @@ export default class AddEdit extends SmartView {
         {},
         event,
         {
-          isDisabled: false,
+          isDisabled: true,
           isSaving: false,
           isDeleting: false
         }

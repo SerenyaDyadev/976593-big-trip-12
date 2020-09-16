@@ -89,10 +89,6 @@ const renderMoneyChart = (moneyCtx, events) => {
 const renderTransportChart = (transportCtx, events) => {
   const transportCounts = new Map();
 
-  // TRANSPORTS.get()
-  console.log(events[0].eventType.toUpperCase());
-  console.log(events[0].eventType.toUpperCase() in TRANSPORTS);
-
   for (let event of events) {
     if (event.eventType.toUpperCase() in TRANSPORTS) {
       const count = 1;

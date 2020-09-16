@@ -8,17 +8,6 @@ export const TRANSPORTS = {
   TRAIN: `train`,
 };
 
-const PLACES = {
-  CHECK_IN: `check-in`,
-  SIGHTSEEING: `sightseeing`,
-  RESTAURANT: `restaurant`
-};
-
-export const EVENT_TYPES = [
-  TRANSPORTS,
-  PLACES
-];
-
 export const SortType = {
   EVENT: `event`,
   TIME: `time`,

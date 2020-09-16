@@ -33,7 +33,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._listContainer, this._handleViewAction);
+    this._eventNewPresenter = new EventNewPresenter(this._listDaysComponent, this._handleViewAction);
   }
 
   init() {
@@ -50,6 +50,7 @@ export default class Trip {
   }
 
   createEvent() {
+    this._handleModeChange();
     this._eventNewPresenter.init(this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers());
   }
 

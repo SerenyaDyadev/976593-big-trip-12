@@ -80,26 +80,26 @@ const createTypesList = (addOffers) => {
   const activityTypes = [];
 
   for (let offer of addOffers) {
-    transportTypes.push(offer.type);
     if (offer.type.toUpperCase() in TRANSPORTS) {
       transportTypes.push(`
         <div class="event__type-item">
           <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}">
           <label class="event__type-label  event__type-label--${offer.type}" for="event-type-${offer.type}-1">${offer.type.slice(0, 1).toUpperCase() + offer.type.slice(1)}</label>
         </div>`
-      )
+      );
     } else {
       activityTypes.push(`
         <div class="event__type-item">
           <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}">
           <label class="event__type-label  event__type-label--${offer.type}" for="event-type-${offer.type}-1">${offer.type.slice(0, 1).toUpperCase() + offer.type.slice(1)}</label>
         </div>`
-      )
+      );
     }
   }
 
-  return (
-  `<fieldset class="event__type-group">
+
+  return (`
+  <fieldset class="event__type-group">
     <legend class="visually-hidden">Transfer</legend>
 
     ${transportTypes.join(``)}
@@ -154,8 +154,10 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
               <div class="event__type-list">
+
                 ${createTypesList(addOffers)}
               </div>
+
           </div>
 
           <div class="event__field-group  event__field-group--destination">

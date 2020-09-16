@@ -80,31 +80,33 @@ export default class Provider {
   }
 
   getAddDestinations() {
-    if (isOnline()) {
-      return this._api.getDestinations()
-        .then((destination) => {
-          this._store.setStaticDataByKey(StoreTitle.DESTINATIONS, destination);
-          return destination;
+    if (Provider.isOnline()) {
+      return this._api.getAddDestinations()
+        .then((destinations) => {
+          const items = createStoreStructure(destinations);
+          this._store.setItems(items);
+          return destinations;
         });
     }
 
-    return Promise.resolve(
-        this._store.getStaticDataByKey(StoreTitle.DESTINATIONS)
-    );
+    const storeDestinations = Object.values(this._store.getItems());
+
+    return Promise.resolve(storeDestinations);
   }
 
   getAddOffers() {
-    if (isOnline()) {
-      return this._api.getOffers()
+    if (Provider.isOnline()) {
+      return this._api.getAddOffers()
         .then((offers) => {
-          this._store.setStaticDataByKey(StoreTitle.OFFERS, offers);
+          const items = createStoreStructure(offers);
+          this._store.setItems(items);
           return offers;
         });
     }
 
-    return Promise.resolve(
-        this._store.getStaticDataByKey(StoreTitle.OFFERS)
-    );
+    const storeOffers = Object.values(this._store.getItems());
+
+    return Promise.resolve(storeOffers);
   }
 
   sync() {

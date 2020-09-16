@@ -10,7 +10,7 @@ import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const AUTHORIZATION = `Basic lkdfnbgksndflbsdfk123wef23`;
+const AUTHORIZATION = `Basic dljfbghjkdfbgklsdfjkl3223`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -77,7 +77,7 @@ const tripPresenter = new TripPresenter(siteTripEvents, eventsModel, filterModel
 filterPresenter.init();
 tripPresenter.init();
 
-Promise.all([api.getAddDestinations(), api.getAddOffers(), api.getEvents()])
+Promise.all([apiWithProvider.getAddDestinations(), apiWithProvider.getAddOffers(), apiWithProvider.getEvents()])
 .then((values) => {
   eventsModel.setAddDestinations(values[0]);
   eventsModel.setAddOffers(values[1]);
@@ -85,22 +85,22 @@ Promise.all([api.getAddDestinations(), api.getAddOffers(), api.getEvents()])
   enableMenu();
 });
 
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`/sw.js`)
-//     .then(() => {
-//       // Действие, в случае успешной регистрации ServiceWorker
-//       console.log(`ServiceWorker available`); // eslint-disable-line
-//     }).catch(() => {
-//       // Действие, в случае ошибки при регистрации ServiceWorker
-//       console.error(`ServiceWorker isn't available`); // eslint-disable-line
-//     });
-// });
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      // Действие, в случае успешной регистрации ServiceWorker
+      console.log(`ServiceWorker available`); // eslint-disable-line
+    }).catch(() => {
+      // Действие, в случае ошибки при регистрации ServiceWorker
+      console.error(`ServiceWorker isn't available`); // eslint-disable-line
+    });
+});
 
-// window.addEventListener(`online`, () => {
-//   document.title = document.title.replace(` [offline]`, ``);
-//   apiWithProvider.sync();
-// });
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
 
-// window.addEventListener(`offline`, () => {
-//   document.title += ` [offline]`;
-// });
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

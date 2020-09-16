@@ -20,28 +20,21 @@ const BLANK_EVENT = {
   offers: []
 };
 
-// const isChecked = (teplateElement, eventOffers, isNew) => {
-//   console.log(isNew);
-//   if (!isNew) {
-//     const checked = eventOffers.some((el) => el.title === teplateElement);
-//     if (checked) {
-//       return `checked`;
-//     }
-//   }
+const isChecked = (teplateElement, eventOffers) => {
+  const checked = eventOffers.some((el) => el.title === teplateElement);
 
-//   return ``;
-// };
+  if (!checked) {
+    return ``;
+  }
 
-const getOffersList = (eventOffers, templateOffers, isNew) => {
-console.log(templateOffers);
-console.log(eventOffers);
+  return `checked`;
+};
 
-
-  // isChecked(templateOffers[index].title, eventOffers)
+const getOffersList = (eventOffers, templateOffers) => {
 
   return new Array(templateOffers.length).fill().map((element, index) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}" type="checkbox" name="${templateOffers[index].title}">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}" type="checkbox" name="${templateOffers[index].title}" ${isChecked(templateOffers[index].title, eventOffers)}>
       <label class="event__offer-label" for="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}">
         <span class="event__offer-title">${templateOffers[index].title}</span>
         &plus;&euro;&nbsp;
@@ -209,7 +202,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
             <section class="event__section  event__section--offers">
               <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                <div class="event__available-offers">
-                  ${getOffersList(eventOffers, templateOffers, isNew)}
+                  ${getOffersList(eventOffers, templateOffers)}
                </div>
             </section>
           <section class="event__section  event__section--destination">
@@ -227,7 +220,6 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
 export default class AddEdit extends SmartView {
   constructor(addDestinations, addOffers, event) {
     super();
-    this._isNew = false;
 
     if (!event) {
       event = BLANK_EVENT;
@@ -362,7 +354,7 @@ export default class AddEdit extends SmartView {
       this.updateData(
           {
             eventType: evt.target.value,
-            offers: this._addOffers.find((offer) => offer.type === evt.target.value).offers
+            offers: []
           });
     }
   }
@@ -406,7 +398,7 @@ export default class AddEdit extends SmartView {
       message = `Не указан пункт назначения`;
       validity = false;
     } else if (!destinations.includes(destinationInput.value)) {
-      message = `Выбранный пункт назначения отсутсвует в предложенном списке`;
+      message = `Такого пункта назначения в предложенном списке нет!`;
       validity = false;
     }
 

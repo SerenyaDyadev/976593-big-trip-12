@@ -1,4 +1,4 @@
-import {POINT_TYPES, PointCategory, EventType} from "../const.js";
+import {POINT_TYPES, PointCategory, EventType} from "./const.js";
 import {
   generatePointLabel,
   isInputTag,

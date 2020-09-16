@@ -9,8 +9,8 @@ import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 const BLANK_EVENT = {
   isFavorite: false,
   price: ``,
-  dateFrom: ``,
-  dateTo: ``,
+  dateFrom: new Date(),
+  dateTo: new Date(),
   eventType: TRANSPORTS.TAXI,
   destination: {
     name: ``,
@@ -20,21 +20,28 @@ const BLANK_EVENT = {
   offers: []
 };
 
-const isChecked = (teplateElement, eventOffers) => {
-  const checked = eventOffers.some((el) => el.title === teplateElement);
+// const isChecked = (teplateElement, eventOffers, isNew) => {
+//   console.log(isNew);
+//   if (!isNew) {
+//     const checked = eventOffers.some((el) => el.title === teplateElement);
+//     if (checked) {
+//       return `checked`;
+//     }
+//   }
 
-  if (!checked) {
-    return ``;
-  }
+//   return ``;
+// };
 
-  return `checked`;
-};
+const getOffersList = (eventOffers, templateOffers, isNew) => {
+console.log(templateOffers);
+console.log(eventOffers);
 
-const getOffersList = (eventOffers, templateOffers) => {
+
+  // isChecked(templateOffers[index].title, eventOffers)
 
   return new Array(templateOffers.length).fill().map((element, index) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}" type="checkbox" name="${templateOffers[index].title}" ${isChecked(templateOffers[index].title, eventOffers)}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}" type="checkbox" name="${templateOffers[index].title}">
       <label class="event__offer-label" for="event-offer-${(templateOffers[index].title).toLowerCase().replace(/ /g, `-`)}">
         <span class="event__offer-title">${templateOffers[index].title}</span>
         &plus;&euro;&nbsp;
@@ -202,7 +209,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
             <section class="event__section  event__section--offers">
               <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                <div class="event__available-offers">
-                  ${getOffersList(eventOffers, templateOffers)}
+                  ${getOffersList(eventOffers, templateOffers, isNew)}
                </div>
             </section>
           <section class="event__section  event__section--destination">
@@ -220,6 +227,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
 export default class AddEdit extends SmartView {
   constructor(addDestinations, addOffers, event) {
     super();
+    this._isNew = false;
 
     if (!event) {
       event = BLANK_EVENT;
@@ -326,12 +334,16 @@ export default class AddEdit extends SmartView {
 
   _offerChangeHandler(evt) {
 
+    if (evt.target.nodeName !== `INPUT`) {
+      return;
+    }
+
     const offers = this._data.offers.map((offer) => Object.assign({}, offer));
-    const offerIndex = offers.findIndex((it) => it.title === evt.target.outerText);
+    const offerIndex = offers.findIndex((it) => it.title === evt.target.name);
 
     if (offerIndex < 0) {
       const templateOffers = this._addOffers.find((offer) => offer.type === this._data.eventType.toLowerCase()).offers;
-      const newOffer = templateOffers.find((it) => it.title === evt.target.outerText);
+      const newOffer = templateOffers.find((it) => it.title === evt.target.name);
       if (newOffer) {
         offers.push(newOffer);
       }
@@ -380,9 +392,54 @@ export default class AddEdit extends SmartView {
         });
   }
 
+  _checkDestinationsValidity() {
+    const destinationInput = this.getElement().querySelector(`.event__field-group--destination input`);
+    let message = ``;
+    let validity = true;
+    const destinations = [];
+
+    for (let destination of this._addDestinations) {
+      destinations.push(destination.name);
+    }
+
+    if (destinationInput.value.length === 0) {
+      message = `Не указан пункт назначения`;
+      validity = false;
+    } else if (!destinations.includes(destinationInput.value)) {
+      message = `Выбранный пункт назначения отсутсвует в предложенном списке`;
+      validity = false;
+    }
+
+    destinationInput.setCustomValidity(message);
+    return validity;
+  }
+
+  _checkPriceValidity() {
+    const priceInput = this.getElement().querySelector(`.event__field-group--price input`);
+    let message = ``;
+    let validity = true;
+
+    if (!(parseInt(priceInput.value, 10))) {
+      message = `Стоимость должны быть больше ноля`;
+      validity = false;
+    }
+
+    priceInput.setCustomValidity(message);
+
+    return validity;
+  }
+
+  _checkFormValidity() {
+    return this._checkDestinationsValidity() && this._checkPriceValidity();
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
+    if (this._checkFormValidity()) {
+      if (this._checkFormValidity()) {
+        this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
+      }
+    }
   }
 
   _handleFavoriteClick() {

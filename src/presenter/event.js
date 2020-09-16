@@ -83,6 +83,7 @@ export default class Event {
   setViewState(state) {
     const resetFormState = () => {
       this._eventEditComponent.updateData({
+        isDisabled: false,
         isSaving: false,
         isDeleting: false
       });
@@ -92,12 +93,12 @@ export default class Event {
       case State.SAVING:
         this._eventEditComponent.updateData({
           isSaving: true,
-          isDeleting: false
+          isDisabled: true
         });
         break;
       case State.DELETING:
         this._eventEditComponent.updateData({
-          isSaving: false,
+          isDisabled: true,
           isDeleting: true
         });
         break;

@@ -33,7 +33,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._listContainer, this._handleViewAction);
+    this._eventNewPresenter = new EventNewPresenter(this._listDaysComponent, this._handleViewAction);
   }
 
   init() {
@@ -44,13 +44,14 @@ export default class Trip {
 
   destroy() {
     this._clearListEvents({resetSortType: true});
-
     this._eventsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
   }
 
-  createEvent() {
-    this._eventNewPresenter.init(this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers());
+  createEvent(callback) {
+    this._handleModeChange();
+
+    this._eventNewPresenter.init(this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers(), callback);
   }
 
   _getEvents() {
@@ -196,6 +197,9 @@ export default class Trip {
     }
 
     this._renderInfo();
+
+    remove(this._sortComponent);
+
     this._renderSort();
 
     render(this._listContainer, this._listDaysComponent);
@@ -231,7 +235,7 @@ export default class Trip {
     remove(this._loadingComponent);
     this._taskPresenter = {};
 
-    remove(this._sortComponent);
+    // remove(this._sortComponent);
     if (resetSortType) {
       this._currentSortType = SortType.EVENT;
     }

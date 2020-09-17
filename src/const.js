@@ -1,4 +1,4 @@
-const TRANSPORTS = {
+export const TRANSPORTS = {
   TAXI: `taxi`,
   BUS: `bus`,
   SHIP: `ship`,
@@ -7,17 +7,6 @@ const TRANSPORTS = {
   FLIGHT: `flight`,
   TRAIN: `train`,
 };
-
-const PLACES = {
-  CHECK_IN: `check-in`,
-  SIGHTSEEING: `sightseeing`,
-  RESTAURANT: `restaurant`
-};
-
-export const EVENT_TYPES = [
-  TRANSPORTS,
-  PLACES
-];
 
 export const SortType = {
   EVENT: `event`,

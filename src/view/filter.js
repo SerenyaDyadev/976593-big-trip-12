@@ -1,7 +1,8 @@
 import AbstractView from "./abstract.js";
 import {FilterType} from "../const.js";
+import {filter} from "../utils/filter.js";
 
-const createFilterTemplate = (currentFilterType) => {
+const createFilterTemplate = (currentFilterType, events) => {
   return (
     `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
@@ -10,12 +11,12 @@ const createFilterTemplate = (currentFilterType) => {
       </div>
 
       <div class="trip-filters__filter">
-        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" ${currentFilterType === FilterType.FUTURE ? `checked` : ``}>
+        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" ${filter[FilterType.FUTURE](events).length > 0 ? ` ` : `disabled`} ${currentFilterType === FilterType.FUTURE ? `checked` : ``}>
         <label class="trip-filters__filter-label" for="filter-future">Future</label>
       </div>
 
       <div class="trip-filters__filter">
-        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${currentFilterType === FilterType.PAST ? `checked` : ``}>
+        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${filter[FilterType.PAST](events).length > 0 ? ` ` : `disabled`} ${currentFilterType === FilterType.PAST ? `checked` : ``}>
         <label class="trip-filters__filter-label" for="filter-past"">Past</label>
       </div>
 
@@ -25,14 +26,15 @@ const createFilterTemplate = (currentFilterType) => {
 };
 
 export default class Filter extends AbstractView {
-  constructor(currentFilterType) {
+  constructor(currentFilterType, events) {
     super();
     this._currentFilter = currentFilterType;
+    this._events = events;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
   getTemplate() {
-    return createFilterTemplate(this._currentFilter);
+    return createFilterTemplate(this._currentFilter, this._events);
   }
 
   _filterTypeChangeHandler(evt) {

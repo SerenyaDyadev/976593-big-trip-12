@@ -79,6 +79,36 @@ export default class Provider {
     return Promise.resolve();
   }
 
+  getAddDestinations() {
+    if (Provider.isOnline()) {
+      return this._api.getAddDestinations()
+        .then((destinations) => {
+          const items = createStoreStructure(destinations);
+          this._store.setItems(items);
+          return destinations;
+        });
+    }
+
+    const storeDestinations = Object.values(this._store.getItems());
+
+    return Promise.resolve(storeDestinations);
+  }
+
+  getAddOffers() {
+    if (Provider.isOnline()) {
+      return this._api.getAddOffers()
+        .then((offers) => {
+          const items = createStoreStructure(offers);
+          this._store.setItems(items);
+          return offers;
+        });
+    }
+
+    const storeOffers = Object.values(this._store.getItems());
+
+    return Promise.resolve(storeOffers);
+  }
+
   sync() {
     if (Provider.isOnline()) {
       const storeEvents = Object.values(this._store.getItems());

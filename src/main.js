@@ -10,22 +10,29 @@ import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const AUTHORIZATION = `Basic nfkor2u3e3e2hdiuw`;
+const AUTHORIZATION = `Basic dljfbghjkdfbgklsdfjkl3223`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
-const api = new Api(END_POINT, AUTHORIZATION);
-const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
-
-const eventsModel = new EventsModel();
-const filterModel = new FilterModel();
-
 const siteHeader = document.querySelector(`.page-header`);
 const siteTripControlsElement = siteHeader.querySelector(`.trip-main__trip-controls`);
-const siteMenuComponent = new SiteMenuView();
+const siteTripEvents = document.querySelector(`.trip-events`);
+const eventNewButton = siteHeader.querySelector(`.trip-main__event-add-btn`);
+
+const neweEventButtonCleckHendler = (evt) => {
+  evt.preventDefault();
+  remove(statisticsComponent);
+  tripPresenter.init();
+  siteMenuComponent.setMenuItem(MenuItem.TABLE);
+  tripPresenter.createEvent(newPointFormCloseHandler);
+  eventNewButton.disabled = true;
+};
+
+const newPointFormCloseHandler = () => {
+  eventNewButton.disabled = false;
+};
 
 let statisticsComponent = null;
 
@@ -47,48 +54,36 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
+const enableMenu = () => {
+  render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
+  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  siteMenuComponent.setMenuItem(MenuItem.TABLE);
+  eventNewButton.addEventListener(`click`, neweEventButtonCleckHendler);
+  eventNewButton.disabled = false;
+};
+
+
+const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
+
+const eventsModel = new EventsModel();
+const filterModel = new FilterModel();
+const siteMenuComponent = new SiteMenuView();
 
 const filterPresenter = new FilterPresenter(siteTripControlsElement, filterModel, eventsModel);
-
-const siteTripEvents = document.querySelector(`.trip-events`);
 const tripPresenter = new TripPresenter(siteTripEvents, eventsModel, filterModel, apiWithProvider);
+
 filterPresenter.init();
 tripPresenter.init();
 
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  tripPresenter.createEvent();
+Promise.all([apiWithProvider.getAddDestinations(), apiWithProvider.getAddOffers(), apiWithProvider.getEvents()])
+.then((values) => {
+  eventsModel.setAddDestinations(values[0]);
+  eventsModel.setAddOffers(values[1]);
+  eventsModel.setEvents(UpdateType.INIT, values[2]);
+  enableMenu();
 });
-
-api.getAddDestinations()
-  .then((destinations) => {
-    eventsModel.setAddDestinations(UpdateType.INIT, destinations);
-  })
-  .catch(() => {
-    eventsModel.setAddDestinations(UpdateType.INIT, []);
-  });
-
-api.getAddOffers()
-  .then((offers) => {
-    eventsModel.setAddOffers(UpdateType.INIT, offers);
-  })
-  .catch(() => {
-    eventsModel.setAddOffers(UpdateType.INIT, []);
-  });
-
-apiWithProvider.getEvents()
-  .then((events) => {
-    eventsModel.setEvents(UpdateType.INIT, events);
-    render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-    siteMenuComponent.setMenuItem(MenuItem.TABLE);
-  })
-  .catch(() => {
-    eventsModel.setEvents(UpdateType.INIT, []);
-    render(siteTripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-    siteMenuComponent.setMenuItem(MenuItem.TABLE);
-  });
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)

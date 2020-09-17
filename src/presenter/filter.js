@@ -19,11 +19,13 @@ export default class Filter {
   }
 
   init() {
+    this._events = this._eventsModel.getEvents();
+
     this._currentFilter = this._filterModel.getFilter();
 
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FilterView(this._currentFilter);
+    this._filterComponent = new FilterView(this._currentFilter, this._events);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {

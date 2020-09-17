@@ -18,20 +18,16 @@ export default class Points extends Observer {
     return this._events;
   }
 
-  setAddOffers(updateType, offers) {
+  setAddOffers(offers) {
     this._addOffers = offers.slice();
-
-    this._notify(updateType);
   }
 
   getAddOffers() {
     return this._addOffers;
   }
 
-  setAddDestinations(updateType, destinations) {
+  setAddDestinations(destinations) {
     this._addDestinations = destinations.slice();
-
-    this._notify(updateType);
   }
 
   getAddDestinations() {

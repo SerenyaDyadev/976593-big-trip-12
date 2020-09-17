@@ -25,7 +25,6 @@ const createFilterTemplate = (currentFilterType, events) => {
   );
 };
 
-// opacity: 0.6;
 export default class Filter extends AbstractView {
   constructor(currentFilterType, events) {
     super();

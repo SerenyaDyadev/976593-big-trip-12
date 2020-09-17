@@ -5,7 +5,7 @@ import FilterPresenter from "./presenter/filter.js";
 import EventsModel from "./model/points.js";
 import FilterModel from "./model/filter.js";
 import {render, remove, RenderPosition} from "./utils/dom-utils.js";
-import {MenuItem, UpdateType} from "./const.js";
+import {MenuItem, UpdateType, FilterType} from "./const.js";
 import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
@@ -24,6 +24,9 @@ const eventNewButton = siteHeader.querySelector(`.trip-main__event-add-btn`);
 const neweEventButtonCleckHendler = (evt) => {
   evt.preventDefault();
   remove(statisticsComponent);
+  tripPresenter.destroy();
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  tripPresenter.init();
   siteMenuComponent.setMenuItem(MenuItem.TABLE);
   tripPresenter.createEvent(newPointFormCloseHandler);
   eventNewButton.disabled = true;

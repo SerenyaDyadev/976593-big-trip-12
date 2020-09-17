@@ -236,7 +236,6 @@ export default class Trip {
     remove(this._loadingComponent);
     this._taskPresenter = {};
 
-    // remove(this._sortComponent);
     if (resetSortType) {
       this._currentSortType = SortType.EVENT;
     }

@@ -24,7 +24,6 @@ const eventNewButton = siteHeader.querySelector(`.trip-main__event-add-btn`);
 const neweEventButtonCleckHendler = (evt) => {
   evt.preventDefault();
   remove(statisticsComponent);
-  tripPresenter.init();
   siteMenuComponent.setMenuItem(MenuItem.TABLE);
   tripPresenter.createEvent(newPointFormCloseHandler);
   eventNewButton.disabled = true;

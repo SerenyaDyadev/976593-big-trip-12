@@ -12,12 +12,12 @@ const createFilterTemplate = (currentFilterType, events) => {
 
       <div class="trip-filters__filter">
         <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" ${filter[FilterType.FUTURE](events).length > 0 ? ` ` : `disabled`} ${currentFilterType === FilterType.FUTURE ? `checked` : ``}>
-        <label class="trip-filters__filter-label" for="filter-future">Future</label>
+        <label class="trip-filters__filter-label" ${filter[FilterType.FUTURE](events).length > 0 ? ` ` : `style="opacity: 0.6; cursor: unset;"`}for="filter-future">Future</label>
       </div>
 
       <div class="trip-filters__filter">
         <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${filter[FilterType.PAST](events).length > 0 ? ` ` : `disabled`} ${currentFilterType === FilterType.PAST ? `checked` : ``}>
-        <label class="trip-filters__filter-label" for="filter-past"">Past</label>
+        <label class="trip-filters__filter-label" ${filter[FilterType.PAST](events).length > 0 ? ` ` : `style="opacity: 0.6; cursor: unset;"`} for="filter-past"">Past</label>
       </div>
 
       <button class="visually-hidden" type="submit">Accept filter</button>
@@ -25,6 +25,7 @@ const createFilterTemplate = (currentFilterType, events) => {
   );
 };
 
+// opacity: 0.6;
 export default class Filter extends AbstractView {
   constructor(currentFilterType, events) {
     super();

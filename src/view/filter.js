@@ -38,7 +38,6 @@ export default class Filter extends AbstractView {
   }
 
   _filterTypeChangeHandler(evt) {
-    // console.log(evt);
     if (evt.target.tagName === `INPUT`) {
       this._callback.filterTypeChange(evt.target.value);
     }

@@ -21,6 +21,7 @@ export default class Trip {
     this._isLoading = true;
     this._api = api;
 
+    this._events = null;
     this._sortComponent = null;
     this._infoComponent = null;
 
@@ -56,8 +57,8 @@ export default class Trip {
 
   _getEvents() {
     const filterType = this._filterModel.getFilter();
-    const events = this._eventsModel.getEvents();
-    const filtredEvents = filter[filterType](events);
+    this._events = this._eventsModel.getEvents();
+    const filtredEvents = filter[filterType](this._events);
 
     switch (this._currentSortType) {
       case SortType.EVENT:
@@ -150,7 +151,7 @@ export default class Trip {
       this._infoComponent = null;
     }
 
-    this._infoComponent = new InfoView(this._getEvents());
+    this._infoComponent = new InfoView(this._events);
 
     render(document.querySelector(`.trip-main`), this._infoComponent, RenderPosition.AFTERBEGIN);
   }

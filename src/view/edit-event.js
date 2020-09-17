@@ -137,6 +137,8 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
 
   const templateOffers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
 
+  const isCheckEventType = Object.values(TRANSPORTS).some((el) => el === eventType);
+
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
 
@@ -158,7 +160,8 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${eventType[0].toUpperCase() + eventType.slice(1)} to
+              ${eventType[0].toUpperCase() + eventType.slice(1)}
+              ${isCheckEventType ? `to` : `in`}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">

@@ -1,5 +1,6 @@
 import he from "he";
 import AbstractView from "./abstract.js";
+import {TRANSPORTS} from "../const.js";
 import {getHoursMinutsStamp, getYearMonthDayStamp, getDurationTemplate} from "../utils/date-utils.js";
 
 const createOffersTemplates = (offers, maxOffersLength) => {
@@ -22,13 +23,17 @@ const createEventItem = (event) => {
   const maxOffersLength = 3;
   const {eventType, destination, price, offers, dateFrom: startTime, dateTo: endTime} = event;
 
+  const isCheckEventType = Object.values(TRANSPORTS).some((el) => el === eventType);
+
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
         </div>
-          <h3 class="event__title">${eventType[0].toUpperCase() + eventType.slice(1)} To ${he.encode(destination.name)}</h3>
+          <h3 class="event__title">${eventType[0].toUpperCase() + eventType.slice(1)}
+          ${isCheckEventType ? `To` : `In`}
+          ${he.encode(destination.name)}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

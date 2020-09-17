@@ -61,6 +61,22 @@ const destinationsList = (addDestinations) => {
   return new Array(addDestinations.length).fill().map((element, index) => `<option value="${addDestinations[index].name}"></option>`).join(`,`);
 };
 
+const getDescriptionDestinationTemplate = (description, pictures) => {
+  if (!description || !pictures) {
+    return ``;
+  }
+
+  return (`
+        <section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+           <p class="event__destination-description">${description}</p>
+
+            ${createPhotoTeplate(pictures)}
+
+        </section>`
+  );
+};
+
 
 const createFavoriteTemplate = (isFavorite) => {
 
@@ -154,6 +170,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
               <div class="event__type-list">
 
                 ${createTypesList(addOffers)}
+
               </div>
 
           </div>
@@ -201,16 +218,14 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
             <section class="event__section  event__section--offers">
               <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                <div class="event__available-offers">
+
                   ${getOffersList(eventOffers, templateOffers)}
+
                </div>
             </section>
-          <section class="event__section  event__section--destination">
-              <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-              <p class="event__destination-description">${description}</p>
 
-              ${createPhotoTeplate(pictures)}
+              ${getDescriptionDestinationTemplate(description, pictures)}
 
-            </section>
           </section>
           </form>`
   );

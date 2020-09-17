@@ -46,7 +46,7 @@ export const sortByTime = (eventA, eventB) =>
   eventB.dateFrom.getDate() - eventA.dateFrom.getDate();
 
 export const sortByPrice = (eventA, eventB) =>
-  eventA.price - eventB.price;
+  eventB.price - eventA.price;
 
 export const sortByEvent = (eventA, eventB) => {
   if (eventA.dateFrom > eventB.dateFrom) {

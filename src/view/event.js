@@ -1,6 +1,6 @@
 import he from "he";
 import AbstractView from "./abstract.js";
-import {TRANSPORTS} from "../const.js";
+import {Transports} from "../const.js";
 import {getHoursMinutsStamp, getYearMonthDayStamp, getDurationTemplate} from "../utils/date-utils.js";
 
 const createOffersTemplates = (offers, maxOffersLength) => {
@@ -23,7 +23,7 @@ const createEventItem = (event) => {
   const maxOffersLength = 3;
   const {eventType, destination, price, offers, dateFrom: startTime, dateTo: endTime} = event;
 
-  const isCheckEventType = Object.values(TRANSPORTS).some((el) => el === eventType);
+  const isCheckEventType = Object.values(Transports).some((el) => el === eventType);
 
   return (
     `<li class="trip-events__item">

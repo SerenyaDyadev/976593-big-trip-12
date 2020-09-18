@@ -39,7 +39,7 @@ export const getDurationTemplate = (startTime, endTime) => {
   const hours = moment.duration(duration).hours() !== 0 ? moment.duration(duration).hours() + `H` : ``;
   const minutes = moment.duration(duration).minutes() !== 0 ? moment.duration(duration).minutes() + `M` : `M`;
 
-  return (hasZero(days) + hasZero(hours) + hasZero(minutes));
+  return (hasZero(days) + ` ` + hasZero(hours) + ` ` + hasZero(minutes));
 };
 
 export const sortByTime = (eventA, eventB) =>

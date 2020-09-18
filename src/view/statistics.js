@@ -1,6 +1,6 @@
 import moment from "moment";
 import SmartView from "./smart.js";
-import {TRANSPORTS} from "../const.js";
+import {Transports} from "../const.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -90,7 +90,7 @@ const renderTransportChart = (transportCtx, events) => {
   const transportCounts = new Map();
 
   for (let event of events) {
-    if (event.eventType.toUpperCase() in TRANSPORTS) {
+    if (event.eventType.toUpperCase() in Transports) {
       const count = 1;
       const type = transportCounts.get(event.eventType.toUpperCase());
       if (!type) {

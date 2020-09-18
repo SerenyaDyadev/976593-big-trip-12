@@ -1,6 +1,6 @@
 import he from "he";
 import SmartView from "./smart.js";
-import {TRANSPORTS} from "../const.js";
+import {Transports} from "../const.js";
 import {getFullDateForTeplate} from "../utils/date-utils.js";
 import flatpickr from "flatpickr";
 
@@ -11,7 +11,7 @@ const BLANK_EVENT = {
   price: ``,
   dateFrom: new Date(),
   dateTo: new Date(),
-  eventType: TRANSPORTS.TAXI,
+  eventType: Transports.TAXI,
   destination: {
     name: ``,
     description: ``,
@@ -40,7 +40,7 @@ const getOffersList = (eventOffers, templateOffers) => {
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${templateOffers[index].price}</span>
       </label>
-    </div>`).join(`,`);
+    </div>`).join(` `);
 };
 
 const createPhotoTeplate = (pictures) => {
@@ -96,7 +96,7 @@ const createTypesList = (addOffers) => {
   const activityTypes = [];
 
   for (let offer of addOffers) {
-    if (offer.type.toUpperCase() in TRANSPORTS) {
+    if (offer.type.toUpperCase() in Transports) {
       transportTypes.push(`
         <div class="event__type-item">
           <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}">
@@ -153,7 +153,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
 
   const templateOffers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
 
-  const isCheckEventType = Object.values(TRANSPORTS).some((el) => el === eventType);
+  const isCheckEventType = Object.values(Transports).some((el) => el === eventType);
 
   const startTime = getFullDateForTeplate(dateFrom).replace(`,`, ``);
   const endTime = getFullDateForTeplate(dateTo).replace(`,`, ``);
@@ -205,7 +205,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-              <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
+              <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price"  step="1" min="1" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? `disabled` : ``}> ${isSaving ? `Saving...` : `Save`}</button>
@@ -425,31 +425,10 @@ export default class AddEdit extends SmartView {
     return validity;
   }
 
-  _checkPriceValidity() {
-    const priceInput = this.getElement().querySelector(`.event__field-group--price input`);
-    let message = ``;
-    let validity = true;
-
-    if (!(parseInt(priceInput.value, 10))) {
-      message = `Стоимость должны быть больше ноля`;
-      validity = false;
-    }
-
-    priceInput.setCustomValidity(message);
-
-    return validity;
-  }
-
-  _checkFormValidity() {
-    return this._checkDestinationsValidity() && this._checkPriceValidity();
-  }
-
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    if (this._checkFormValidity()) {
-      if (this._checkFormValidity()) {
-        this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
-      }
+    if (this._checkDestinationsValidity()) {
+      this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
     }
   }
 

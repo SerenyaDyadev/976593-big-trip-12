@@ -58,8 +58,6 @@ export default class Provider {
         });
     }
 
-    // На случай локального создания данных мы должны сами создать `id`.
-    // Иначе наша модель будет не полной, и это может привнести баги
     const localNewEventId = nanoid();
     const localNewEvent = Object.assign({}, event, {id: localNewEventId});
 
@@ -115,12 +113,8 @@ export default class Provider {
 
       return this._api.sync(storeEvents)
         .then((response) => {
-          // Забираем из ответа синхронизированные задачи
           const createdEvents = getSyncedEvents(response.created);
           const updatedEvents = getSyncedEvents(response.updated);
-
-          // Добавляем синхронизированные задачи в хранилище.
-          // Хранилище должно быть актуальным в любой момент.
           const items = createStoreStructure([...createdEvents, ...updatedEvents]);
 
           this._store.setItems(items);

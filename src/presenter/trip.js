@@ -51,7 +51,6 @@ export default class Trip {
 
   createEvent(callback) {
     this._handleModeChange();
-
     this._eventNewPresenter.init(this._eventsModel.getAddDestinations(), this._eventsModel.getAddOffers(), callback);
   }
 
@@ -116,7 +115,8 @@ export default class Trip {
     switch (updateType) {
       case UpdateType.PATCH:
         this._eventPresenter[data.id].init(data);
-        this._renderInfo();
+        this._clearListEvents();
+        this._renderListEvents();
         break;
       case UpdateType.MINOR:
         this._clearListEvents();
@@ -164,7 +164,7 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
-    render(this._listContainer, this._sortComponent);
+    render(this._listContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderNoEvents() {
@@ -192,18 +192,16 @@ export default class Trip {
       return;
     }
 
+    this._renderInfo(this._getEvents());
+    remove(this._sortComponent);
+    render(this._listContainer, this._listDaysComponent);
+
     if (this._getEvents().length === 0) {
       this._renderNoEvents();
       return;
     }
 
-    this._renderInfo();
-
-    remove(this._sortComponent);
-
     this._renderSort();
-
-    render(this._listContainer, this._listDaysComponent);
 
     let dayNumber = 1;
     let dayDate = null;

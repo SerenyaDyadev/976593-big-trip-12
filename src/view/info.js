@@ -1,9 +1,10 @@
 import AbstractView from "./abstract.js";
-import {getMonthStamp, getDayStamp} from "../utils/date-utils.js";
+import {getMonthStamp, getDayStamp, sortByEvent} from "../utils/date-utils.js";
 
 const createInfoTemplate = (events) => {
 
-  if (events.length === 0) {
+
+  if (events === null || events.length === 0) {
     return (
       `<section class="trip-main__trip-info  trip-info">
             <p class="trip-info__cost">
@@ -12,8 +13,9 @@ const createInfoTemplate = (events) => {
       </section>`
     );
   } else {
-    let destinations = new Array(events.length).fill().map((element, index) => events[index].destination.name);
 
+    events.sort(sortByEvent);
+    let destinations = new Array(events.length).fill().map((element, index) => events[index].destination.name);
     let destinationsTemplate = destinations.join(`,`).replace(/,/g, ` &mdash; `);
 
     if (destinations.length > 3) {
@@ -53,6 +55,7 @@ const createInfoTemplate = (events) => {
 export default class Info extends AbstractView {
   constructor(events) {
     super();
+
     this._events = events;
   }
 

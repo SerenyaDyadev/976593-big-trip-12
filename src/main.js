@@ -80,10 +80,10 @@ filterPresenter.init();
 tripPresenter.init();
 
 Promise.all([apiWithProvider.getAddDestinations(), apiWithProvider.getAddOffers(), apiWithProvider.getEvents()])
-.then((values) => {
-  eventsModel.setAddDestinations(values[0]);
-  eventsModel.setAddOffers(values[1]);
-  eventsModel.setEvents(UpdateType.INIT, values[2]);
+.then(([offers, destinations, events]) => {
+  eventsModel.setAddDestinations(offers);
+  eventsModel.setAddOffers(destinations);
+  eventsModel.setEvents(UpdateType.INIT, events);
   enableMenu();
 });
 

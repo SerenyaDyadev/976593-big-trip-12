@@ -2,7 +2,7 @@ import SiteMenuView from "./view/site-menu.js";
 import StatisticsView from "./view/statistics.js";
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
-import EventsModel from "./model/points.js";
+import EventsModel from "./model/events.js";
 import FilterModel from "./model/filter.js";
 import {render, remove, RenderPosition} from "./utils/dom-utils.js";
 import {MenuItem, UpdateType, FilterType} from "./const.js";

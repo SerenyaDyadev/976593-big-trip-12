@@ -1,4 +1,4 @@
-import EventsModel from "../model/points.js";
+import EventsModel from "../model/events.js";
 
 const Method = {
   GET: `GET`,

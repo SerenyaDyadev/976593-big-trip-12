@@ -205,7 +205,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-              <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price"  step="1" min="1" value="${price}">
+              <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price"  step="1" min="1" autocomplete="off" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? `disabled` : ``}> ${isSaving ? `Saving...` : `Save`}</button>
@@ -258,6 +258,7 @@ export default class AddEdit extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepickers();
+    this._checkDestinationsValidity();
   }
 
   removeElement() {
@@ -379,15 +380,17 @@ export default class AddEdit extends SmartView {
   }
 
   _destinationChangeHandler(evt) {
-    this.updateData(
-        {
-          destination: {
-            name: evt.target.value,
-            description: this._addDestinations.find((destination) => destination.name === evt.target.value).description,
-            pictures: this._addDestinations.find((destination) => destination.name === evt.target.value).pictures
-          },
-          isDisabled: false
-        });
+    if (this._addDestinations.some((destination) => destination.name === evt.target.value)) {
+      this.updateData(
+          {
+            destination: {
+              name: evt.target.value,
+              description: this._addDestinations.find((destination) => destination.name === evt.target.value).description,
+              pictures: this._addDestinations.find((destination) => destination.name === evt.target.value).pictures
+            },
+            isDisabled: false
+          });
+    }
   }
 
   _startTimeChangeHandler([time]) {

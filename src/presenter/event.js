@@ -76,6 +76,7 @@ export default class Event {
 
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
+      this._eventEditComponent.reset(this._event);
       this._replaceFormToCard();
     }
   }
@@ -125,8 +126,8 @@ export default class Event {
   _onEscKeyDown(evt) {
     if (escDown(evt.key)) {
       evt.preventDefault();
-      this._eventEditComponent.reset(this._event);
-      this._replaceFormToCard();
+      evt.target.blur();
+      this.resetView();
     }
   }
 

@@ -32,7 +32,7 @@ export default class Event {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._handleFavoriteClick = this._handleDeleteClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -147,6 +147,14 @@ export default class Event {
     this._changeData(
         UserAction.DELETE_EVENT,
         UpdateType.MINOR,
+        event
+    );
+  }
+
+  _handleFavoriteClick(event) {
+    this._changeData(
+        UserAction.FAVORITE,
+        UpdateType.PATCH,
         event
     );
   }

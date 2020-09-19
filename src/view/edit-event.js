@@ -325,9 +325,6 @@ export default class AddEdit extends SmartView {
       .querySelector(`.event__type-wrapper`)
       .addEventListener(`change`, this._typeChangeHandler);
     this.getElement()
-      .querySelector(`.event__type-wrapper`)
-      .addEventListener(`change`, this._offersChangeHandler);
-    this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`change`, this._destinationChangeHandler);
     this.getElement()
@@ -336,6 +333,12 @@ export default class AddEdit extends SmartView {
     this.getElement()
       .querySelector(`.event__available-offers`)
       .addEventListener(`click`, this._offerChangeHandler);
+
+    if (!this._isNew) {
+      this.getElement()
+      .querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, this._handleFavoriteClick);
+    }
   }
 
   _offerChangeHandler(evt) {
@@ -436,8 +439,8 @@ export default class AddEdit extends SmartView {
     this.updateData(
         {
           isFavorite: !this._data.isFavorite,
-          isDisabled: false
         });
+    this._callback.favoriteClick(AddEdit.parseDataToEvent(this._data));
   }
 
   _priceChangeHandler(evt) {
@@ -455,7 +458,6 @@ export default class AddEdit extends SmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._handleFavoriteClick);
   }
 
   _formDeleteClickHandler(evt) {

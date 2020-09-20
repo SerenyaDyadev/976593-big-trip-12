@@ -8,7 +8,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 const renderMoneyChart = (moneyCtx, events) => {
   const money = new Map();
 
-  for (let event of events) {
+  for (const event of events) {
     const sum = money.get(event.eventType.toUpperCase());
     if (!sum) {
       money.set(event.eventType.toUpperCase(), event.price);
@@ -89,7 +89,7 @@ const renderMoneyChart = (moneyCtx, events) => {
 const renderTransportChart = (transportCtx, events) => {
   const transportCounts = new Map();
 
-  for (let event of events) {
+  for (const event of events) {
     if (event.eventType.toUpperCase() in Transports) {
       const count = 1;
       const type = transportCounts.get(event.eventType.toUpperCase());
@@ -173,7 +173,7 @@ const renderTransportChart = (transportCtx, events) => {
 const renderTimeSpendChart = (timeSpendCtx, events) => {
   const destinations = new Map();
 
-  for (let event of events) {
+  for (const event of events) {
     let durationValue = 0;
     const duration = event.dateTo - event.dateFrom;
 

@@ -15,7 +15,7 @@ const createInfoTemplate = (events) => {
   } else {
 
     events.sort(sortByEvent);
-    let destinations = new Array(events.length).fill().map((element, index) => events[index].destination.name);
+    const destinations = new Array(events.length).fill().map((element, index) => events[index].destination.name);
     let destinationsTemplate = destinations.join(`,`).replace(/,/g, ` &mdash; `);
 
     if (destinations.length > 3) {
@@ -25,8 +25,8 @@ const createInfoTemplate = (events) => {
     let eventsPrice = 0;
     let offersPrice = 0;
 
-    for (let event of events) {
-      for (let offer of event.offers) {
+    for (const event of events) {
+      for (const offer of event.offers) {
         offersPrice += offer.price;
       }
       eventsPrice += event.price;

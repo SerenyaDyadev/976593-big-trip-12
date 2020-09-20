@@ -11,6 +11,7 @@ self.addEventListener(`install`, (evt) => {
         .then((cache) => {
           return cache.addAll([
             `/`,
+            `/img`,
             `/index.html`,
             `/bundle.js`,
             `/css/style.css`

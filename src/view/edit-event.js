@@ -95,7 +95,7 @@ const createTypesList = (addOffers, eventTypeSelected) => {
   const transportTypes = [];
   const activityTypes = [];
 
-  for (let offer of addOffers) {
+  for (const offer of addOffers) {
     if (offer.type.toUpperCase() in Transports) {
       transportTypes.push(`
         <div class="event__type-item">
@@ -149,7 +149,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
     isDeleting
   } = event;
 
-  let action = isDeleting ? `Deleting...` : `Delete`;
+  const action = isDeleting ? `Deleting...` : `Delete`;
 
   const templateOffers = addOffers.find((offer) => offer.type === eventType.toLowerCase()).offers;
 
@@ -415,7 +415,7 @@ export default class AddEdit extends SmartView {
     let validity = true;
     const destinations = [];
 
-    for (let destination of this._addDestinations) {
+    for (const destination of this._addDestinations) {
       destinations.push(destination.name);
     }
 

@@ -219,7 +219,7 @@ export default class Trip {
     let dayDate = null;
     let day = null;
 
-    for (let event of this._getEvents()) {
+    for (const event of this._getEvents()) {
       const eventDayDate = event.dateFrom.getDate();
       if (dayDate === eventDayDate) {
         this._renderEvent(day.getEventsList(), event);

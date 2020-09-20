@@ -91,7 +91,7 @@ const createFavoriteTemplate = (isFavorite) => {
   );
 };
 
-const createTypesList = (addOffers) => {
+const createTypesList = (addOffers, eventTypeSelected) => {
   const transportTypes = [];
   const activityTypes = [];
 
@@ -99,14 +99,14 @@ const createTypesList = (addOffers) => {
     if (offer.type.toUpperCase() in Transports) {
       transportTypes.push(`
         <div class="event__type-item">
-          <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}">
+          <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type"  value="${offer.type}" ${eventTypeSelected === offer.type ? `checked` : ``}>
           <label class="event__type-label  event__type-label--${offer.type}" for="event-type-${offer.type}-1">${offer.type.slice(0, 1).toUpperCase() + offer.type.slice(1)}</label>
         </div>`
       );
     } else {
       activityTypes.push(`
         <div class="event__type-item">
-          <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}">
+          <input id="event-type-${offer.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${offer.type}" ${eventTypeSelected === offer.type ? `checked` : ``}>
           <label class="event__type-label  event__type-label--${offer.type}" for="event-type-${offer.type}-1">${offer.type.slice(0, 1).toUpperCase() + offer.type.slice(1)}</label>
         </div>`
       );
@@ -169,7 +169,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
               <div class="event__type-list">
 
-                ${createTypesList(addOffers)}
+                ${createTypesList(addOffers, eventType)}
 
               </div>
 

@@ -10,6 +10,7 @@ const Mode = {
 };
 
 export const State = {
+  FAVORITE: `FAVORITE`,
   SAVING: `SAVING`,
   DELETING: `DELETING`,
   ABORTING: `ABORTING`
@@ -90,7 +91,13 @@ export default class Event {
       });
     };
 
+
     switch (state) {
+      case State.FAVORITE:
+        this._eventEditComponent.updateData({
+          isFavorite: !this._event.isFavorite
+        });
+        break;
       case State.SAVING:
         this._eventEditComponent.updateData({
           isSaving: true,
@@ -155,7 +162,7 @@ export default class Event {
   _handleFavoriteClick(event) {
     this._changeData(
         UserAction.FAVORITE,
-        UpdateType.PATCH,
+        UpdateType.FAVORITE,
         event
     );
   }

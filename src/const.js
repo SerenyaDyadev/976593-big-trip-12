@@ -22,6 +22,7 @@ export const UserAction = {
 };
 
 export const UpdateType = {
+  FAVORITE: `FAVORITE`,
   PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,

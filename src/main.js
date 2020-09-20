@@ -10,7 +10,7 @@ import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const AUTHORIZATION = `Basic dljfbghjkdfbgklsdfjkl3223`;
+const AUTHORIZATION = `Basic dljfbghjkdfbgklsjkl3223`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -88,12 +88,7 @@ Promise.all([apiWithProvider.getAddDestinations(), apiWithProvider.getAddOffers(
 });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      console.log(`ServiceWorker available`); // eslint-disable-line
-    }).catch(() => {
-      console.error(`ServiceWorker isn't available`); // eslint-disable-line
-    });
+  navigator.serviceWorker.register(`/sw.js`);
 });
 
 window.addEventListener(`online`, () => {

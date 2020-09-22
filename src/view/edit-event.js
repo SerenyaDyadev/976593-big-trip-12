@@ -56,7 +56,7 @@ const createPhotoTeplate = (pictures) => {
     </div>`);
 };
 
-const destinationsList = (addDestinations) => {
+const getDestinationsList = (addDestinations) => {
 
   return new Array(addDestinations.length).fill().map((element, index) => `<option value="${addDestinations[index].name}"></option>`).join(`,`);
 };
@@ -183,7 +183,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(name)}" list="destination-list-1" autocomplete="off">
             <datalist id="destination-list-1">
 
-              ${destinationsList(addDestinations)}
+              ${getDestinationsList(addDestinations)}
 
             </datalist>
           </div>
@@ -231,7 +231,7 @@ const createEditEventTemplate = (addDestinations, addOffers, event, isNew) => {
   );
 };
 
-export default class AddEdit extends SmartView {
+export default class EditEvent extends SmartView {
   constructor(addDestinations, addOffers, event) {
     super();
 
@@ -240,15 +240,15 @@ export default class AddEdit extends SmartView {
       this._isNew = true;
     }
 
-    this._data = AddEdit.parseEventToData(event);
+    this._data = EditEvent.parseEventToData(event);
     this._addDestinations = addDestinations;
     this._addOffers = addOffers;
     this._datepickerStart = null;
     this._datepickerEnd = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
@@ -275,7 +275,7 @@ export default class AddEdit extends SmartView {
 
   reset(event) {
     this.updateData(
-        AddEdit.parseEventToData(event)
+        EditEvent.parseEventToData(event)
     );
   }
 
@@ -338,7 +338,7 @@ export default class AddEdit extends SmartView {
     if (!this._isNew) {
       this.getElement()
       .querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, this._handleFavoriteClick);
+      .addEventListener(`click`, this._favoriteClickHandler);
     }
   }
 
@@ -434,16 +434,16 @@ export default class AddEdit extends SmartView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     if (this._checkDestinationsValidity()) {
-      this._callback.formSubmit(AddEdit.parseDataToEvent(this._data));
+      this._callback.formSubmit(EditEvent.parseDataToEvent(this._data));
     }
   }
 
-  _handleFavoriteClick() {
+  _favoriteClickHandler() {
     this.updateData(
         {
           isFavorite: !this._data.isFavorite,
         });
-    this._callback.favoriteClick(AddEdit.parseDataToEvent(this._data));
+    this._callback.favoriteClick(EditEvent.parseDataToEvent(this._data));
   }
 
   _priceChangeHandler(evt) {
@@ -463,14 +463,14 @@ export default class AddEdit extends SmartView {
     this._callback.favoriteClick = callback;
   }
 
-  _formDeleteClickHandler(evt) {
+  _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(AddEdit.parseDataToEvent(this._data));
+    this._callback.deleteClick(EditEvent.parseDataToEvent(this._data));
   }
 
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formDeleteClickHandler);
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 
   static parseEventToData(event) {

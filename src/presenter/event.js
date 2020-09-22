@@ -1,5 +1,5 @@
 import EventView from "../view/event.js";
-import EventEditView from "../view/edit-event.js";
+import EditEventView from "../view/edit-event.js";
 import {render, replace, remove, escDown} from "../utils/dom-utils.js";
 import {UserAction, UpdateType} from "../const.js";
 import {isTimeChange} from "../utils/date-utils.js";
@@ -30,10 +30,10 @@ export default class Event {
     this._eventEditComponent = null;
     this._mode = Mode.DEFAULT;
 
-    this._handleEditClick = this._handleEditClick.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._editClickHandler = this._editClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -45,12 +45,12 @@ export default class Event {
     const prevEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventView(event);
-    this._eventEditComponent = new EventEditView(this._addDestinations, this._addOffers, event);
+    this._eventEditComponent = new EditEventView(this._addDestinations, this._addOffers, event);
 
-    this._eventComponent.setEditClickHandler(this._handleEditClick);
-    this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
-    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventComponent.setEditClickHandler(this._editClickHandler);
+    this._eventEditComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._eventEditComponent.setDeleteClickHandler(this._deleteClickHandler);
+    this._eventEditComponent.setFavoriteClickHandler(this._favoriteClickHandler);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._eventListContainer, this._eventComponent);
@@ -138,11 +138,11 @@ export default class Event {
     }
   }
 
-  _handleEditClick() {
+  _editClickHandler() {
     this._replaceCardToForm();
   }
 
-  _handleFormSubmit(update) {
+  _formSubmitHandler(update) {
     const isMinorUpdate = isTimeChange(this._event.dateFrom, update.dateFrom);
     this._changeData(
         UserAction.UPDATE_EVENT,
@@ -151,7 +151,7 @@ export default class Event {
     );
   }
 
-  _handleDeleteClick(event) {
+  _deleteClickHandler(event) {
     this._changeData(
         UserAction.DELETE_EVENT,
         UpdateType.MINOR,
@@ -159,7 +159,7 @@ export default class Event {
     );
   }
 
-  _handleFavoriteClick(event) {
+  _favoriteClickHandler(event) {
     this._changeData(
         UserAction.FAVORITE,
         UpdateType.FAVORITE,

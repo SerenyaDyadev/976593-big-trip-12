@@ -53,9 +53,9 @@ export const sortByEvent = (eventA, eventB) => {
     return 1;
   } else if (eventA.dateFrom < eventB.dateFrom) {
     return -1;
-  } else {
-    return 0;
   }
+
+  return 0;
 };
 
 export const isTimeChange = (dateA, dateB) => {

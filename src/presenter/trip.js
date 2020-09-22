@@ -5,7 +5,7 @@ import LoadingView from "../view/loading.js";
 import TripDaysView from "../view/trip-days.js";
 import DayView from "../view/day.js";
 import EventPresenter, {State as EventPresenterViewState} from "./event.js";
-import EventNewPresenter from "./add-event.js";
+import EventNewPresenter from "./edit-event.js";
 import {render, remove, RenderPosition} from "../utils/dom-utils.js";
 import {sortByEvent, sortByTime, sortByPrice} from "../utils/date-utils.js";
 import {SortType, UserAction, UpdateType} from "../const.js";

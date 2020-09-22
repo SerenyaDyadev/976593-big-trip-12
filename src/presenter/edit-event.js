@@ -1,8 +1,8 @@
-import EventEditView from "../view/edit-event.js";
+import EditEventView from "../view/edit-event.js";
 import {render, remove, escDown, RenderPosition} from "../utils/dom-utils.js";
 import {UserAction, UpdateType} from "../const.js";
 
-export default class EventNew {
+export default class EditEvent {
   constructor(eventListContainer, changeData) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
@@ -24,7 +24,7 @@ export default class EventNew {
       return;
     }
 
-    this._eventEditComponent = new EventEditView(this._addDestinations, this._addOffers);
+    this._eventEditComponent = new EditEventView(this._addDestinations, this._addOffers);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 

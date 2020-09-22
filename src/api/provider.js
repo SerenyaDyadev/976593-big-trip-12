@@ -1,6 +1,11 @@
 import {nanoid} from "nanoid";
 import EventsModel from "../model/events.js";
 
+const StoreTitle = {
+  OFFERS: `Offers`,
+  DESTINATIONS: `Destinations`,
+};
+
 const getSyncedEvents = (items) => {
   return items.filter(({success}) => success)
     .map(({payload}) => payload.event);
@@ -80,31 +85,29 @@ export default class Provider {
   getAddDestinations() {
     if (Provider.isOnline()) {
       return this._api.getAddDestinations()
-        .then((destinations) => {
-          const items = createStoreStructure(destinations);
-          this._store.setItems(items);
-          return destinations;
+        .then((destination) => {
+          this._store.setStaticDataByKey(StoreTitle.DESTINATIONS, destination);
+          return destination;
         });
     }
 
-    const storeDestinations = Object.values(this._store.getItems());
-
-    return Promise.resolve(storeDestinations);
+    return Promise.resolve(
+        this._store.getStaticDataByKey(StoreTitle.DESTINATIONS)
+    );
   }
 
   getAddOffers() {
     if (Provider.isOnline()) {
       return this._api.getAddOffers()
         .then((offers) => {
-          const items = createStoreStructure(offers);
-          this._store.setItems(items);
+          this._store.setStaticDataByKey(StoreTitle.OFFERS, offers);
           return offers;
         });
     }
 
-    const storeOffers = Object.values(this._store.getItems());
-
-    return Promise.resolve(storeOffers);
+    return Promise.resolve(
+        this._store.getStaticDataByKey(StoreTitle.OFFERS)
+    );
   }
 
   sync() {
@@ -113,7 +116,7 @@ export default class Provider {
 
       return this._api.sync(storeEvents)
         .then((response) => {
-          const createdEvents = getSyncedEvents(response.created);
+          const createdEvents = response.created;
           const updatedEvents = getSyncedEvents(response.updated);
           const items = createStoreStructure([...createdEvents, ...updatedEvents]);
 
